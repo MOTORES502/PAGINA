@@ -331,7 +331,7 @@
                     /></a>
                     
                     <div class="flex-grow-1">
-                        <form class="form-inline form-group flex-nowrap mx-0 mx-lg-auto rounded p-1">
+                        <form class="form-inline form-group flex-nowrap mx-0 mx-lg-auto rounded p-1" autocomplete="off">
                             <input
                                 style="width: 90%"
                                 class="form-control mr-sm-2"
@@ -341,7 +341,7 @@
                                 id="search"
                             />
                             <div id="registros"></div>
-                            <button class="btn btn-info" type="submit">Buscar</button>
+                            <button id="limpiar" class="btn btn-info">Limpiar</button>
                         </form>
                     </div>
                 </nav>
@@ -446,8 +446,9 @@
         
         $(document).ready(function(){
 
-            $('#search').keyup(function(){ 
+            $('#search').keydown(function(){ 
                 var query = $(this).val();
+                $('#registros').fadeOut(); 
                 if(query != '')
                 {
                     var _token = $('input[name="_token"]').val();
@@ -471,6 +472,11 @@
 
             $(document).on('click', '.dropdown-item', function(){  
                 $('#search').val($(this).text());  
+                $('#registros').fadeOut();  
+            });  
+
+            $(document).on('click', '#limpiar', function(){  
+                $('#search').val('');  
                 $('#registros').fadeOut();  
             });  
 
