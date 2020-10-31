@@ -14,8 +14,8 @@
       <div class="col-6"><h3 class="mb-3" style="color: #808080;"><strong>Últimos Ingresos</strong></h3></div>
       @if (count($nuevo_ingreso) > 1)
       <div class="col-6 text-right">
-        <a style="color: #808080;" class="btn btn-primary mb-3 mr-1" style="color: white;" href="#carrusel_categoria" role="button" data-slide="prev">Atrás</a>
-        <a style="color: #808080;" class="btn btn-primary mb-3" href="#carrusel_categoria" role="button" data-slide="next">Siguiente</a>
+        <a class="btn btn-primary mb-3 mr-1" href="#carrusel_categoria" role="button" data-slide="prev">Atrás</a>
+        <a class="btn btn-primary mb-3" href="#carrusel_categoria" role="button" data-slide="next">Siguiente</a>
       </div>          
       @endif
       <div class="col-12">

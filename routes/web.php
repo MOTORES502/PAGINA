@@ -14,3 +14,4 @@
 Route::name('home')->get('/', 'HomeController@index');
 Route::name('categoria')->get('categoria/{slug}/{value}', 'CategoriaController@categoria');
 Route::name('vehiculo')->get('vehiculo/{slug}/{value}', 'VehiculoController@vehiculo');
+Route::name('autocomplete.ocurrencia')->post('autocomplete', 'AutocompleteController@ocurrencia');

@@ -11,9 +11,9 @@ class HomeController extends Controller
         $title = 'Venta de carros usados, motos y más en consignación. Guatemala';
         $description = 'Si tiene motor, te ayudamos a venderlo en consignación. Carros usados y seminuevos en venta.';
         $keywords = array();
-        $url_https = 'https://www.motores502.com/';
+        $image = asset('img/logo_s_fondo_mrm.png');
         
-        $this->seo($title, $description, $keywords, $url_https);
+        $this->seo($title, $description, $keywords, null, $image, 'wbesite');
 
         $ofertas = $this->ofertas();
         $carros = $this->categorias_carros();

@@ -3,18 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Artesaos\SEOTools\Facades\JsonLd;
+use Artesaos\SEOTools\Facades\SEOMeta;
+use Illuminate\Support\Facades\Config;
+use Artesaos\SEOTools\Facades\OpenGraph;
+
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
-use Artesaos\SEOTools\Facades\SEOMeta;
-
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function seo($title, $description, $keywords = [], $url_https)
+    public function seo($title, $description, $keywords = [], $url = null, $image = null, $type = null)
     {
         $keywords_defaults = ['venta de carros', 'carros usados en venta', 'olx venta de carros', 'venta de carros usados', 'olx vehiculos', 'autos usados', 'toyota usados', 'usados de agencia', 'venta de autos', 'autos en venta', 'autos olx', 'venta de autos usados', 'carros de lujo', 'carros lujosos', 'autos de lujo', 'carros nuevos', 'sedan', 'hatchback',  'carros europeos', 'carros americanos', 'carros japoneses', 'carros de lujo'];
 
@@ -46,7 +49,51 @@ class Controller extends BaseController
             SEOMeta::addKeyword($value);
         }
         SEOMeta::setTitleSeparator(', ');
-        SEOMeta::setCanonical($url_https);
+        SEOMeta::setCanonical(Config::get('app.url') . $url, 'https://www.motores502.com/');
+
+        $this->opengraph($image, $description, $title, $url, $type);
+    }
+
+    public function opengraph($image = null, $descripcion = null, $title = null, $url = null, $type = null)
+    {
+        OpenGraph::addProperty('locale', 'es_ES');
+        if(!is_null($image)) {
+            OpenGraph::addImage($image, ['size' => 300]);
+        } else {
+            OpenGraph::addImage('', ['size' => 300]);
+        }
+        if(!is_null($title)) {
+            OpenGraph::setTitle($title);
+        }
+        if(!is_null($descripcion)) {
+            OpenGraph::setDescription($descripcion);
+        }
+        if(!is_null($type)) {
+            OpenGraph::setType($type);
+        }
+        if(!is_null($url)) {
+            OpenGraph::setUrl(Config::get('app.url') . $url, 'https://www.motores502.com/');
+        }
+
+        $this->jsonld($image, $descripcion, $title, $type);
+    }
+
+    public function jsonld($image = null, $descripcion = null, $title = null, $type = null)
+    {
+        if (!is_null($image)) {
+            JsonLd::addImage($image, ['size' => 300]);
+        } else {
+            JsonLd::addImage('https://www.motores502.com/img/Logo-Motores502.png', ['size' => 300]);
+        }
+        if (!is_null($title)) {
+            JsonLd::setTitle($title);
+        }
+        if (!is_null($descripcion)) {
+            JsonLd::setDescription($descripcion);
+        }
+        if (!is_null($type)) {
+            JsonLd::setType($type);
+        }
     }
 
     protected function ofertas()

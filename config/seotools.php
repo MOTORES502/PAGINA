@@ -38,9 +38,9 @@ return [
         'defaults' => [
             'title'       => 'Motores 502', // set false to total remove
             'description' => 'Si tiene motor, te ayudamos a venderlo en consignación. Carros usados y seminuevos en venta.', // set false to total remove
-            'url'         => true, // Set null for using Url::current(), set false to total remove
-            'type'        => true,
-            'site_name'   => true,
+            'url'         => 'https://www.motores502.com/', // Set null for using Url::current(), set false to total remove
+            'type'        => 'website',
+            'site_name'   => 'Motores 502',
             'images'      => [],
         ],
     ],

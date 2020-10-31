@@ -331,15 +331,17 @@
                     /></a>
                     
                     <div class="flex-grow-1">
-                        <form class="form-inline flex-nowrap mx-0 mx-lg-auto rounded p-1">
-                        <input
-                            style="width: 90%"
-                            class="form-control mr-sm-2"
-                            type="search"
-                            placeholder="Buscar"
-                            aria-label="Search"
-                        />
-                        <button class="btn btn-primary" type="submit">Buscar</button>
+                        <form class="form-inline form-group flex-nowrap mx-0 mx-lg-auto rounded p-1">
+                            <input
+                                style="width: 90%"
+                                class="form-control mr-sm-2"
+                                type="search"
+                                placeholder="Buscar"
+                                aria-label="Search"
+                                id="search"
+                            />
+                            <div id="registros"></div>
+                            <button class="btn btn-info" type="submit">Buscar</button>
                         </form>
                     </div>
                 </nav>
@@ -440,6 +442,38 @@
             }
 
             var accordion = new Accordion($('#accordion'), false);
+        });
+        
+        $(document).ready(function(){
+
+            $('#search').keyup(function(){ 
+                var query = $(this).val();
+                if(query != '')
+                {
+                    var _token = $('input[name="_token"]').val();
+                    $.ajax({
+                        url:"{{ route('autocomplete.ocurrencia') }}",
+                        method:"POST",
+                        data:{query:query, _token:_token},
+                        success:function(data){
+                            if(data.existe) {
+                                $('#registros').fadeIn();  
+                                $('#registros').html(data.data);
+                            } else {
+                                $('#registros').fadeOut(); 
+                            }
+                        }
+                    });
+                } else {  
+                    $('#registros').fadeOut(); 
+                }
+            });
+
+            $(document).on('click', '.dropdown-item', function(){  
+                $('#search').val($(this).text());  
+                $('#registros').fadeOut();  
+            });  
+
         });
     </script>
 </html>

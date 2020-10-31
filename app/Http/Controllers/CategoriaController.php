@@ -8,6 +8,14 @@ class CategoriaController extends Controller
 {
     public function categoria($slug, $value)
     {
+        $title = "categoría de vehículos $slug";
+        $description = "todos los vehículos de la categoria $slug";
+        $keywords = array();
+        $image = asset('img/logo_s_fondo_mrm.png');
+        $url = "/categoria/$slug/$value";
+
+        $this->seo($title, $description, $keywords, $url, $image, 'wbesite');
+
         $sub_categoria = DB::table('sub_categories')
                         ->select('name', 'icon')
                         ->where('id', base64_decode($value))
