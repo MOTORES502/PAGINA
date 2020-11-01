@@ -2,15 +2,17 @@
 
 @section('content')
 @if ($existe)
+    <br><br>
     <div class="row">
         <div class="col-12">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container">
-                    <h1 style="font-size: 3vw;" class="text-center"><strong>{{ $titulo }}</strong></h1>
-                </div>
-            </div>
+            <h1 style="font-size: 3vw;" class="text-center"><strong>{{ $titulo }}</strong></h1>
         </div>
-    </div>
+    </div>   
+    <div class=" py-4">
+        <nav class="d-flex justify-content-end" aria-label="...">
+            {{ $data->links() }}
+        </nav> 
+    </div> 
     <div class="row">
         @foreach ($data as $vehiculo)
         <div class="col-md-3 mb-3">
@@ -33,7 +35,13 @@
             </div>
         </div>                      
         @endforeach
-    </div>    
+    </div>   
+    <div class=" py-4">
+        <nav class="d-flex justify-content-end" aria-label="...">
+            {{ $data->links() }}
+        </nav> 
+    </div>                       
+</div> 
 @else
     <br><br>
     <div class="row">
