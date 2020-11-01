@@ -134,7 +134,7 @@ class Controller extends BaseController
         $array_uno = array();
         $sub_categorias = DB::table('sub_categories')
         ->join('categories', 'sub_categories.categories_id', 'categories.id')
-        ->select('sub_categories.id AS id', DB::RAW('"categoría / ",sub_categories.name) AS name'))
+        ->select('sub_categories.id AS id', 'sub_categories.name AS name')
         ->whereNull('sub_categories.deleted_at')
         ->whereNull('categories.deleted_at')
         ->inRandomOrder()
