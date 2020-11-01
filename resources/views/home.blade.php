@@ -82,7 +82,7 @@
     </div>
     @foreach ($carros as $key => $item)
     <div class="row">
-      <div class="col-6"><h3 class="mb-3" style="color: #808080;"><strong>{{ $item['nombre'] }}</strong></h3></div>
+      <div class="col-6"><h3 class="mb-3" style="color: #808080;"><strong>categoría | {{ $item['nombre'] }}</strong></h3></div>
       @if (count($item['carrusel']) > 1)
       <div class="col-6 text-right">
         <a class="btn btn-primary mb-3 mr-1" style="color: white;" href="{{ "#carrusel_carros".$key }}" role="button" data-slide="prev">Atrás</a>
