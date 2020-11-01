@@ -36,13 +36,6 @@ class VehiculoController extends Controller
         if(is_null($vehiculo))
             return redirect()->route('home');
 
-        $title = $vehiculo->nombre_completo;
-        $description = 'Si tiene motor, te ayudamos a venderlo en consignación. Carros usados y seminuevos en venta.';
-        $keywords = array();
-        $url_https = 'https://www.motores502.com/';
-
-        $this->seo($title, $description, $keywords, $url_https);
-
         $images = DB::table('transports_images')
         ->select('image', 'concat')
         ->where('transports_images.transports_id', $vehiculo->id)
@@ -50,10 +43,20 @@ class VehiculoController extends Controller
         ->get();
 
         $sub_categoria = DB::table('sub_categories_transports')->where('transports_id', $vehiculo->id)->whereIn('option', [1,2])->first();
-        $precio = is_null($vehiculo->oferta_sf) ? $vehiculo->precio : $vehiculo->oferta_sf;
+        $precio = is_null($vehiculo->oferta_sf) ? intval($vehiculo->precio) : intval($vehiculo->oferta_sf);
         $precios_carros = $this->recomendacion($precio, $vehiculo->moneda, $sub_categoria->sub_categories_id, $vehiculo->id);
         $enganche = $this->calcular_enganche($precio, $vehiculo->symbol);
-        
+
+        //SEO
+        $nombre = mb_strtolower($vehiculo->nombre_completo);
+        $title = $nombre;
+        $description = "el vehículo seleccionado para ver la información es $nombre";
+        $keywords = array();
+        $image = count($images) > 0 ? $images[0]->image : asset('img/logo_s_fondo_mrm.png');
+        $url = "/vehiculo/$slug/$value";
+
+        $this->seo($title, $description, $keywords, $url, $image, 'vehículo');
+
         return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche'));
     }
 
