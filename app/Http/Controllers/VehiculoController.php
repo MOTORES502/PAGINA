@@ -102,6 +102,15 @@ class VehiculoController extends Controller
         ->where('transports_business.transports_id', $vehiculo->id)
         ->get();
 
+        $tipos_telefono = DB::table('type_phone')
+        ->select('id', 'name')
+        ->get();
+
+        $canales = DB::table('channels')
+        ->select('id', 'name')
+        ->whereNull('deleted_at')
+        ->get();
+
         //SEO
         $nombre = mb_strtolower($vehiculo->nombre_completo);
         $title = $nombre;
@@ -112,7 +121,7 @@ class VehiculoController extends Controller
 
         $this->seo($title, $description, $keywords, $url, $image, 'vehículo');
 
-        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion'));
+        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales'));
     }
 
     public function calcular_enganche($precio, $moneda)

@@ -4,6 +4,41 @@
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
             <br><br>
+            @if (count($errors) > 0)
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="fa fa-ban"></i> ¡Error!</h5>
+                    <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                    </ul>
+                </div> 
+            @elseif(Session::has('success'))
+                <div class="alert alert-success alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="fa fa-check"></i> ¡Éxito!</h5>
+                    {{Session::get('success')}}
+                </div>
+            @elseif(Session::has('warning'))
+                <div class="alert alert-warning alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="fa fa-exclamation-triangle"></i> ¡Advertencia!</h5>
+                    {{Session::get('warning')}}
+                </div>
+            @elseif(Session::has('danger'))
+                <div class="alert alert-danger alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="fa fa-exclamation-triangle"></i> ¡Error!</h5>
+                    {{Session::get('danger')}}
+                </div>
+            @elseif(Session::has('info'))
+                <div class="alert alert-info alert-dismissible">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h5><i class="fa fa-info"></i> ¡Información!</h5>
+                    {{Session::get('info')}}
+                </div>
+            @endif 
         </div>
         <div class="col-sm-12 col-md-10 col-lg-10" style="color: #808080;">
             <p><strong style="font-size: 4vw;">{{ $vehiculo->nombre_completo }} |</strong><span style="font-size: 2vw;">|  {{ $vehiculo->generacion }}</span></p>
@@ -78,7 +113,7 @@
                     <h3>CUOTA:</h3>
                 </div>
                 <div class="col-ms-12 col-md-4 col-lg-4 text-right">
-                    <button class="btn btn-sm btn-info">MÁS INFORMACIÓN</button>
+                    <button class="btn btn-sm btn-info" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#masInformacion">MÁS INFORMACIÓN</button>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-12 text-right" id="o_trace_d"></div>
                 <div class="col-sm-12 col-md-12 col-lg-12 text-right">
@@ -244,12 +279,128 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="masInformacion" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #595758; color: #eaeded;">
+                    Formulario para cotización
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="background: #eaeded; color: #595758;">
+                    <form action="{{ route('cotizar.store') }}" role="form" method="post" autocomplete="off">
+                        @csrf
+                        <input type="text" name="transports_id" value="{{ $vehiculo->id }}" hidden>
+                        <div class="form-group">
+                            <label for="names">Nombres</label>
+                            <input type="text" name="names" onkeyup="mayus(this);" value="{{ old('names') }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="surnames">Apellidos</label>
+                            <input type="text" name="surnames" onkeyup="mayus(this);" value="{{ old('surnames') }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Correo electrónico</label>
+                            <input type="email" name="email" onkeyup="min(this);" value="{{ old('email') }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="type_phone_id">Tipo de teléfono</label>
+                            <select class="form-control js-example-basic-single" style="width: 100%" name="type_phone_id">
+                                <option value="">Seleccionar uno por favor</option>
+                                @foreach ($tipos_telefono as $item)
+                                    <option value="{{ $item->id }}" {{ ($item->id == old('type_phone_id')) ? 'selected' : '' }}>{{ $item->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="number">Número de Teléfono</label>
+                            <br>
+                            <input type="tel" name="number" style="width: 100%" value="{{ old('number') }}" class="form-control" id="phone">
+                            <span id="error-msg" class="hide"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="channel_id">¿Medio por donde se entero de nosotros?</label>
+                            <select class="form-control js-example-basic-multiple" style="width: 100%" multiple="multiple" name="channel_id[]">
+                                <option value="">Seleccionar uno o más por favor</option>
+                                @foreach ($canales as $item)
+                                    <option value="{{ $item->id }}"><small>{{ $item->name }}</small></option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <button type="submit" id="guardar" class="btn btn-info btn-large pull-right">Cotizar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     
 <script>
-    $(document).ready(function(){
-   $("#calcular").click();
+$(document).ready(function(){
+    $("#calcular").click();
 });
+
+function mayus(e) {
+    e.value = e.value.toUpperCase();
+}
+
+function min(e) {
+    e.value = e.value.toLowerCase();
+}
+
+var input = document.querySelector("#phone"),
+    errorMsg = document.querySelector("#error-msg");
+
+// here, the index maps to the error code returned from getValidationError - see readme
+var errorMap = ["Número inválido", "Código de país no válido", "Cantidad de dígitos inválido", "Cantidad de dígitos inválido", "Número inválido", "Número inválido"];
+
+// initialise plugin
+var iti = window.intlTelInput(input, {
+  initialCountry: "auto",
+  geoIpLookup: function(callback) {
+    $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+      var countryCode = (resp && resp.country) ? resp.country : "gt";
+      callback(countryCode);
+    });
+  },   
+  utilsScript: "{{ asset('assets/js/utils.js') }}"
+});
+
+var reset = function() {
+  input.classList.remove("text-danger");
+  errorMsg.innerHTML = "";
+  errorMsg.classList.add("hide");
+};
+
+// on blur: validate
+input.addEventListener('keyup', function() {
+  reset();
+  if (input.value.trim()) {
+    if (iti.isValidNumber()) {
+      input.classList.remove("text-danger");
+      input.classList.add("text-success");
+      $('#guardar').show();
+    } else {
+      input.classList.remove("text-success");
+      input.classList.add("text-danger");
+      var errorCode = iti.getValidationError();
+      errorMsg.innerHTML = errorMap[errorCode];
+      errorMsg.classList.remove("hide");
+      errorMsg.classList.add("text-danger");
+      $('#guardar').hide();
+    }
+  }
+});
+
+// on keyup / change flag: reset
+input.addEventListener('keyup', reset);
+input.addEventListener('change', reset);
+
 </script>
 @stop
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="{{ asset('assets/js/intlTelInput.js') }}"></script>
 <script src="{{ asset('js/quotes.js') }}"></script>

@@ -33,3 +33,5 @@ Route::name('buscar.marca_version')->get('buscar/marca-version/{slug}/{value}', 
 Route::name('buscar.version_modelo')->get('buscar/version-modelo/{slug}/{value}', 'SearchController@version_modelo');
 Route::name('buscar.marca_linea_version')->get('buscar/marca-linea-version/{slug}/{value}', 'SearchController@marca_linea_version');
 Route::name('buscar.personalizada')->get('busqueda/personalizada', 'SearchController@personalizada');
+
+Route::name('cotizar.store')->post('cotizar', 'Empresa\QuoteController@store');
