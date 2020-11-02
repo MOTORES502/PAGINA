@@ -30,6 +30,7 @@ class VehiculoController extends Controller
             'transports.price_publisher AS precio_sf',
             'coins.id AS moneda',
             'coins.symbol AS symbol',
+            DB::RAW('substring(transports.code, INSTR(transports.code, "|")+1) AS facebook'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
             DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
             DB::RAW('(SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta_sf')

@@ -83,6 +83,33 @@
                 <div class="col-sm-12 col-md-12 col-lg-12 text-right" id="o_trace_d"></div>
                 <div class="col-sm-12 col-md-12 col-lg-12 text-right">
                     <br><br>
+                    <a 
+                        href="{{ 'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fmotores502.com%2Fvehiculo%3Fid%3D' .  $vehiculo->facebook}}"
+                        class="btn-info btn-lg btn-fb" 
+                        style="margin-right: 15px;"
+                        type="button" 
+                        role="button"
+                    >
+                        <i class="fa fa-facebook-f"></i>
+                    </a>
+                    <a 
+                        href="mailto:info@motores502.com"
+                        class="btn-info btn-lg btn-fb" 
+                        style="margin-right: 15px;"
+                        type="button" 
+                        role="button"
+                    >
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    <a 
+                        href="tel:+50255792225"
+                        class="btn-info btn-lg btn-fb" 
+                        type="button" 
+                        role="button"
+                    >
+                        <i class="fa fa-phone"></i>
+                    </a>
+                    <br><br>
                 </div>
             </div>
         </div>
