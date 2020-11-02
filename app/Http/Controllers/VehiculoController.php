@@ -8,6 +8,15 @@ class VehiculoController extends Controller
 {
     public function vehiculo($slug, $value)
     {
+        $tipos_telefono = DB::table('type_phone')
+        ->select('id', 'name')
+        ->get();
+
+        $canales = DB::table('channels')
+        ->select('id', 'name')
+        ->whereNull('deleted_at')
+        ->get();
+
         $vehiculo = DB::table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
@@ -102,15 +111,6 @@ class VehiculoController extends Controller
         ->where('transports_business.transports_id', $vehiculo->id)
         ->get();
 
-        $tipos_telefono = DB::table('type_phone')
-        ->select('id', 'name')
-        ->get();
-
-        $canales = DB::table('channels')
-        ->select('id', 'name')
-        ->whereNull('deleted_at')
-        ->get();
-
         //SEO
         $nombre = mb_strtolower($vehiculo->nombre_completo);
         $title = $nombre;
@@ -119,9 +119,11 @@ class VehiculoController extends Controller
         $image = count($images) > 0 ? $images[0]->image : asset('img/logo_s_fondo_mrm.png');
         $url = "/vehiculo/$slug/$value";
 
+        $id = $vehiculo->id;
+
         $this->seo($title, $description, $keywords, $url, $image, 'vehículo');
 
-        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales'));
+        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales', 'id'));
     }
 
     public function calcular_enganche($precio, $moneda)

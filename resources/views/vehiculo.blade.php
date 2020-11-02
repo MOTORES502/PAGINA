@@ -281,7 +281,7 @@
     </div>
 
 
-    <div class="modal fade" id="masInformacion" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="masInformacion" tabindex="-2" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background: #595758; color: #eaeded;">
@@ -293,7 +293,7 @@
                 <div class="modal-body" style="background: #eaeded; color: #595758;">
                     <form action="{{ route('cotizar.store') }}" role="form" method="post" autocomplete="off">
                         @csrf
-                        <input type="text" name="transports_id" value="{{ $vehiculo->id }}" hidden>
+                        <input type="text" name="transports_id" value="{{ $id }}" hidden>
                         <div class="form-group">
                             <label for="names">Nombres</label>
                             <input type="text" name="names" onkeyup="mayus(this);" value="{{ old('names') }}" class="form-control">
