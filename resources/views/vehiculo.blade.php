@@ -24,7 +24,7 @@
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     <div id="gallery-lightbox" class="row" data-toggle="modal" data-target="#exampleModal">
                         @foreach ($images as $key => $item)
-                        <div class="col-sm-12 col-md-3 col-lg-3 p-0">
+                        <div class="col-md-3 col-lg-3 p-0">
                             <img class="w-100" src="{{ asset('img/encima_motores502.png') }}" width="100px" height="100px" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" data-target="#vehiculo_especifico" data-slide-to="{{ $key }}">
                         </div>
                         @endforeach
