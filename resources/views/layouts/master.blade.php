@@ -8,18 +8,25 @@
         {!! Twitter::generate() !!}
         {!! JsonLd::generate() !!}
         <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
+
         <!-- Styles -->
         <link href="{{ asset('template/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
         <link href="{{ asset('card.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('footer.css') }}">
         
         <!-- Scripts -->
-        <script src="{{ asset('template/jquery/jquery.min.js') }}" defer></script>
-        <script src="{{ asset('template/bootstrap/js/bootstrap.js') }}" defer></script>
+        <script src="{{ asset('template/jquery/jquery.min.js') }}"></script>
+        <script src="{{ asset('template/bootstrap/js/bootstrap.js') }}"></script>
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
         <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
         integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
+        <script type="text/javascript" src="{{ asset('whatsapp/jquery-3.3.1.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
+        <link rel="stylesheet" href="{{ asset('whatsapp/floating-wpp.min.css') }}">
         <style>
             .sidebar {
                 position: fixed;
@@ -353,6 +360,8 @@
             @yield('content')
         </div>
 
+        <div id="whatsapp"></div>
+
         <footer class="site-footer">
             <div class="container">
                 <div class="row">
@@ -405,8 +414,23 @@
                 </div>
             </div>
         </footer>
-    </body>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    </body>    
+    <script type="text/javascript">
+        $(function () {
+            $('#whatsapp').floatingWhatsApp({
+                phone: '50255792225',
+                popupMessage: '¿Hola, en que podemos ayudarle?',
+                showPopup: true,
+                showOnIE: true,
+                headerTitle: 'Whatsapp - Motores 502',
+                position: 'right',
+                autoOpenTimeout: 10000,
+                headerColor: '#545454',
+                size: '75px',
+                backgroundColor: '#eaeded'
+            });
+        });
+    </script>   
     <script>
         function mostrar() {
             document.getElementById("sidebar").style.width = "350px";

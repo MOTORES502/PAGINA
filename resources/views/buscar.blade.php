@@ -21,7 +21,7 @@
                 <img class="img-fluid" alt="{{ $vehiculo->alt }}" src="{{ asset('img/encima_motores502.png') }}" style="background-blend-mode: normal; background-image: url({{ $vehiculo->image }}); background-size: 100% 100%; background-repeat: no-repeat;" />
                 </a>
                 <div class="card-body">
-                <h4 class="card-title">{{ $vehiculo->codigo }}</h4>
+                <h4 class="card-title">{{ $vehiculo->codigo }} <img class="img-fluid pull-right" height="35" width="35" src="{{ $vehiculo->imagen_marca }}" alt="{{ $vehiculo->marca_alt }}"></h4>
                 <p class="card-text">
                     <ul>
                         <li>{{ $vehiculo->marca }}</li>
