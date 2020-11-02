@@ -299,16 +299,6 @@
                 right: 0;
                 outline: 0;
             }
-            
-            #gallery-lightbox img {
-                height: 100%;
-                object-fit: cover;
-                cursor: pointer;
-            }
-            #gallery-lightbox img:hover {
-                opacity: 0.9;
-                transition: 0.5s ease-out;
-            }
         </style>
     </head>
     <body style="background: #eaeded;" class="text-uppercase">
