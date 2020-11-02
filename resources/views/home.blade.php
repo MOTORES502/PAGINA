@@ -5,11 +5,10 @@
       <div class="col-12">
         <div
           id="carouselExampleIndicators"
-          class="carousel slide"
+          class="carousel slide carousel-fade"
           style="height: 450px"
           data-ride="carousel"
         >
-          <div class="carousel-inner" role="listbox">
             <div
               class="carousel-item active"
               style="
@@ -31,7 +30,6 @@
                 height: 65vh;
               "
             ></div>
-          </div>
 
           <a
             class="carousel-control-prev"

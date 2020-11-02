@@ -221,14 +221,16 @@
             <span aria-hidden="true">&times;</span>
         </button>
         <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content bg-transparent">
-                <div class="modal-body p-0">
-                    <div id="vehiculo_especifico" class="carousel slide carousel-fade" data-ride="false">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div id="vehiculo_especifico" class="carousel slide carousel-fade" data-ride="carousel">
+                        <div class="carousel-inner" role="listbox">
                         @foreach ($images as $key => $item)
                         <div class="{{ $key == 0 ? 'carousel-item active' : 'carousel-item' }}">
                             <img class="d-block w-100" src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
                         </div>
                         @endforeach
+                        </div>
                     </div>
                     <a class="carousel-control-prev" href="#vehiculo_especifico" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
