@@ -21,7 +21,7 @@
                 <div class="col-sm-12 col-md-12 col-lg-12">
                     <p style="color: #808080;"><strong style="font-size: 2vw;">id: </strong><span style="font-size: 3vw;">{{ $vehiculo->codigo }}</span></p>
                 </div>      
-                <div class="col-sm-12 col-md-11 col-lg-11">
+                <div class="col-sm-12 col-md-12 col-lg-12">
                     <div id="gallery-lightbox" class="row" data-toggle="modal" data-target="#exampleModal">
                         @foreach ($images as $key => $item)
                         <div class="col-sm-12 col-md-3 col-lg-3 p-0">
