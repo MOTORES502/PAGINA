@@ -331,17 +331,18 @@
                     /></a>
                     
                     <div class="flex-grow-1">
-                        <form class="form-inline form-group flex-nowrap mx-0 mx-lg-auto rounded p-1" autocomplete="off">
+                        <form class="form-inline form-group flex-nowrap mx-0 mx-lg-auto rounded p-1" action="{{ route('buscar.personalizada') }}" method="get" role="search" autocomplete="off">
                             <input
                                 style="width: 90%"
                                 class="form-control mr-sm-2"
                                 type="search"
+                                name="search"
                                 placeholder="Buscar"
                                 aria-label="Search"
                                 id="search"
                             />
                             <div id="registros"></div>
-                            <button id="limpiar" class="btn btn-info">Limpiar</button>
+                            <button type="submit" class="btn btn-info">Buscar</button>
                         </form>
                     </div>
                 </nav>
@@ -417,7 +418,8 @@
             document.getElementById("sidebar").style.width = "0";
             document.getElementById("abrir").style.display = "inline";
             document.getElementById("cerrar").style.display = "none";
-        }
+        } 
+
         $(function() {
             var Accordion = function(el, multiple) {
             this.el = el || {};
@@ -446,7 +448,7 @@
         
         $(document).ready(function(){
 
-            $('#search').keydown(function(){ 
+            $('#search').keyup(function(){ 
                 var query = $(this).val();
                 $('#registros').fadeOut(); 
                 if(query != '')
@@ -473,13 +475,7 @@
             $(document).on('click', '.dropdown-item', function(){  
                 $('#search').val($(this).text());  
                 $('#registros').fadeOut();  
-            });  
-
-            $(document).on('click', '#limpiar', function(){  
-                $('#search').val('');  
-                $('#registros').fadeOut();  
-            });  
-
+            });
         });
     </script>
 </html>

@@ -15,10 +15,14 @@ class VehiculoController extends Controller
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'transports.fuels_id', 'fuels.id')
+        ->join('colors', 'transports.colors_id', 'colors.id')
         ->select(
             'transports.id AS id',
             'transports.code AS codigo',
             'transports.status AS estado',
+            'fuels.name AS fuels',
+            'colors.name AS colors',
             DB::RAW('LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio)) AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name," ",models.anio) AS nombre_completo'),
             DB::RAW('CONCAT(generations.name," Generación (",generations.start," - ",generations.end,")") AS generacion'),
@@ -47,6 +51,56 @@ class VehiculoController extends Controller
         $precios_carros = $this->recomendacion($precio, $vehiculo->moneda, $sub_categoria->sub_categories_id, $vehiculo->id);
         $enganche = $this->calcular_enganche($precio, $vehiculo->symbol);
 
+        $general = DB::table('transports_engineers')
+        ->join('tractions', 'transports_engineers.tractions_id', 'tractions.id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('yields', 'transports_engineers.yields_id', 'yields.id')
+        ->join('fabrications', 'transports_engineers.fabrications_id', 'fabrications.id')
+        ->select(
+            'tractions.name AS tractions',
+            'transmisions.name AS transmisions',
+            'yields.name AS yields',
+            'fabrications.name AS fabrications',
+            'transports_engineers.description AS description'
+        )
+        ->where('transports_engineers.transports_id', $vehiculo->id)
+        ->first();
+
+        $comfort = DB::table('transports_mod_cons')
+        ->select('transports_mod_cons.description AS description')
+        ->where('transports_mod_cons.transports_id', $vehiculo->id)
+        ->first();
+
+        $seguridad = DB::table('transports_securities')
+        ->select('transports_securities.description AS description')
+        ->where('transports_securities.transports_id', $vehiculo->id)
+        ->first();
+
+        $diferencia = DB::table('transports_differences')
+        ->join('differences', 'transports_differences.differences_id', 'differences.id')
+        ->select(
+            'differences.name AS name'
+        )
+        ->where('transports_differences.transports_id', $vehiculo->id)
+        ->get();
+
+        $extra = DB::table('additional_features')
+        ->select('additional_features.description AS description')
+        ->where('additional_features.transports_id', $vehiculo->id)
+        ->first();
+
+        $ubicacion = DB::table('transports_business')
+        ->join('bussines', 'transports_business.bussines_id', 'bussines.id')
+        ->join('bussines_locations', 'bussines.id', 'bussines_locations.bussines_id')
+        ->join('municipalities', 'bussines_locations.municipalities_id', 'municipalities.id')
+        ->join('departaments', 'municipalities.departaments_id', 'departaments.id')
+        ->join('countries', 'departaments.countries_id', 'countries.id')
+        ->select(
+            DB::RAW('CONCAT(countries.name,", ",departaments.name,", ",municipalities.name,", ",bussines_locations.location) AS location')
+        )
+        ->where('transports_business.transports_id', $vehiculo->id)
+        ->get();
+
         //SEO
         $nombre = mb_strtolower($vehiculo->nombre_completo);
         $title = $nombre;
@@ -57,7 +111,7 @@ class VehiculoController extends Controller
 
         $this->seo($title, $description, $keywords, $url, $image, 'vehículo');
 
-        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche'));
+        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion'));
     }
 
     public function calcular_enganche($precio, $moneda)

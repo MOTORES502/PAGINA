@@ -30,3 +30,6 @@ Route::name('buscar.marca_linea_generacion_modelo_version')->get('buscar/marca-l
 Route::name('buscar.marca_modelo')->get('buscar/marca-modelo/{slug}/{value}', 'SearchController@marca_modelo');
 Route::name('buscar.marca_linea_modelo_version')->get('buscar/marca-linea-modelo-version/{slug}/{value}', 'SearchController@marca_linea_modelo_version');
 Route::name('buscar.marca_version')->get('buscar/marca-version/{slug}/{value}', 'SearchController@marca_version');
+Route::name('buscar.version_modelo')->get('buscar/version-modelo/{slug}/{value}', 'SearchController@version_modelo');
+Route::name('buscar.marca_linea_version')->get('buscar/marca-linea-version/{slug}/{value}', 'SearchController@marca_linea_version');
+Route::name('buscar.personalizada')->get('busqueda/personalizada', 'SearchController@personalizada');
