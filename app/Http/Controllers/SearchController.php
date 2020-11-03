@@ -818,6 +818,7 @@ class SearchController extends Controller
                     'brands.image AS imagen_marca',
                     'brands.name AS marca_alt'
                 )
+                ->orWhere(DB::RAW('substring(transports.code, INSTR(transports.code, "|")+1)', $quitar_espacios)
                 ->orWhere(DB::RAW('TRIM(sub_categories.name)'), $quitar_espacios)
                 ->orWhere(DB::RAW('TRIM(brands.name)'), $quitar_espacios)
                 ->orWhere(DB::RAW('TRIM(lines.name)'), $quitar_espacios)
@@ -836,6 +837,7 @@ class SearchController extends Controller
                 ->orWhere(DB::RAW('TRIM(CONCAT(lines.name,versions.name))'), $quitar_espacios)
                 ->orWhere(DB::RAW('TRIM(CONCAT(brands.name,models.anio))'), $quitar_espacios)
                 ->orWhere(DB::RAW('TRIM(CONCAT(lines.name,models.anio))'), $quitar_espacios)
+                ->orWhere(DB::RAW('TRIM(brands.name,lines.name,models.anio)'), $quitar_espacios)
                 ->where('transports.status', 'DISPONIBLE')
                 ->whereNull('transports.deleted_at')
                 ->whereNull('sub_categories.deleted_at')
