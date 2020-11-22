@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Paginator::defaultView('vendor.pagination.bootstrap-4');
         view()->composer('layouts.master', function ($view) {
             $categorias = DB::table('categories')->select('id', 'name')->whereNull('deleted_at')->get();
             $menus = array();

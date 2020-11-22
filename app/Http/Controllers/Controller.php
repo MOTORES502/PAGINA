@@ -107,95 +107,76 @@ class Controller extends BaseController
             ->join('generations', 'generations.id', 'transports.generations_id')
             ->join('models', 'models.id', 'transports.models_id')
             ->join('versions', 'versions.id', 'transports.versions_id')
+            ->join('fuels', 'fuels.id', 'transports.fuels_id')
+            ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+            ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
             ->select(
                 'transports.code AS codigo',
                 'transports.status AS estado',
                 DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-                DB::RAW('CONCAT("Marcar: ",brands.name) AS marca'),
-                DB::RAW('CONCAT("Linea: ",lines.name," ",versions.name) AS linea'),
-                DB::RAW('CONCAT("Modelo: ",models.anio) AS modelo'),
-                DB::RAW('CONCAT("Kilometraje: ",transports.mileage) AS kilometro'),
-                DB::RAW('CONCAT("Valor: ",coins.symbol," ",FORMAT(transports_offers.price_offer,2)) AS precio'),
+                DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
+                DB::RAW('CONCAT("Marca: ",brands.name) AS marca'),
+                DB::RAW('CONCAT("Linea: ",lines.name) AS linea'),
+                DB::RAW('CONCAT("Versión: ",versions.name) AS version'),
+                'models.anio AS modelo',
+                'transports.mileage AS kilometro',
+                'fuels.name AS combustible',
+                'transmisions.name AS transmision',
+                DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports_offers.price_offer,2)) AS precio'),
                 DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-                DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+                DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt'),
+                DB::RAW('FORMAT(100-((transports_offers.price_offer*100)/transports.price_publisher),2) AS porcentaje')
             )
             ->where('transports.status', 'DISPONIBLE')
             ->where('transports_offers.active', true)
             ->whereNull('transports_offers.deleted_at')
             ->whereNull('transports.deleted_at')
             ->orderByDesc('transports_offers.updated_at')
-            ->limit(4)
+            ->limit(16)
             ->get();
     }
 
     public function categorias_carros()
     {
-        $cantidad_categorias = 3;
-        $array_uno = array();
+        $cantidad_categorias = 8;
         $sub_categorias = DB::table('sub_categories')
-        ->join('categories', 'sub_categories.categories_id', 'categories.id')
-        ->select('sub_categories.id AS id', 'sub_categories.name AS name')
         ->whereNull('sub_categories.deleted_at')
-        ->whereNull('categories.deleted_at')
         ->inRandomOrder()
-            ->limit($cantidad_categorias)
-            ->get();
+        ->limit($cantidad_categorias)
+        ->pluck('id');
 
-        foreach ($sub_categorias as $key => $value) {
+        $carros = DB::table('sub_categories_transports')
+        ->join('sub_categories', 'sub_categories_transports.sub_categories_id', 'sub_categories.id')
+        ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
+        ->join('brands', 'brands.id', 'transports.brands_id')
+        ->join('lines', 'lines.id', 'transports.lines_id')
+        ->join('generations', 'generations.id', 'transports.generations_id')
+        ->join('models', 'models.id', 'transports.models_id')
+        ->join('versions', 'versions.id', 'transports.versions_id')
+        ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->select(
+            'transports.code AS codigo',
+            'transports.status AS estado',
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
+            DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
+            DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
+            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
+            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
+            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+        )
+        ->whereIn('sub_categories_transports.sub_categories_id', $sub_categorias)
+        ->where('transports.status', 'DISPONIBLE')
+        ->whereNull('transports.deleted_at')
+        ->orderByDesc('transports.updated_at')
+        ->inRandomOrder()
+        ->groupByRaw('transports.code')
+        ->paginate(8, ['*'], 'carros');
 
-            $sub['nombre'] = $value->name;
-            $sub['carrusel'] = array();
-            array_push($array_uno, $sub);
-
-            $carros = DB::table('sub_categories_transports')
-            ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
-            ->join('brands', 'brands.id', 'transports.brands_id')
-            ->join('lines', 'lines.id', 'transports.lines_id')
-            ->join('generations', 'generations.id', 'transports.generations_id')
-            ->join('models', 'models.id', 'transports.models_id')
-            ->join('versions', 'versions.id', 'transports.versions_id')
-            ->join('coins', 'transports.coins_id', 'coins.id')
-            ->select(
-                'transports.code AS codigo',
-                'transports.status AS estado',
-                DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-                DB::RAW('CONCAT("Marcar: ",brands.name) AS marca'),
-                DB::RAW('CONCAT("Linea: ",lines.name," ",versions.name) AS linea'),
-                DB::RAW('CONCAT("Modelo: ",models.anio) AS modelo'),
-                DB::RAW('CONCAT("Kilometraje: ",transports.mileage) AS kilometro'),
-                DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-                DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-                DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-                DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
-            )
-                ->where('sub_categories_transports.sub_categories_id', $value->id)
-                ->where('transports.status', 'DISPONIBLE')
-                ->whereNull('transports.deleted_at')
-                ->orderByDesc('transports.updated_at')
-                ->limit(12)
-                ->get();
-
-            $items_carrusel = 4;
-            for ($i = 0; $i < (count($carros) / $items_carrusel); $i++) {
-                $carrusel['numero'] = $i;
-                $carrusel['vehiculos'] = array();
-                $contador = $items_carrusel;
-
-                foreach ($carros as $llave => $value_dos) {
-                    if ($contador == 0) {
-                        break;
-                    } else {
-                        array_push($carrusel['vehiculos'], $value_dos);
-                        $contador--;
-                        unset($carros[$llave]);
-                    }
-                }
-
-                array_push($array_uno[$key]['carrusel'], $carrusel);
-            }
-        }
-
-        return $array_uno;
+        return $carros;
     }
 
     public function nuevo_ingreso($sub_categoria_id)

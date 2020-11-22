@@ -1,142 +1,181 @@
 <html lang="es">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="Content-Language" content="es">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        {!! SEOMeta::generate() !!}
-        {!! OpenGraph::generate() !!}
-        {!! Twitter::generate() !!}
-        {!! JsonLd::generate() !!}
-        <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Language" content="es">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {!! SEOMeta::generate() !!}
+    {!! OpenGraph::generate() !!}
+    {!! Twitter::generate() !!}
+    {!! JsonLd::generate() !!}
+    <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
 
-        <!-- Styles -->
-        <link href="{{ asset('template/bootstrap/css/bootstrap.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-multiselect.css') }}">
-        <link href="{{ asset('card.css') }}" rel="stylesheet">
-        <link rel="stylesheet" href="{{ asset('footer.css') }}">
-        
-        <!-- Scripts -->
-        <link rel="stylesheet" href="{{ asset('assets/css/intlTelInput.css') }}">
+    <!-- Responsive -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ asset('template_new/css/bootstrap.css') }}">
 
-        <script src="{{ asset('template/jquery/jquery.min.js') }}"></script>
-        <script src="{{ asset('template/bootstrap/js/bootstrap.js') }}"></script>
-        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
-        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-        
-        <script type="text/javascript" src="{{ asset('whatsapp/jquery-3.3.1.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
-        <link rel="stylesheet" href="{{ asset('whatsapp/floating-wpp.min.css') }}">
+    <link href="{{ asset('template_new/plugins/revolution/css/settings.css') }}" rel="stylesheet" type="text/css"><!-- REVOLUTION SETTINGS STYLES -->
+    <link href="{{ asset('template_new/plugins/revolution/css/layers.css') }}" rel="stylesheet" type="text/css"><!-- REVOLUTION LAYERS STYLES -->
+    <link href="{{ asset('template_new/plugins/revolution/css/navigation.css') }}" rel="stylesheet" type="text/css"><!-- REVOLUTION NAVIGATION STYLES -->
 
-        <link rel="stylesheet" href="{{ asset('select2/css/select2.css') }}">
-        <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
-    </head>
-    <body style="background: #eaeded;" class="text-uppercase">
-        @section('sidebar')
-            <div id="sidebar" class="sidebar">
-                <a href="#" class="btn boton-cerrar" onclick="ocultar()"><h4>&times;</h4></a>
-                <br>
-                <ul id="accordion" class="accordion">
-                    @foreach ($menus as $item)
-                    <li>
-                        <div class="link"><i class="fa fa-eye" aria-hidden="true"></i>{{ $item['nombre'] }}<i class="fa fa-chevron-down"></i></div>
-                        <ul class="submenu">
-                            @foreach ($item['subs'] as $sub)
-                                <li><a href="{{ route('categoria', ['slug' => mb_strtolower($sub->name), 'value' => base64_encode($sub->id)]) }}">{{ $sub->name }}</a></li>             
-                            @endforeach
-                        </ul>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
+    <link rel="stylesheet" href="{{ asset('template_new/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('template_new/css/responsive.css') }}">
+    
+    <!-- Extras -->
+    <link rel="stylesheet" href="{{ asset('whatsapp/floating-wpp.css') }}">
 
-            <header>
-                <nav class="navbar navbar-expand-lg navbar-dark text-center" style="background-color: #545454">
-                    <a id="abrir" class="abrir-cerrar" href="javascript:void(0)" onclick="mostrar()"><i class="fa fa-bars fa-5x" aria-hidden="true"></i></a>
-                    <a class="navbar-brand" href="{{ route('home') }}" style="width: 150px"
-                        ><img src="{{ asset('img/logo_s_fondo_mrm.png') }}" alt="Motores502" width="75%"
-                    /></a>
-                    
-                    <div class="flex-grow-1">
-                        <form class="form-inline form-group flex-nowrap mx-0 mx-lg-auto rounded p-1" action="{{ route('buscar.personalizada') }}" method="get" role="search" autocomplete="off">
-                            <input
-                                style="width: 90%"
-                                class="form-control mr-sm-2"
-                                type="search"
-                                name="search"
-                                placeholder="Buscar"
-                                aria-label="Search"
-                                id="search"
-                            />
-                            <div id="registros"></div>
-                            <button type="submit" class="btn btn-info">Buscar</button>
-                        </form>
+    <link rel="stylesheet" href="{{ asset('select2/css/select2.css') }}">
+</head>
+<body class="msb-x">
+    <div class="page-wrapper">
+        <div class="preloader"></div>
+
+        <!-- Main Header-->
+        <header class="main-header">
+            
+            <!--Header-Upper-->
+            <div class="header-upper">
+                <div class="container-fluid p-0">
+                    <div class="upper-inner clearfix">
+
+                        <div class="navbar-header">
+                            <div class="mnb">
+                                <a href="javascript:" id="msbo">
+                                    <div id="burger">
+                                        <div class="gliphicon allBar topBar"></div>
+                                        <div class="gliphicon allBar middleBar"></div>
+                                        <div class="gliphicon allBar bottomBar"></div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="logo"><a href="{{ route('home') }}"><img src="{{ asset('template_new/images/logo.png') }}" alt="Motores 502" title="Motores 502"></a></div>
+                        </div>
+
+                        <div class="msb" id="msb">
+                            <div class="side-menu-container">
+                                <ul>
+                                    <li class="panel panel-default">
+                                        <a data-toggle="collapse" href="javascript:">
+                                            <i class="fa fa-list"></i>Categorias<i class="fa fa-close"></i>
+                                        </a>
+                                    </li>
+
+                                    @foreach ($menus as $item)
+                                    <li class="panel panel-default">
+                                        <a data-toggle="collapse" href="{{ '#'.str_replace(" ","-",$item['nombre']) }}">
+                                            <i class="fa fa-car"></i>{{ $item['nombre'] }} <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        <div id="{{ str_replace(" ","-",$item['nombre']) }}" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                <ul class="nav navbar-nav">
+                                                    @foreach ($item['subs'] as $sub)
+                                                        <li><a href="{{ route('categoria', ['slug' => mb_strtolower($sub->name), 'value' => base64_encode($sub->id)]) }}">{{ $sub->name }}</a></li>             
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="contact-on-call">
+                            <ul>
+                                <li><a href="tel:50255792225"><i class="fa fa-phone"></i>+502 5579-2225</a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=50255792225" target="_blank"><i class="fa fa-whatsapp"></i>+502 5579-2225</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="search-box">
+                            <form method="post" action="">
+                                <form class="form-inline form-group flex-nowrap mx-0 mx-lg-auto rounded p-1" action="{{ route('buscar.personalizada') }}" method="get" role="search" autocomplete="off">
+                                    <div class="form-group">
+                                        <input type="search" id="search" name="search-field" value="{{ old('search') }}" placeholder="Buscar..." required>
+                                        <div id="registros"></div>
+                                        <button type="submit"><span class="icon fa fa-search"></span></button>
+                                    </div>
+                                </form>
+                            </form>
+                        </div>
                     </div>
-                </nav>
-            </header>
-        @show
-
-        <div class="container">
-            @yield('content')
-        </div>
-
-        <div id="whatsapp"></div>
-
-        <footer class="site-footer">
-            <div class="container">
-                <div class="row">
-                <div class="col-sm-12 col-md-6">
-                    <h6>About</h6>
-                    <p class="text-justify">Scanfcode.com <i>CODE WANTS TO BE SIMPLE </i> is an initiative  to help the upcoming programmers with the code. Scanfcode focuses on providing the most efficient code or snippets as the code wants to be simple. We will help programmers build up concepts in different programming languages that include C, C++, Java, HTML, CSS, Bootstrap, JavaScript, PHP, Android, SQL and Algorithm.</p>
-                </div>
-
-                <div class="col-xs-6 col-md-3">
-                    <h6>Categories</h6>
-                    <ul class="footer-links">
-                    <li><a href="http://scanfcode.com/category/c-language/">C</a></li>
-                    <li><a href="http://scanfcode.com/category/front-end-development/">UI Design</a></li>
-                    <li><a href="http://scanfcode.com/category/back-end-development/">PHP</a></li>
-                    <li><a href="http://scanfcode.com/category/java-programming-language/">Java</a></li>
-                    <li><a href="http://scanfcode.com/category/android/">Android</a></li>
-                    <li><a href="http://scanfcode.com/category/templates/">Templates</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-xs-6 col-md-3">
-                    <h6>Quick Links</h6>
-                    <ul class="footer-links">
-                    <li><a href="http://scanfcode.com/about/">About Us</a></li>
-                    <li><a href="http://scanfcode.com/contact/">Contact Us</a></li>
-                    <li><a href="http://scanfcode.com/contribute-at-scanfcode/">Contribute</a></li>
-                    <li><a href="http://scanfcode.com/privacy-policy/">Privacy Policy</a></li>
-                    <li><a href="http://scanfcode.com/sitemap/">Sitemap</a></li>
-                    </ul>
-                </div>
-                </div>
-                <hr>
-            </div>
-            <div class="container">
-                <div class="row">
-                <div class="col-md-8 col-sm-6 col-xs-12">
-                    <p class="copyright-text">Copyright &copy; 2017 All Rights Reserved by 
-                <a href="#">Scanfcode</a>.
-                    </p>
-                </div>
-
-                <div class="col-md-4 col-sm-6 col-xs-12">
-                    <ul class="social-icons">
-                    <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-                    <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-                    <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
-                    <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>   
-                    </ul>
-                </div>
                 </div>
             </div>
-        </footer>
-    </body>    
+            <!--End Header Upper-->
+
+            <div class="header-lower">
+                <div class="container-fluid p-0">
+                    <div class="lower-inner">
+                        <!-- Main Menu -->
+                        <nav class="main-menu">
+                            <div class="navbar-header">
+                                <h4><b>Motores 502</b></h4>
+                                <!-- Toggle Button -->
+                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                            </div>
+
+                            <div class="navbar-collapse collapse clearfix">
+                                <ul class="navigation clearfix">
+                                    <li class="current"><a href="{{ route('home') }}">Inicio</a></li>
+                                    <li><a href="about.html">About Us</a></li>
+                                    <li><a href="inventory-grid.html">Recent Tickets</a></li>
+                                    <li><a href="vehicle-compare.html">Compare Vehicle</a></li>
+                                    <li><a href="blog.html">Blog</a></li>
+                                    <li><a href="faq.html">FAQs</a></li>
+                                    <li><a href="contact.html">Contact</a></li>
+                                </ul>
+                            </div>
+                        </nav>
+                        <!-- Main Menu End-->
+                    </div>
+                </div>
+            </div>
+        
+        </header>
+        <!--End Main Header -->
+    </div>
+
+    @yield('content') 
+
+    <div id="whatsapp"></div>
+
+    <!--Scroll to top-->
+    <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon fa fa-angle-up"></span></div>
+
+    <script src="{{ asset('template_new/js/jquery.js') }}"></script> 
+    <script src="{{ asset('template_new/js/bootstrap.min.js') }}"></script>
+    <!--Revolution Slider-->
+    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.revolution.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.tools.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.actions.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.carousel.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.kenburn.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.migration.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.navigation.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
+    <!--End Revolution Slider-->
+    <script src="{{ asset('template_new/js/jquery-ui.js') }}"></script>
+    <script src="{{ asset('template_new/js/jquery.fancybox.pack.js') }}"></script>
+    <script src="{{ asset('template_new/js/jquery.fancybox-media.js') }}"></script>
+    <script src="{{ asset('template_new/js/owl.js') }}"></script>
+    <script src="{{ asset('template_new/js/appear.js') }}"></script>
+    <script src="{{ asset('template_new/js/wow.js') }}"></script>
+    <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
+    <script src="{{ asset('template_new/js/script.js') }}"></script>  
+    <script type="text/javascript" src="{{ asset('whatsapp/jquery-3.3.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
+    <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
+
+</body>     
+
     <script type="text/javascript">
         $(function () {
             $('#whatsapp').floatingWhatsApp({
@@ -148,52 +187,17 @@
                 position: 'right',
                 autoOpenTimeout: 10000,
                 headerColor: '#545454',
-                size: '75px',
+                size: '50px',
                 backgroundColor: '#eaeded'
             });
         });
     </script>   
-    <script>
-        function mostrar() {
-            document.getElementById("sidebar").style.width = "350px";
-            document.getElementById("abrir").style.display = "none";
-            document.getElementById("cerrar").style.display = "inline";
-        }
-
-        function ocultar() {
-            document.getElementById("sidebar").style.width = "0";
-            document.getElementById("abrir").style.display = "inline";
-            document.getElementById("cerrar").style.display = "none";
-        } 
-
-        $(function() {
-            var Accordion = function(el, multiple) {
-            this.el = el || {};
-            this.multiple = multiple || false;
-
-            var links = this.el.find('.link');
-
-            links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
-            }
-
-            Accordion.prototype.dropdown = function(e) {
-            var $el = e.data.el;
-            $this = $(this),
-            $next = $this.next();
-
-            $next.slideToggle();
-            $this.parent().toggleClass('open');
-
-            if (!e.data.multiple) {
-            $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
-            };
-            }
-
-            var accordion = new Accordion($('#accordion'), false);
-        });
-        
+    <script>        
         $(document).ready(function(){
-            $('.js-example-basic-single').select2();
+            $('.js-example-basic-single').select2({
+                theme: "classic",
+                width: 'resolve'
+            });
             $('.js-example-basic-multiple').select2();
             $('#search').keyup(function(){ 
                 var query = $(this).val();

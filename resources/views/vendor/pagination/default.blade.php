@@ -1,10 +1,11 @@
 @if ($paginator->hasPages())
+<div class="styled-pagination text-center">
     <nav>
-        <ul class="pagination">
+        <ul class="clearfix">
             {{-- Previous Page Link --}}
             @if ($paginator->onFirstPage())
                 <li class="disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
-                    <span aria-hidden="true">&lsaquo;</span>
+                    <span class="fa fa-caret-left"></span></a></li>
                 </li>
             @else
                 <li>
@@ -38,9 +39,10 @@
                 </li>
             @else
                 <li class="disabled" aria-disabled="true" aria-label="@lang('pagination.next')">
-                    <span aria-hidden="true">&rsaquo;</span>
+                    <span class="fa fa-caret-right"></span></a></li>
                 </li>
             @endif
         </ul>
     </nav>
+</div>
 @endif
