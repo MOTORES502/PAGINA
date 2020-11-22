@@ -34,6 +34,7 @@ class HomeController extends Controller
         ->where('transports.status', 'DISPONIBLE')
         ->whereNull('transports.deleted_at')
         ->groupByRaw('brands.id')
+        ->groupByRaw('brands.name')
         ->orderByDesc('brands.name')
         ->get();
 
