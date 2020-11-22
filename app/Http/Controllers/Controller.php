@@ -176,6 +176,7 @@ class Controller extends BaseController
         ->groupByRaw('transports.updated_at')
         ->groupByRaw('transports.status')
         ->groupByRaw('models.anio')
+        ->groupByRaw('transports.mileage')
         ->groupByRaw('fuels.name')
         ->limit(200)
         ->paginate(8, ['*'], 'carros');
