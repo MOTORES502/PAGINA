@@ -138,16 +138,7 @@ class Controller extends BaseController
 
     public function categorias_carros()
     {
-        $cantidad_categorias = 8;
-        $sub_categorias = DB::table('sub_categories')
-        ->whereNull('sub_categories.deleted_at')
-        ->inRandomOrder()
-        ->limit($cantidad_categorias)
-        ->pluck('id');
-
-        $carros = DB::table('sub_categories_transports')
-        ->join('sub_categories', 'sub_categories_transports.sub_categories_id', 'sub_categories.id')
-        ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
+        $carros = DB::table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
         ->join('generations', 'generations.id', 'transports.generations_id')
@@ -168,17 +159,9 @@ class Controller extends BaseController
             DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
             DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
         )
-        ->whereIn('sub_categories_transports.sub_categories_id', $sub_categorias)
         ->where('transports.status', 'DISPONIBLE')
         ->whereNull('transports.deleted_at')
         ->orderByDesc('transports.updated_at')
-        ->groupByRaw('transports.code')
-        ->groupByRaw('transports.updated_at')
-        ->groupByRaw('transports.status')
-        ->groupByRaw('models.anio')
-        ->groupByRaw('transports.mileage')
-        ->groupByRaw('fuels.name')
-        ->limit(200)
         ->paginate(8, ['*'], 'carros');
 
         return $carros;
