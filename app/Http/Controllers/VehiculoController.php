@@ -57,6 +57,7 @@ class VehiculoController extends Controller
         ->get();
 
         $sub_categoria = DB::table('sub_categories_transports')->where('transports_id', $vehiculo->id)->whereIn('option', [1,2])->first();
+        dd($sub_categoria);
         $precio = is_null($vehiculo->oferta_sf) ? intval($vehiculo->precio) : intval($vehiculo->oferta_sf);
         $precios_carros = $this->recomendacion($precio, $vehiculo->moneda, $sub_categoria->sub_categories_id, $vehiculo->id);
         $enganche = $this->calcular_enganche($precio, $vehiculo->symbol);
