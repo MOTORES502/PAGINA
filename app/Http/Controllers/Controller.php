@@ -175,6 +175,7 @@ class Controller extends BaseController
         ->inRandomOrder()
         ->groupByRaw('transports.code')
         ->groupByRaw('transports.updated_at')
+        ->groupByRaw('transports.status')
         ->paginate(8, ['*'], 'carros');
 
         return $carros;
