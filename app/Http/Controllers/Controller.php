@@ -172,10 +172,12 @@ class Controller extends BaseController
         ->where('transports.status', 'DISPONIBLE')
         ->whereNull('transports.deleted_at')
         ->orderByDesc('transports.updated_at')
-        ->inRandomOrder()
         ->groupByRaw('transports.code')
         ->groupByRaw('transports.updated_at')
         ->groupByRaw('transports.status')
+        ->groupByRaw('models.anio')
+        ->groupByRaw('fuels.name')
+        ->limit(200)
         ->paginate(8, ['*'], 'carros');
 
         return $carros;
