@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="{{ asset('whatsapp/floating-wpp.css') }}">
 
     <link rel="stylesheet" href="{{ asset('select2/css/select2.css') }}">
+    
 </head>
 <body class="msb-x">
     <div class="page-wrapper">
@@ -89,10 +90,10 @@
                         </div>
 
                         <div class="search-box">
-                            <form method="post" action="">
+                            <form action="{{ route('buscar.personalizada') }}" method="get">
                                 <form class="form-inline form-group flex-nowrap mx-0 mx-lg-auto rounded p-1" action="{{ route('buscar.personalizada') }}" method="get" role="search" autocomplete="off">
                                     <div class="form-group">
-                                        <input type="search" id="search" name="search-field" value="{{ old('search') }}" placeholder="Buscar..." required>
+                                        <input type="search" id="search" name="search" value="{{ old('search') }}" placeholder="Buscar por marca, línea o palabra" required>
                                         <div id="registros"></div>
                                         <button type="submit"><span class="icon fa fa-search"></span></button>
                                     </div>
@@ -123,7 +124,7 @@
                                 <ul class="navigation clearfix">
                                     <li class="current"><a href="{{ route('home') }}">Inicio</a></li>
                                     <li><a href="about.html">About Us</a></li>
-                                    <li><a href="inventory-grid.html">Recent Tickets</a></li>
+                                    <li><a href="{{ route('vehiculos') }}">Vehículos Publicados</a></li>
                                     <li><a href="vehicle-compare.html">Compare Vehicle</a></li>
                                     <li><a href="blog.html">Blog</a></li>
                                     <li><a href="faq.html">FAQs</a></li>
@@ -143,7 +144,7 @@
     @yield('content') 
 
     <div id="whatsapp"></div>
-
+    
     <!--Scroll to top-->
     <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon fa fa-angle-up"></span></div>
 
@@ -173,9 +174,8 @@
     <script type="text/javascript" src="{{ asset('whatsapp/jquery-3.3.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
     <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
-
-</body>     
-
+</body> 
+    @yield('script')    
     <script type="text/javascript">
         $(function () {
             $('#whatsapp').floatingWhatsApp({

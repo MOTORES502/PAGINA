@@ -56,7 +56,7 @@
                 <!--Form Group-->
                 <div class="form-group col-md-4">
                     <select class="custom-select-box">
-                        <option>Generacion</option>
+                        <option>Precio Min</option>
                         <option>Generacion One</option>
                         <option>Generacion Two</option>
                         <option>Generacion Three</option>
@@ -67,7 +67,7 @@
                 <!--Form Group-->
                 <div class="form-group col-md-4">
                     <select class="custom-select-box">
-                        <option>Max.Price</option>
+                        <option>Precio Max</option>
                         <option>Price One</option>
                         <option>Price Two</option>
                         <option>Price Three</option>
@@ -96,24 +96,24 @@
               <h2>Categorias</h2>
           </div>
           <div class="allcategory">
-              <div class="content">
-                  <div class="row clearfix">
+              <div id="categorias_paginas" class="content">
+                <div class="row clearfix">
                     @foreach ($subs as $sub)
-                      <div class="body-block col-md-3 col-sm-4 col-xs-12">
-                          <div class="inner-box">
-                              <a href="{{ route('categoria', ['slug' => mb_strtolower($sub->name), 'value' => base64_encode($sub->id)]) }}" class="link-box">
+                        <div class="body-block col-md-3 col-sm-4 col-xs-12">
+                            <div class="inner-box">
+                                <a href="{{ route('categoria', ['slug' => mb_strtolower($sub->name), 'value' => base64_encode($sub->id)]) }}" class="link-box">
                                 <div class="icon-box">
-                                  <img src="{{ $sub->icon ? $sub->icon : asset('template_new/images/icons/car-icons/1.png') }}" alt="{{ $sub->name }}">
+                                    <img src="{{ $sub->icon ? $sub->icon : asset('template_new/images/icons/car-icons/1.png') }}" alt="{{ $sub->name }}">
                                 </div>
                                 <div class="text">{{ $sub->name }} ({{ $sub->cantidad }})</div>
-                              </a>
-                          </div>
-                      </div>
+                                </a>
+                            </div>
+                        </div>
                     @endforeach
-                  </div>
-                  <!--Styled Pagination-->
-                  {{ $subs->appends(['carros' => $carros->currentPage()])->links() }}
-                  <!--End Styled Pagination-->
+                </div>
+                <!--Styled Pagination-->
+                {{ $subs->appends(['carros' => $carros->currentPage()])->links() }}
+                <!--End Styled Pagination-->      
               </div>
           </div>
       </div>
@@ -136,7 +136,7 @@
                           <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
                             <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
                           </a>
-                          <div class="price">{{ $item->porcentaje }} <span class="percent">%</span></div>
+                          <div class="price">-{{ $item->porcentaje }} <span class="percent">%</span></div>
                       </div>
                       <h3>
                         <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
@@ -177,32 +177,36 @@
         <h2>Entradas Recientes</h2>
       </div>
       <!--End Sec Title-->
-      <div class="row clearfix">
+      <div id="carros_paginas">
         <!--Car Block-->
-        @foreach ($carros as $item)
-          <div class="car-block col-lg-3 col-md-3 col-sm-6 col-xs-12">
-            <div class="inner-box">
-                <div class="image">
-                    <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
-                      <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
-                    </a>
-                    <div class="price">{{ $item->precio }}</div>
+        @foreach($carros->chunk(4) as $bloque)
+          <div class="row clearfix">
+            @foreach ($bloque as $item)
+              <div class="car-block col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="inner-box">
+                    <div class="image">
+                      <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                        <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
+                      </a>
+                      <div class="price">{{ $item->precio }}</div>
+                    </div>
+                    <h3>
+                      <a  href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                        {{ $item->completo }} <br> {{ $item->codigo }}
+                      </a>
+                    </h3>
+                    <div class="lower-box">
+                      <ul class="car-info">
+                          <li><span class="icon fa fa-road"></span>{{ number_format($item->kilometro, 0, '.', ',') }}</li>
+                          <li><span class="icon fa fa-car"></span>{{ $item->combustible }}</li>
+                          <br>
+                          <li><span class="icon fa fa-clock-o"></span>{{ $item->modelo }}</li>
+                        </ul>
+                    </div>
                   </div>
-                  <h3>
-                    <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
-                      {{ $item->completo }} <br> {{ $item->codigo }}
-                    </a>
-                  </h3>
-                  <div class="lower-box">
-                    <ul class="car-info">
-                        <li><span class="icon fa fa-road"></span>{{ number_format($item->kilometro, 0, '.', ',') }}</li>
-                        <li><span class="icon fa fa-car"></span>{{ $item->combustible }}</li>
-                        <br>
-                        <li><span class="icon fa fa-clock-o"></span>{{ $item->modelo }}</li>
-                      </ul>
-                  </div>
-              </div>
-          </div>            
+              </div>            
+            @endforeach
+          </div>
         @endforeach
         
         <!--Styled Pagination-->
@@ -226,9 +230,9 @@
                           <div class="content">
                               <div class="count-outer count-box">
                                   <div class="icon-box"><span class="icon flaticon-transport-1"></span></div>
-                                  <span class="count-text" data-speed="2500" data-stop="1724">0</span>
+                                  <span class="count-text" data-speed="1000" data-stop="{{ $total_carros }}">0</span>
                               </div>
-                              <h4 class="counter-title">Projects Completed</h4>
+                              <h4 class="counter-title">Vehículos Disponibles</h4>
                           </div>
                       </div>
                   </div>
@@ -355,34 +359,6 @@
                 <div class="clients-box">
                     <div class="clearfix">
                       
-                        <!--Client Box-->
-                        <div class="client-box col-md-3 col-sm-6 col-xs-12">
-                            <div class="image">
-                                <a href="javascript:"><img src="images/clients/1.png" alt="" /></a>
-                              </div>
-                          </div>
-                          
-                          <!--Client Box-->
-                        <div class="client-box col-md-3 col-sm-6 col-xs-12">
-                            <div class="image">
-                                <a href="javascript:"><img src="images/clients/2.png" alt="" /></a>
-                              </div>
-                          </div>
-                          
-                          <!--Client Box-->
-                        <div class="client-box col-md-3 col-sm-6 col-xs-12">
-                            <div class="image">
-                                <a href="javascript:"><img src="images/clients/3.png" alt="" /></a>
-                              </div>
-                          </div>
-                          
-                          <!--Client Box-->
-                        <div class="client-box col-md-3 col-sm-6 col-xs-12">
-                            <div class="image">
-                                <a href="javascript:"><img src="images/clients/4.png" alt="" /></a>
-                              </div>
-                          </div>
-                          
                           <!--Client Box-->
                         <div class="client-box col-md-3 col-sm-6 col-xs-12">
                             <div class="image">
@@ -488,7 +464,7 @@
   <!--End News Section-->
 
   <!--Main Footer-->
-  <footer class="main-footer" style="background-image:url({{ asset('template_new/images/background/1.jgpg') }});">
+  <footer class="main-footer" style="background-image:url({{ asset('template_new/images/background/1.jpg') }});">
       <div class="auto-container">
           <!--Widgets Section-->
           <div class="widgets-section">
@@ -602,3 +578,7 @@
   <!--End Main Footer-->
 
 @stop
+
+@section('script')
+  <script type="text/javascript" src="{{ asset('js/paginador.js') }}"></script>
+@endsection

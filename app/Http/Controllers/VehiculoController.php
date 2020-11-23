@@ -2,10 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class VehiculoController extends Controller
 {
+    public function all(Request $request)
+    {
+        //SEO
+        $title = "listado de todos los vehículos publicados en la página";
+        $description = "muestra todos los vehículos que han sido publicados a lo largo de la historia";
+        $keywords = array();
+        $image = asset('img/logo_s_fondo_mrm.png');
+        $url = "/vehiculos/publicados";
+
+        $this->seo($title, $description, $keywords, $url, $image, 'vehículos');
+
+        $data = DB::table('transports')
+        ->join('brands', 'brands.id', 'transports.brands_id')
+        ->join('lines', 'lines.id', 'transports.lines_id')
+        ->join('generations', 'generations.id', 'transports.generations_id')
+        ->join('models', 'models.id', 'transports.models_id')
+        ->join('versions', 'versions.id', 'transports.versions_id')
+        ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->select(
+            'transports.code AS codigo',
+            'transports.status AS estado',
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
+            DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
+            DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
+            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
+            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
+            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+        )
+        ->whereNull('transports.deleted_at')
+        ->orderByDesc('transports.created_at')
+        ->paginate(16);
+
+        $existe = count($data) == 0 ? false : true;
+
+        if ($request->ajax()) {
+            return response()->json(['carro' => view('paginado.carros_buscados', compact('data'))->render()]);
+        }
+
+        return view('vehiculos', compact('data'));
+    }
+
     public function vehiculo($slug, $value)
     {
         $tipos_telefono = DB::table('type_phone')
@@ -57,7 +103,7 @@ class VehiculoController extends Controller
         ->get();
 
         $sub_categoria = DB::table('sub_categories_transports')->where('transports_id', $vehiculo->id)->whereIn('option', [1,2])->first();
-        dd($sub_categoria);
+  
         $precio = is_null($vehiculo->oferta_sf) ? intval($vehiculo->precio) : intval($vehiculo->oferta_sf);
         $precios_carros = $this->recomendacion($precio, $vehiculo->moneda, $sub_categoria->sub_categories_id, $vehiculo->id);
         $enganche = $this->calcular_enganche($precio, $vehiculo->symbol);

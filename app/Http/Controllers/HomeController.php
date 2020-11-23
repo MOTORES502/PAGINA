@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $title = 'Venta de carros usados, motos y más en consignación. Guatemala';
         $description = 'Si tiene motor, te ayudamos a venderlo en consignación. Carros usados y seminuevos en venta.';
@@ -35,12 +36,20 @@ class HomeController extends Controller
         ->whereNull('transports.deleted_at')
         ->groupByRaw('brands.id')
         ->groupByRaw('brands.name')
-        ->orderByDesc('brands.name')
+        ->orderBy('brands.name')
         ->get();
 
-        $ofertas = $this->ofertas();
         $carros = $this->categorias_carros();
+        if ($request->ajax()) {
+            return response()->json(['sub' => view('paginado.categoria', compact('subs', 'carros'))->render(), 'carro' => view('paginado.carro', compact('subs', 'carros'))->render()]);
+        }
 
-        return view('home', compact('ofertas', 'carros', 'subs', 'marcas'));
+        $ofertas = $this->ofertas();
+        $total_carros = DB::table('transports')
+        ->where('transports.status', 'DISPONIBLE')
+        ->whereNull('transports.deleted_at')
+        ->count();
+        
+        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros'));
     }
 }

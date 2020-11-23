@@ -1,12 +1,12 @@
 @if ($paginator->hasPages())
 <div class="styled-pagination text-center">
     <nav>
-        <ul class="clearfix">
+        <ul class="clearfix filtrar-pagina">
             {{-- Previous Page Link --}}
             @if ($paginator->onFirstPage())
-                <li><a href="javascript:" class="disabled" aria-disabled="true" aria-label="@lang('pagination.previous')"><span class="fa fa-caret-left"></span></a></li>
+                <li><a href="{{ $paginator->previousPageUrl() }}"><span class="fa fa-caret-left"></span></a></li>
             @else
-                <li><a href="{{ $paginator->previousPageUrl() }}" rel="prev" aria-label="@lang('pagination.previous')"><span class="fa fa-caret-left"></span></a></li>
+                <li><a href="{{ $paginator->previousPageUrl() }}"><span class="fa fa-caret-left"></span></a></li>
             @endif
 
             {{-- Pagination Elements --}}
@@ -30,9 +30,9 @@
 
             {{-- Next Page Link --}}
             @if ($paginator->hasMorePages())
-                <li><a href="{{ $paginator->nextPageUrl() }}" rel="next" aria-label="@lang('pagination.next')"><span class="fa fa-caret-right"></span></a></li>
+                <li><a href="{{ $paginator->nextPageUrl() }}"><span class="fa fa-caret-right"></span></a></li>
             @else
-                <li><a href="javascript:" class="disabled" aria-disabled="true" aria-label="@lang('pagination.next')"><span class="fa fa-caret-right"></span></a></li>
+                <li><a href="javascript:" class="disabled" aria-disabled="true"><span class="fa fa-caret-right"></span></a></li>
             @endif
         </ul>
     </nav>

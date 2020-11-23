@@ -1,14 +1,12 @@
 @extends('layouts.master')
 
 @section('content')
-<input type="hidden" id="search" value="{{ $search }}">
-@if ($existe)
 <!--Popular Cars Section-->
 <section class="recent-tickets-section">
     <div class="auto-container">
         <!--Sec Title-->
         <div class="sec-title">
-            <h2>{{ $titulo }}</h2>
+            <h2>Vehículos Públicados</h2>
         </div>
 
         <!--End Sec Title-->
@@ -39,8 +37,8 @@
                             <ul class="car-info">
                                 <li><span class="icon fa fa-road"></span>{{ number_format($item->kilometro, 0, '.', ',') }}</li>
                                 <li><span class="icon fa fa-car"></span>{{ $item->combustible }}</li>
-                                <br>
                                 <li><span class="icon fa fa-clock-o"></span>{{ $item->modelo }}</li>
+                                <li><span class="icon fa fa-binoculars"></span><span class="badge badge-secondary">{{ $item->estado }}</span></li>
                             </ul>
                         </div>
                         </div>
@@ -56,25 +54,6 @@
     </div>
 </section>
 <!--End Popular Cars Section-->
-@else
-    <br><br>
-    <div class="row">
-        <div class="col-12">
-            <div class="jumbotron image-no-result">
-                <h1 class="display-4">¡Lo Sentimos!</h1>
-                <p class="lead">En nuestra base de datos no se encuentran {{ $titulo }} registrados.</p>
-                <hr class="my-4">
-                <p>Le invitamos a seguir buscando más información.</p>
-                <p class="lead text-center">
-                    <img src="{{ asset('img/logo_s_fondo_mrm.png') }}" alt="Motores 502">
-                    <br>
-                    <a class="btn btn-info btn-lg" href="{{ route('home') }}" role="button">Regresar a la página de inicio</a>
-                </p>
-            </div>
-        </div>
-    </div>  
-    <br><br>  
-@endif
 @stop
 
 @section('script')
