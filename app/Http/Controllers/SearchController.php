@@ -272,14 +272,7 @@ class SearchController extends Controller
             ->whereNull('generations.deleted_at')
             ->whereNull('models.deleted_at')
             ->whereNull('versions.deleted_at')
-            ->groupBy('transports.code')
-            ->groupBy('transports.status')
-            ->groupBy('models.anio')
-            ->groupBy('fuels.name')
-            ->groupBy('brands.name')
-            ->groupBy('lines.name')
-            ->groupBy('versions.name')
-            ->groupBy('transports.mileage')
+            ->distinct('transports.code')
             ->orderByRaw('RAND()')
             ->paginate(16);
 
