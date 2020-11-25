@@ -9,7 +9,7 @@ class SearchController extends Controller
 {
     public function marca($slug, $value) //existe
     {
-        $buscar = str_replace('-', ' ', $slug);
+        $buscar = str_replace('_', ' ', $slug);
 
         //SEO
         $title = "vehículos por marca $buscar";
@@ -30,20 +30,19 @@ class SearchController extends Controller
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-            DB::RAW('CONCAT("Marcar: ",brands.name) AS marca'),
-            DB::RAW('CONCAT("Linea: ",lines.name," ",versions.name) AS linea'),
-            DB::RAW('CONCAT("Modelo: ",models.anio) AS modelo'),
-            DB::RAW('CONCAT("Kilometraje: ",transports.mileage) AS kilometro'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
             DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
             DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt'),
-            'brands.image AS imagen_marca',
-            'brands.name AS marca_alt'
+            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
         )
         ->where('brands.name', $buscar)
         ->where('transports.status', 'DISPONIBLE')
@@ -53,13 +52,14 @@ class SearchController extends Controller
         ->paginate(16);
 
         $existe = count($data) == 0 ? false : true;
+        $search = '';
 
-        return view('buscar', compact('data', 'existe', 'titulo'));        
+        return view('buscar', compact('data', 'existe', 'titulo', 'search'));        
     }
 
     public function marca_linea($slug, $value) //existe
     {
-        $buscar = str_replace('-', ' ', $slug);
+        $buscar = str_replace('_', ' ', $slug);
 
         //SEO
         $title = "vehículos de la marca y linea $buscar";
@@ -80,37 +80,35 @@ class SearchController extends Controller
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-            DB::RAW('CONCAT("Marcar: ",brands.name) AS marca'),
-            DB::RAW('CONCAT("Linea: ",lines.name," ",versions.name) AS linea'),
-            DB::RAW('CONCAT("Modelo: ",models.anio) AS modelo'),
-            DB::RAW('CONCAT("Kilometraje: ",transports.mileage) AS kilometro'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
             DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
             DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt'),
-            'brands.image AS imagen_marca',
-            'brands.name AS marca_alt'
+            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
         )
         ->where(DB::RAW("TRIM(CONCAT(brands.name,lines.name))"), $quitar_espacios)
         ->where('transports.status', 'DISPONIBLE')
         ->whereNull('transports.deleted_at')
-        ->whereNull('brands.deleted_at')
-        ->whereNull('lines.deleted_at')
         ->orderByRaw('RAND()')
         ->paginate(16);
 
         $existe = count($data) == 0 ? false : true;
+        $search = '';
 
-        return view('buscar', compact('data', 'existe', 'titulo'));    
+        return view('buscar', compact('data', 'existe', 'titulo', 'search'));    
     }
 
     public function marca_modelo($slug, $value) //existe
     {
-        $buscar = str_replace('-', ' ', $slug);
+        $buscar = str_replace('_', ' ', $slug);
 
         //SEO
         $title = "vehículos de la marca y modelo $buscar";
@@ -131,20 +129,19 @@ class SearchController extends Controller
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-            DB::RAW('CONCAT("Marcar: ",brands.name) AS marca'),
-            DB::RAW('CONCAT("Linea: ",lines.name," ",versions.name) AS linea'),
-            DB::RAW('CONCAT("Modelo: ",models.anio) AS modelo'),
-            DB::RAW('CONCAT("Kilometraje: ",transports.mileage) AS kilometro'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
             DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
             DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt'),
-            'brands.image AS imagen_marca',
-            'brands.name AS marca_alt'
+            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
         )
         ->where(DB::RAW("TRIM(CONCAT(brands.name,models.anio))"), $quitar_espacios)
         ->where('transports.status', 'DISPONIBLE')
@@ -155,13 +152,14 @@ class SearchController extends Controller
         ->paginate(16);
 
         $existe = count($data) == 0 ? false : true;
+        $search = '';
 
-        return view('buscar', compact('data', 'existe', 'titulo')); 
+        return view('buscar', compact('data', 'existe', 'titulo', 'search')); 
     }
 
     public function marca_linea_version($slug, $value) //existe
     {
-        $buscar = str_replace('-', ' ', $slug);
+        $buscar = str_replace('_', ' ', $slug);
 
         //SEO
         $title = "vehículos de la versión y modelo $buscar";
@@ -182,26 +180,23 @@ class SearchController extends Controller
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-            DB::RAW('CONCAT("Marcar: ",brands.name) AS marca'),
-            DB::RAW('CONCAT("Linea: ",lines.name," ",versions.name) AS linea'),
-            DB::RAW('CONCAT("Modelo: ",models.anio) AS modelo'),
-            DB::RAW('CONCAT("Kilometraje: ",transports.mileage) AS kilometro'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
             DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
             DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt'),
-            'brands.image AS imagen_marca',
-            'brands.name AS marca_alt'
+            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
         )
         ->where(DB::RAW("TRIM(CONCAT(brands.name,lines.name,versions.name))"), $quitar_espacios)
         ->where('transports.status', 'DISPONIBLE')
         ->whereNull('transports.deleted_at')
-        ->whereNull('models.deleted_at')
-        ->whereNull('versions.deleted_at')
         ->orderByRaw('RAND()')
         ->paginate(16);
 
@@ -213,7 +208,7 @@ class SearchController extends Controller
 
     public function personalizada(Request $request)
     {
-        $buscar = str_replace('-', ' ', $request->get('search'));
+        $buscar = str_replace('_', ' ', $request->get('search'));
 
         //SEO
         $title = "busqueda personalizada $buscar";

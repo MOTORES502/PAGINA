@@ -20,12 +20,13 @@ class AutocompleteController extends Controller
                 'name'
             )
             ->where('name', $query)
-            ->where(DB::RAW('(
-                SELECT COUNT(*) 
-                FROM transports 
-                WHERE transports.brands_id = brands.id 
-                AND transports.deleted_at IS NULL 
-                AND transports.status = "DISPONIBLE")'), '>', 0)
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('transports')
+                    ->whereNull('transports.deleted_at')
+                    ->where('transports.status', "DISPONIBLE")
+                    ->whereRaw('transports.brands_id = brands.id');
+            }) 
             ->whereNotNull('name')
             ->groupBy('name')
             ->groupBy('condicion');
@@ -37,13 +38,14 @@ class AutocompleteController extends Controller
                 DB::RAW("CONCAT(brands.name,' ',lines.name) AS name")
             )
             ->where(DB::RAW("TRIM(CONCAT(brands.name,lines.name))"), 'LIKE', "{$quitar_espacios}%")
-            ->where(DB::RAW('(
-                SELECT COUNT(*) 
-                FROM transports WHERE 
-                transports.brands_id = brands.id 
-                AND transports.lines_id = lines.id 
-                AND transports.deleted_at IS NULL
-                AND transports.status = "DISPONIBLE")'), '>', 0)
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('transports')
+                    ->whereNull('transports.deleted_at')
+                    ->where('transports.status', "DISPONIBLE")
+                    ->whereRaw('transports.lines_id = lines.id')
+                    ->whereRaw('transports.brands_id = brands.id');
+            })            
             ->whereNotNull('brands.name')
             ->whereNotNull('lines.name')
             ->groupBy('name')
@@ -53,24 +55,23 @@ class AutocompleteController extends Controller
             ->join('lines', 'brands.id', 'lines.brands_id')
             ->join('generations', 'lines.id', 'generations.lines_id')
             ->join('models', 'generations.id', 'models.generations_id')
-            ->join('versions', 'models.id', 'versions.models_id')
             ->select(
                 DB::RAW("3 AS condicion"),
                 DB::RAW("CONCAT(brands.name,' ',models.anio) AS name")
             )
             ->where(DB::RAW("TRIM(CONCAT(brands.name,models.anio))"), 'LIKE', "{$quitar_espacios}%")
-            ->where(DB::RAW('(
-                SELECT COUNT(*) 
-                FROM transports 
-                WHERE transports.brands_id = brands.id 
-                AND transports.models_id = models.id 
-                AND transports.deleted_at IS NULL
-                AND transports.status = "DISPONIBLE")'), '>', 0)
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('transports')
+                    ->whereNull('transports.deleted_at')
+                    ->where('transports.status', "DISPONIBLE")
+                    ->whereRaw('transports.brands_id = brands.id')
+                    ->whereRaw('transports.models_id = models.id');
+            }) 
             ->whereNotNull('brands.name')
             ->whereNotNull('lines.name')
             ->whereNotNull('generations.name')
             ->whereNotNull('models.anio')
-            ->whereNotNull('versions.name')
             ->groupBy('name')
             ->groupBy('condicion');
 
@@ -84,18 +85,17 @@ class AutocompleteController extends Controller
                 DB::RAW("CONCAT(brands.name,' ',lines.name,' ',versions.name) AS name")
             )
             ->where(DB::RAW("TRIM(CONCAT(brands.name,lines.name,versions.name))"), 'LIKE', "{$quitar_espacios}%")
-            ->where(DB::RAW('(
-                SELECT COUNT(*) 
-                FROM transports 
-                WHERE transports.brands_id = brands.id 
-                AND transports.lines_id = lines.id 
-                AND transports.versions_id = versions.id 
-                AND transports.deleted_at IS NULL
-                AND transports.status = "DISPONIBLE")'), '>', 0)
+            ->whereExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('transports')
+                    ->whereNull('transports.deleted_at')
+                    ->where('transports.status', "DISPONIBLE")
+                    ->whereRaw('transports.brands_id = brands.id')
+                    ->whereRaw('transports.lines_id = lines.id')
+                    ->whereRaw('transports.versions_id = versions.id');
+            }) 
             ->whereNotNull('brands.name')
             ->whereNotNull('lines.name')
-            ->whereNotNull('generations.name')
-            ->whereNotNull('models.anio')
             ->whereNotNull('versions.name')
             ->unionAll($marca)
             ->unionAll($marca_linea)
@@ -107,7 +107,7 @@ class AutocompleteController extends Controller
             $output = '<div class="dropdown-menu" style="display:block; position:absolute; width: 100%;">';
             $existe = false;
             foreach ($marca_linea_version as $row) {
-                $guiones = str_replace(' ', '-', $row->name);
+                $guiones = str_replace(' ', '_', $row->name);
                 $minusculas = mb_strtolower($guiones);
                 switch ($row->condicion) {
                     case 1:
