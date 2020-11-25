@@ -206,8 +206,9 @@ class SearchController extends Controller
         ->paginate(16);
 
         $existe = count($data) == 0 ? false : true;
+        $search = '';
 
-        return view('buscar', compact('data', 'existe', 'titulo'));
+        return view('buscar', compact('data', 'existe', 'titulo', 'search'));
     }
 
     public function personalizada(Request $request)
