@@ -78,6 +78,7 @@ class VehiculoController extends Controller
             'transports.status AS estado',
             'fuels.name AS fuels',
             'colors.name AS colors',
+            'brands.name AS marca',
             DB::RAW('LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio)) AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name," ",models.anio) AS nombre_completo'),
             DB::RAW('CONCAT(generations.name," Generación (",generations.start," - ",generations.end,")") AS generacion'),
@@ -85,6 +86,7 @@ class VehiculoController extends Controller
             'transports.price_publisher AS precio_sf',
             'coins.id AS moneda',
             'coins.symbol AS symbol',
+            'transports.mileage',
             DB::RAW('substring(transports.code, INSTR(transports.code, "|")+1) AS facebook'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
             DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
@@ -99,13 +101,13 @@ class VehiculoController extends Controller
         $images = DB::table('transports_images')
         ->select('image', 'concat')
         ->where('transports_images.transports_id', $vehiculo->id)
-        ->orderByDesc('order')
+        ->orderByRaw('RAND()')
         ->get();
 
-        $sub_categoria = DB::table('sub_categories_transports')->where('transports_id', $vehiculo->id)->whereIn('option', [1,2])->first();
+        $sub_categoria = DB::table('sub_categories_transports')->where('transports_id', $vehiculo->id)->whereIn('option', [1,2])->pluck('sub_categories_id');
   
         $precio = is_null($vehiculo->oferta_sf) ? intval($vehiculo->precio) : intval($vehiculo->oferta_sf);
-        $precios_carros = $this->recomendacion($precio, $vehiculo->moneda, $sub_categoria->sub_categories_id, $vehiculo->id);
+        $precios_carros = $this->recomendacion($precio, $vehiculo->moneda, $sub_categoria, $vehiculo->id);
         $enganche = $this->calcular_enganche($precio, $vehiculo->symbol);
 
         $general = DB::table('transports_engineers')
@@ -218,25 +220,28 @@ class VehiculoController extends Controller
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-            DB::RAW('CONCAT("Marcar: ",brands.name) AS marca'),
-            DB::RAW('CONCAT("Linea: ",lines.name," ",versions.name) AS linea'),
-            DB::RAW('CONCAT("Modelo: ",models.anio) AS modelo'),
-            DB::RAW('CONCAT("Kilometraje: ",transports.mileage) AS kilometro'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
             DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
             DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
             DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
         )
-        ->where('sub_categories_transports.sub_categories_id', $sub_categories_transports)
+        ->whereIn('sub_categories_transports.sub_categories_id', $sub_categories_transports)
         ->where('coins.id', $moneda_s)
         ->whereBetween(DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))'), [$pmin_s, $pmax_s])
         ->whereNull('transports.deleted_at')
         ->where('transports.id', '!=', $id)
-        ->where('transports.status', 'DISPONIBLE');
+        ->where('transports.status', 'DISPONIBLE')
+        ->orderByRaw('RAND()')
+        ->limit(\rand(1,3));
 
         $todos = DB::table('sub_categories_transports')
         ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
@@ -246,31 +251,32 @@ class VehiculoController extends Controller
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-            DB::RAW('CONCAT("Marcar: ",brands.name) AS marca'),
-            DB::RAW('CONCAT("Linea: ",lines.name," ",versions.name) AS linea'),
-            DB::RAW('CONCAT("Modelo: ",models.anio) AS modelo'),
-            DB::RAW('CONCAT("Kilometraje: ",transports.mileage) AS kilometro'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
             DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
             DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
             DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
         )
-        ->where('sub_categories_transports.sub_categories_id', $sub_categories_transports)
+        ->whereIn('sub_categories_transports.sub_categories_id', $sub_categories_transports)
         ->where('coins.id', $moneda)
         ->whereBetween(DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))'), [$pmin, $pmax])
         ->whereNull('transports.deleted_at')
         ->where('transports.status', 'DISPONIBLE')
         ->where('transports.id', '!=', $id)
-        ->union($dolares)
         ->orderByRaw('RAND()')
-        ->limit(12)
-        ->get();  
+        ->limit(\rand(1,3))
+        ->union($dolares, true)
+        ->orderByRaw('RAND()')
+        ->get();
         
-        
-        return $this->parserCarrusel($todos);
+        return $todos;
     }
 }

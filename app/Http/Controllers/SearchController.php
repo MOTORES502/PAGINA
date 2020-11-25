@@ -273,6 +273,7 @@ class SearchController extends Controller
             ->where('transports.status', 'DISPONIBLE')
             ->whereNull('transports.deleted_at')
             ->whereNull('sub_categories.deleted_at')
+            ->groupByRaw('transports.code')
             ->orderByRaw('RAND()')
             ->paginate(16);
 

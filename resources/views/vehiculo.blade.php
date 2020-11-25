@@ -1,6 +1,374 @@
 @extends('layouts.master')
 
 @section('content')
+    <!--Page Title-->
+    <section class="page-title" style="background-image:url({{ asset('template_new/images/background/1.jpg') }});">
+        <div class="auto-container">
+            <h1>Si tiene motor, te ayudamos a venderlo</h1>
+        </div>
+    </section>
+    <!--End Page Title-->
+
+    <!--Inventory Section-->
+    <section class="inventory-section inventory-single">
+    	<div class="auto-container">
+        	<div class="row clearfix">
+            	
+                <!--Column-->
+            	<div class="column col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                	<!--Inventory Details-->
+                    <div class="inventory-details">
+                    
+                        <!--Product Carousel-->
+                        <div class="product-carousel-outer">
+                            <div class="big-image-outer">
+
+                                <div class="vehicle-details">
+                                    <div class="text-description">
+                                        <h2>{{ $vehiculo->nombre_completo }} <span class="h3"><b>(id: {{ $vehiculo->codigo }})</b></span> </h2>
+                                        <p class="h4">Ubicación:
+                                        @if (count($ubicacion) > 0)
+                                            @foreach ($ubicacion as $item)
+                                                {{ $item->location }} <br>
+                                            @endforeach
+                                        @else
+                                            Haga su cita
+                                        @endif
+                                        </p>
+                                        <hr>  
+                                    </div>  
+                                </div>
+
+                                <!--Product image Carousel-->
+                                <ul class="prod-image-carousel owl-theme owl-carousel">
+                                    @foreach ($images as $key => $item)
+                                        <li>
+                                            <figure class="image">
+                                                <img src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
+                                                <a class="lightbox-image fancy-btn" data-fancybox-group="example-gallery" href="{{ asset('img/encima_motores502.png') }}" title="{{ $item->concat }}" 
+                                                    style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
+                                                    <span class="fa fa-search-plus"></span>
+                                                </a>
+                                            </figure>
+                                        </li>
+                                    @endforeach                                   
+                                    <li><figure class="image"><img src="{{ asset('template_new/images/resource/inventory-image-7.jpg') }}" alt=""><a class="lightbox-image fancy-btn" data-fancybox-group="example-gallery" href="https://www.youtube.com/watch?v=icbp9z1pw40" title="Image Title Here"><span class="fa fa-play"></span></a></figure></li>
+                                </ul>
+                            </div>
+                            
+                            <!--Product Thumbs Carousel-->
+                            <div class="prod-thumbs-carousel owl-theme owl-carousel">
+                                @foreach ($images as $key => $item)
+                                    <div class="thumb-item">
+                                        <figure class="thumb-box">
+                                            <img src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
+                                        </figure>
+                                    </div>
+                                @endforeach                                   
+                                <div class="thumb-item"><figure class="thumb-box"><img src="images/resource/inv-thumb-3.jpg" alt=""><div class="video-icon"><span class="fa fa-play"></span></div></figure></div>
+                            </div>
+                            
+                        </div><!--End Product Carousel-->
+                        
+
+                        <!--Details Panel Box-->
+                        <div class="details-panel-box">
+                        	<div class="panel-header"><div class="panel-btn clearfix"><h4><strong>Características del vehículo</strong> {{ $vehiculo->nombre_completo }} </h4><div class="arrow"><span class="fa fa-angle-down"></span></div></div></div>
+                            <div class="panel-content">
+                            	<div class="content-box">
+                                	<div class="listing-outer clearfix">
+                                    	<div class="list-column">
+                                        	<ul class="list-style-seven">
+                                            	<li class="clearfix"><span class="ttl">Fabricación</span><span class="dtl">{{ $general->fabrications }}</span></li>
+                                                <li class="clearfix"><span class="ttl">Total Kilometres</span><span class="dtl">{{ $vehiculo->mileage }}Km’s</span></li>
+                                                <li class="clearfix"><span class="ttl">Combustible</span><span class="dtl">{{ $vehiculo->fuels }}</span></li>
+                                                <li class="clearfix"><span class="ttl">Estado</span><span class="dtl">{{ $vehiculo->estado }}</span></li>
+                                            </ul>
+                                        </div>
+                                        <div class="list-column">
+                                        	<ul class="list-style-seven">
+                                            	<li class="clearfix"><span class="ttl">Transmisión</span><span class="dtl">{{ $general->transmisions }}</span></li>
+                                                <li class="clearfix"><span class="ttl">Tracción</span><span class="dtl">{{ $general->tractions }}</span></li>
+                                                <li class="clearfix"><span class="ttl">Rendimiento</span><span class="dtl">{{ $general->yields }} kmpl</span></li>
+                                                <li class="clearfix"><span class="ttl">Color</span><span class="dtl">{{ $vehiculo->colors }}</span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--Details Panel Box-->
+                        <div class="details-panel-box tech-details">
+                        	<div class="panel-header"><div class="panel-btn clearfix"><h4><strong>Detalles técnicos</strong> {{ $vehiculo->nombre_completo }} </h4><div class="arrow"><span class="fa fa-angle-down"></span></div></div></div>
+                            <div class="panel-content">
+                            	<div class="content-box tabs-box inventory-tabs clearfix">
+                                	<div class="tab-buttons-outer">
+                                    	<ul class="tab-buttons clearfix">
+                                        	<li class="tab-btn active-btn" data-tab="#tab-one">Ingeniería</li>
+                                            <li class="tab-btn" data-tab="#tab-two">Comfort</li>
+                                            <li class="tab-btn" data-tab="#tab-three">Protección</li>
+                                            <li class="tab-btn" data-tab="#tab-four">Extras</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <!--Tabs Content-->
+                                    <div class="tabs-content">
+                                    	<!--Tab / Active Tab-->
+                                    	<div class="tab active-tab" id="tab-one">
+                                            <div class="listing-outer clearfix">
+                                                <ul class="list-style-eight">
+                                                <li class="clearfix">
+                                                    <span class="ttl">Descripción</span>
+                                                    <span class="dtl">{!! $general->description !!}</span>
+                                                </li>
+                                                </ul>
+                                            </div>
+                                        </div><!--End Tab-->
+                                        <!--Tab-->
+                                    	<div class="tab" id="tab-two">
+                                            <div class="listing-outer clearfix">
+                                                <ul class="list-style-eight">
+                                                <li class="clearfix">
+                                                    <span class="ttl">Descripción</span>
+                                                    <span class="dtl">{!! $comfort->description !!}</span>
+                                                </li>
+                                                </ul>
+                                            </div>
+                                        </div><!--End Tab-->
+                                        <!--Tab-->
+                                    	<div class="tab" id="tab-three">
+                                            <div class="listing-outer clearfix">
+                                                <ul class="list-style-eight">
+                                                <li class="clearfix">
+                                                    <span class="ttl">Descripción</span>
+                                                    <span class="dtl">{!! $seguridad->description !!}</span>
+                                                </li>
+                                                </ul>
+                                            </div>
+                                        </div><!--End Tab-->
+                                        <!--Tab-->
+                                    	<div class="tab" id="tab-four">
+                                            <div class="listing-outer clearfix">
+                                                <ul class="list-style-eight">
+                                                <li class="clearfix">
+                                                    <span class="ttl">Descripción</span>
+                                                    <span class="dtl">{!! $extra->description !!}</span>
+                                                </li>
+                                                </ul>
+                                            </div>
+                                        </div><!--End Tab-->
+                                        
+                                    </div><!--End Tabs Content-->
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--Details Panel Box-->
+                        <div class="details-panel-box extra-features">
+                        	<div class="panel-header"><div class="panel-btn clearfix"><h4><strong>Detalles únicos </strong> {{ $vehiculo->nombre_completo }} </h4><div class="arrow"><span class="fa fa-angle-down"></span></div></div></div>
+                            <div class="panel-content">
+                            	<div class="content-box">
+                                    <div class="listing-outer clearfix">
+                                        @foreach ($diferencia->chunk(3) as $bloque)
+                                            <div class="list-column">
+                                                <ul class="list-style-nine">                                       
+                                            @foreach ($bloque as $item)
+                                                <li>{{ $item->name }}</li>
+                                            @endforeach
+                                                </ul>
+                                            </div>                                           
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!--Offer Box-->
+                        <div class="offer-box">
+                        	<div class="row clearfix">
+                            	<!--Offer Column-->
+                                <div class="offer-column col-md-7 col-sm-12 col-xs-12">
+                                	<div class="inner-box">
+                                    	<h3>Audi A8 3.0 TDI S12 Quattro Tiptronic </h3>
+                                        <div class="subtitle">Special Offer</div>
+                                        <ul class="offer-info">
+                                        	<li><h4>Sales Offer:</h4><div class="clearfix"><span class="pull-left">1.5APR ,Deal Available untill Aug 21</span><span class="pull-right">*2 Years  Free Service</span></div></li>
+                                            <li><h4>Service Offer:</h4><div class="clearfix"><span class="pull-left">Get 50% Discount on Every Service<br>3 Years Warrant for all Products</span><span class="pull-right">* 1 Year Free Service</span></div></li>
+                                            <li><div class="conditions-apply"><a href="javascript:">* Conditions Apply.</a></div></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!--Offer Banner-->
+                                <div class="offer-banner col-md-5 col-sm-6 col-xs-12">
+                                	<div class="inner-box">
+                                    	<figure class="image"><img src="images/resource/inventory-image-10.jpg" alt=""></figure>
+                                        <div class="upper-info">
+                                        	<h3>Audi A4 3.0</h3>
+                                            <div class="text">100% Safety and 0% Emissions</div>
+                                            <div class="link"><a data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#masInformacion" class="theme-btn btn-style-one">Más Información</a></div>
+                                        </div>
+                                        <div class="limit">* Get some special offers now</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <!--Form Column-->
+                <div class="form-column col-lg-4 col-md-4 col-sm-12 col-xs-12">
+
+                    <div class="inventory-single-price sec-title">
+                        <h2>
+                            @if ($vehiculo->oferta )
+                                <del>{{ $vehiculo->precio }}</del>
+                                <br>
+                                {{ $vehiculo->oferta }}
+                            @else
+                                {{ $vehiculo->precio }}
+                            @endif
+                                                                        
+                            <span class="pull-right">
+                                <img width="50px" src="{{ $vehiculo->imagen_marca }}" alt="{{ $vehiculo->marca }}">
+                            </span>
+                        </h2>
+                    </div>
+
+                    <!--Schedule Test Drive Form-->
+                    <div class="schedule-drive-outer">
+                        <div class="form-outer">
+                            <div class="form-header">
+                                <h2>Formulario para prueba de manejo</h2>
+                                <div class="vehicle-model">{{ $vehiculo->nombre_completo }}</div>
+                            </div>
+                            <div class="form-box">
+                                <!--Cars Form-->
+                                <div class="cars-form">
+                                    <form method="post" action="">
+                                        <div class="row clearfix">
+                                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                                <label>Name</label>
+                                                <div class="field-inner">
+                                                    <input type="text" name="field-name" value="" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                                <label>Email</label>
+                                                <div class="field-inner">
+                                                    <input type="email" name="field-name" value="" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                                <label>Phone</label>
+                                                <div class="field-inner">
+                                                    <input type="text" name="field-name" value="" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                                <label>Date &amp; Time</label>
+                                                <div class="field-inner">
+                                                    <span class="fa fa-clock-o"></span>
+                                                    <input class="date-time-picker" type="text" name="field-name" value="" placeholder="">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                <button class="theme-btn btn-style-one">Request Now</button>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- oan calculator widget-->
+                    <div class="loan-cal-widget">
+                        <div class="inner">
+                            <h3>Cotizador</h3>
+                            <div class="form-box">
+                                <!--Cars Form-->
+                                <div class="cars-form">
+                                    
+                                        <div class="form-group">
+                                            <label>Enganche</label>
+                                            <input type="text" name="inputEnganche_d" id="inputEnganche_d" value="{{ $enganche }}" placeholder="50000">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Cuotas</label>
+                                            <select class="custom-select-box" name="mes_c_d" id="mes_c_d">
+                                                <option id="mes0" value="24">24</option>
+                                                <option id="mes1" value="36">36</option>
+                                                <option id="mes2" value="48">48</option>
+                                                <option id="mes3" value="60" selected>60</option>
+                                            </select>
+                                        </div>
+
+                                        <h2>
+                                            <div class="text-center" id="cuotasDesdeResult_d"></div>
+                                        </h2>
+
+                                        <div class="form-group">
+                                            <button class="theme-btn btn-style-one" id="calcular"  onclick="{{ "javascript:calcularCuotas_d('$vehiculo->symbol',$precio);" }}">Calcular</button>
+                                        </div>
+                              
+                                    <div id="o_trace_d"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Single inventory Recommendation-->
+                    <div class="recent-tickets-section inventory-single-recommendation">
+
+                        <div class="inventory-single-price sec-title">
+                            <h2>Recomendaciones</h2>
+                        </div>
+
+                        <div class="row clearfix">
+                            <!--Car Block-->
+                            @foreach ($precios_carros->take(3) as $item)
+                 
+                            <div class="car-block col-sm-12">
+                                <div class="inner-box">
+                                    <div class="image">
+                                    <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                                        <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
+                                    </a>
+                                    <div class="price">{{ $item->precio }}</div>
+                                    </div>
+                                    <h3>
+                                    <a  href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                                        {{ $item->completo }} <br> {{ $item->codigo }}
+                                    </a>
+                                    </h3>
+                                    <div class="lower-box">
+                                    <ul class="car-info">
+                                        <li><span class="icon fa fa-road"></span>{{ number_format($item->kilometro, 0, '.', ',') }}</li>
+                                        <li><span class="icon fa fa-car"></span>{{ $item->combustible }}</li>
+                                        <br>
+                                        <li><span class="icon fa fa-clock-o"></span>{{ $item->modelo }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>                                    
+                            @endforeach
+                            <!--Car Block-->
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--End Inventory Section-->
+
+
     <div class="row">
         <div class="col-sm-12 col-md-12 col-lg-12">
             <br><br>
@@ -40,82 +408,10 @@
                 </div>
             @endif 
         </div>
-        <div class="col-sm-12 col-md-10 col-lg-10" style="color: #808080;">
-            <p><strong style="font-size: 4vw;">{{ $vehiculo->nombre_completo }} |</strong><span style="font-size: 2vw;">|  {{ $vehiculo->generacion }}</span></p>
-        </div>
-        <div class="col-sm-12 col-md-2 col-lg-2">
-            <img class="img-fluid" width="100%" style="margin:auto; display:block;" alt="{{ $vehiculo->nombre_completo }}" src="{{ $vehiculo->imagen_marca }}" />
-        </div>
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            <hr style="height: 10px; width: 80%; background-color:#343a40;">
-        </div>
     </div>
     <div class="row" style="background-color: #d0d0d0;"> 
-        <div class="col-sm-12 col-md-6 col-lg-6">
-            <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12">
-                    <p style="color: #808080;"><strong style="font-size: 2vw;">id: </strong><span style="font-size: 3vw;">{{ $vehiculo->codigo }}</span></p>
-                </div>      
-                <div class="col-sm-12 col-md-12 col-lg-12">
-                    <div class="row" data-toggle="modal" data-target="#exampleModal">
-                        @foreach ($images as $key => $item)
-                        <div class="col-sm-12 col-md-3 col-lg-3 p-0">
-                            <img class="w-100" src="{{ asset('img/encima_motores502.png') }}" width="100px" height="100px" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" data-target="#vehiculo_especifico" data-slide-to="{{ $key }}">
-                        </div>
-                        @endforeach
-                    </div>
-                </div>   
-            </div>
-        </div>
         <div class="col-sm-12 col-md-6 col-lg-6 fondo-motores">
             <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12"><br><br></div>
-                <div class="col-ms-12 col-md-4 col-lg-4" style="font-size: 4em;">Valor</div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-right">
-                    @if ($vehiculo->oferta )
-                        <h3><del>{{ $vehiculo->precio }}</del></h3>
-                        <h1>{{ $vehiculo->oferta }}</h1>
-                    @else
-                        <h1>{{ $vehiculo->precio }}</h1>
-                    @endif
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-12 text-center">
-                    <hr>
-                    <h2>COTIZADOR</h2>
-                </div>
-                <div class="col-ms-12 col-md-4 col-lg-4 text-right">
-                    <h3>ENGANCHE</h3>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-left">
-                    <input type="text" name="inputEnganche_d" id="inputEnganche_d" value="{{ $enganche }}" disabled>
-                </div>
-                <div class="col-ms-12 col-md-4 col-lg-4 text-right">
-                    <h3>CUOTAS</h3>
-                </div>
-                <div class="col-ms-12 col-md-4 col-lg-4 text-left">
-                    <select name="mes_c_d" id="mes_c_d" style="width: 100%">
-                        <option id="mes0" value="24">24</option>
-						<option id="mes1" value="36">36</option>
-						<option id="mes2" value="48">48</option>
-						<option id="mes3" value="60" selected>60</option>
-                    </select>
-                </div>
-                <div class="col-ms-12 col-md-4 col-lg-4 text-right">
-                    <div id="cuotasDesdeResult_d" style="font-family:'Montserrat-Medium'; color:black; background:transparent; font-size:2.4em;"></div>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-center">
-                    <button class="btn btn-info" id="calcular" onclick="{{ "javascript:calcularCuotas_d('$vehiculo->symbol',$precio);" }}">CALCULAR</button>
-                    <br>
-                    <br>
-                </div>
-                <div class="col-ms-12 col-md-4 col-lg-4 text-right" style="color: black;"></div>
-                <div class="col-sm-12 col-md-8 col-lg-8 text-right">
-                    <h3>CUOTA:</h3>
-                </div>
-                <div class="col-ms-12 col-md-4 col-lg-4 text-right">
-                    <button class="btn btn-sm btn-info" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#masInformacion">MÁS INFORMACIÓN</button>
-                </div>
-                <div class="col-sm-12 col-md-12 col-lg-12 text-right" id="o_trace_d"></div>
                 <div class="col-sm-12 col-md-12 col-lg-12 text-right">
                     <br><br>
                     <a 
@@ -149,137 +445,6 @@
             </div>
         </div>
     </div>
-    <div class="row" style="background-color: #d0d0d0; color: #808080;">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            <br><br>
-            <span style="font-size:2vw;"><strong> Ubicación: </strong>
-                @if (count($ubicacion) > 0)
-                    @foreach ($ubicacion as $item)
-                        {{ $item->location }} <br>
-                    @endforeach
-                @else
-                    Haga su cita
-                @endif
-            </span>
-            <br><br>
-        </div>
-    </div>
-    <div class="row" style="background-color: #d0d0d0;">
-        <div class="col-sm-12 col-md-3 col-lg-3">
-            <h3 class="text-center"><strong>Generales</strong></h3>
-            <p>
-                {!! $general->description !!}<br>
-                Combustible: {{ $vehiculo->fuels }}<br>
-                Tracción: {{ $general->tractions }}<br>
-                Transmisión: {{ $general->transmisions }}<br>
-                Rendimiento: {{ $general->yields }}<br>
-                Fabiración: {{ $general->fabrications }}<br>
-                Color: {{ $vehiculo->colors }}
-            </p>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3">
-            <h3 class="text-center"><strong>Comfort</strong></h3>
-            <p>
-                {!! $comfort->description !!}
-            </p>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3">
-            <h3 class="text-center"><strong>Protección</strong></h3>
-            <p>
-                {!! $seguridad->description !!}
-            </p>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3">
-            <h3 class="text-center"><strong>Extras</strong></h3>
-            <p>
-                @foreach ($diferencia as $item)
-                    {{ $item->name }} <br>
-                @endforeach
-                {!! $extra->description !!}
-            </p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            <hr style="height: 10px; width: 80%; background-color:#343a40;">
-        </div>
-    </div>
-    <div class="row">
-      <div class="col-6"><h3 class="mb-3" style="color: #808080;"><strong>Recomendaciones</strong></h3></div>
-      @if (count($precios_carros) > 1)
-      <div class="col-6 text-right">
-        <a class="btn btn-primary mb-3 mr-1" href="#carrusel_categoria" role="button" data-slide="prev">Atrás</a>
-        <a class="btn btn-primary mb-3" href="#carrusel_categoria" role="button" data-slide="next">Siguiente</a>
-      </div>          
-      @endif
-      <div class="col-sm-12 col-md-12 col-lg-12">
-        <div id="carrusel_categoria" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-            @foreach ($precios_carros as $carrusel)
-              <div class="{{ $carrusel['numero'] == 0 ? "carousel-item active" : "carousel-item" }}">
-                <div class="row">
-                  @foreach ($carrusel['vehiculos'] as $vehiculo)
-                  <div class="col-md-3 mb-3">
-                    <div class="card box">
-                        @if ($vehiculo->estado != 'DISPONIBLE')
-                            <div class="ribbon ribbon-top-left"><span>{{ $vehiculo->estado }}</span></div>
-                        @endif
-                        <a href="{{ route('vehiculo', ['slug' => $vehiculo->slug, 'value' => base64_encode($vehiculo->codigo)]) }}">
-                        <img class="img-fluid" alt="{{ $vehiculo->alt }}" src="{{ asset('img/encima_motores502.png') }}" style="background-blend-mode: normal; background-image: url({{ $vehiculo->image }}); background-size: 100% 100%; background-repeat: no-repeat;" />
-                        </a>
-                        <div class="card-body">
-                            <h4 class="card-title">{{ $vehiculo->codigo }}</h4>
-                            <p class="card-text">
-                                <ul>
-                                    <li>{{ $vehiculo->marca }}</li>
-                                    <li>{{ $vehiculo->linea }}</li>
-                                    <li>{{ $vehiculo->modelo }}</li>
-                                    <li>{{ $vehiculo->kilometro }}</li>
-                                    <li>{{ $vehiculo->oferta ? $vehiculo->oferta : $vehiculo->precio }}</li>
-                                </ul>
-                            </p>
-                        </div>
-                    </div>
-                  </div>                      
-                  @endforeach
-                </div>
-              </div>
-            @endforeach
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="modal" id="exampleModal" tabindex="-1" role="dialog" aria-hidden="true">
-        <button type="button" class="close m-0 p-3 text-white position-absolute right-0" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div id="vehiculo_especifico" class="carousel slide carousel-fade" data-ride="carousel">
-                        <div class="carousel-inner" role="listbox">
-                        @foreach ($images as $key => $item)
-                        <div class="{{ $key == 0 ? 'carousel-item active' : 'carousel-item' }}">
-                            <img class="d-block w-100" src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
-                        </div>
-                        @endforeach
-                        </div>
-                    </div>
-                    <a class="carousel-control-prev" href="#vehiculo_especifico" role="button" data-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Previous</span>
-                    </a>
-                    <a class="carousel-control-next" href="#vehiculo_especifico" role="button" data-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="sr-only">Next</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <div class="modal fade" id="masInformacion" tabindex="-2" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">

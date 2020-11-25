@@ -19,6 +19,7 @@
     <link href="{{ asset('template_new/plugins/revolution/css/layers.css') }}" rel="stylesheet" type="text/css"><!-- REVOLUTION LAYERS STYLES -->
     <link href="{{ asset('template_new/plugins/revolution/css/navigation.css') }}" rel="stylesheet" type="text/css"><!-- REVOLUTION NAVIGATION STYLES -->
 
+    <link rel="stylesheet" href="{{ asset('template_new/css/jquery.datetimepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('template_new/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('template_new/css/responsive.css') }}">
     
@@ -162,6 +163,7 @@
     <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
     <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
     <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
+    <script src="{{ asset('template_new/js/jquery.datetimepicker.js') }}"></script>
     <!--End Revolution Slider-->
     <script src="{{ asset('template_new/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('template_new/js/jquery.fancybox.pack.js') }}"></script>
