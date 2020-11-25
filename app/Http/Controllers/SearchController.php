@@ -279,6 +279,7 @@ class SearchController extends Controller
             ->groupBy('brands.name')
             ->groupBy('lines.name')
             ->groupBy('versions.name')
+            ->groupBy('transports.mileage')
             ->orderByRaw('RAND()')
             ->paginate(16);
 
