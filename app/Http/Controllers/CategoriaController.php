@@ -32,7 +32,7 @@ class CategoriaController extends Controller
         ->where('sub_categories_transports.sub_categories_id', base64_decode($value))
         ->whereNull('transports.deleted_at')
         ->whereNull('brands.deleted_at')
-        ->groupByRaw('brands.id, brands.name')
+        ->distinct('brands.id')
         ->orderBy('brands.name')
         ->get();
 
@@ -44,8 +44,7 @@ class CategoriaController extends Controller
                             ->where('id', $marca->id)
                             ->first();
 
-            $data['carros'] = DB::connection('mysql')->table('sub_categories_transports')
-            ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
+            $data['carros'] = DB::connection('mysql')->table('transports')
             ->join('brands', 'brands.id', 'transports.brands_id')
             ->join('lines', 'lines.id', 'transports.lines_id')
             ->join('generations', 'generations.id', 'transports.generations_id')
@@ -69,11 +68,10 @@ class CategoriaController extends Controller
                 DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
                 DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
             )
-            ->where('sub_categories_transports.sub_categories_id', base64_decode($value))
             ->where('brands.id', $marca->id)
             ->whereNull('transports.deleted_at')
+            ->where('transports.status', 'DISPONIBLE')
             ->whereNull('brands.deleted_at')
-            ->limit(15)
             ->get();        
             
             array_push($array, $data);
