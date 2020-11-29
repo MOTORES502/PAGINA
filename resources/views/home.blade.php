@@ -96,7 +96,7 @@
                         @foreach ($subs as $sub)
                             <div class="body-block col-md-3 col-sm-4 col-xs-12">
                                 <div class="inner-box">
-                                    <a href="{{ route('categoria', ['slug' => str_replace('_', ' ', mb_strtolower($sub->name)), 'value' => base64_encode($sub->id)]) }}" class="link-box">
+                                    <a href="{{ route('categoria', ['slug' => str_replace(' ', '_', mb_strtolower($sub->name)), 'value' => base64_encode($sub->id)]) }}" class="link-box">
                                     <div class="icon-box">
                                         <img src="{{ $sub->icon ? $sub->icon : asset('template_new/images/icons/car-icons/1.png') }}" alt="{{ $sub->name }}">
                                     </div>

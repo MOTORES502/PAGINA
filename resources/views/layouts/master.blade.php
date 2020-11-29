@@ -72,7 +72,7 @@
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
                                                     @foreach ($item['subs'] as $sub)
-                                                        <li><a href="{{ route('categoria', ['slug' => str_replace('_', ' ', mb_strtolower($sub->name)), 'value' => base64_encode($sub->id)]) }}">{{ $sub->name }}</a></li>             
+                                                        <li><a href="{{ route('categoria', ['slug' => str_replace(' ', '_', mb_strtolower($sub->name)), 'value' => base64_encode($sub->id)]) }}">{{ $sub->name }}</a></li>             
                                                     @endforeach
                                                 </ul>
                                             </div>
