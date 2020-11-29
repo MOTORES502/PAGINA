@@ -373,7 +373,6 @@
 		});
 	}
 	
-	
 	//Contact Form Validation
 	if($('#contact-form').length){
 		$('#contact-form').validate({
@@ -393,6 +392,34 @@
 				}
 			}
 		});
+	}
+
+
+	//Mas Informacion Form Validation
+	if ($('#mas-informacion-form').length) {
+	    $('#mas-informacion-form').validate({
+	        rules: {
+	            names: {
+	                required: true
+	            },
+	            surnames: {
+	                required: true
+	            },
+	            email: {
+	                required: true,
+					email:true
+	            },
+	            type_phone_id: {
+	                required: true
+	            },
+	            number: {
+	                required: true
+	            },
+	            channel_id: {
+	                required: true
+	            }
+	        }
+	    });
 	}
 	
 	

@@ -2,12 +2,15 @@
 
 namespace App\Providers;
 
+use App\Traits\informacion;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    use informacion;
+
     /**
      * Register any application services.
      *
@@ -41,7 +44,13 @@ class AppServiceProvider extends ServiceProvider
                 }
             }
 
-            $view->with('menus', $menus);
+            $view->with(
+                [
+                    'menus' => $menus,
+                    'horario' => $this->horario_atencion(),
+                    'canales' => $this->canales()
+                ]
+            );
         });
     }
 }

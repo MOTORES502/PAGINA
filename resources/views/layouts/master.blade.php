@@ -129,7 +129,7 @@
                                     <li><a href="vehicle-compare.html">Compare Vehicle</a></li>
                                     <li><a href="{{ route('blog.index') }}">Blog</a></li>
                                     <li><a href="faq.html">FAQs</a></li>
-                                    <li><a href="contact.html">Contact</a></li>
+                                    <li><a href="{{ route('contacto.index') }}">Contacto</a></li>
                                 </ul>
                             </div>
                         </nav>
@@ -240,11 +240,11 @@
                                             <li><span class="icon flaticon-web"></span>Supportteam@motores502.com</li>
                                         </ul>
                                     </div>
-                                    <h2>Follow Us</h2>
+                                    <h2>Siguenos</h2>
                                     <ul class="social-icon-four">
-                                        <li><a href="javascript:"><span class="fa fa-facebook"></span></a></li>
-                                        <li><a href="javascript:"><span class="fa fa-twitter"></span></a></li>
-                                        <li><a href="javascript:"><span class="fa fa-youtube-play"></span></a></li>
+                                        @foreach ($canales as $item)
+                                            <li><a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer"><span class="{{ $item['icon'] }}"></span></a></li>
+                                        @endforeach                                        
                                     </ul>
                                 </div>
                             </div>
@@ -255,15 +255,11 @@
                                     <div class="column">
                                         <div class="hours-block">
                                             <div class="inner-box p-0">
-                                                <h2>Working Hours</h2>
+                                                <h2>Horario de atención en instalaciones</h2>
                                                 <ul>
-                                                    <li class="clearfix">Monday<span>9am - 8pm</span></li>
-                                                    <li class="clearfix">Tuesday<span>9am - 6pm</span></li>
-                                                    <li class="clearfix">Wednesday<span>10am - 8pm</span></li>
-                                                    <li class="clearfix">Thursday<span>9am - 8pm</span></li>
-                                                    <li class="clearfix">Friday<span>9am - 6pm</span></li>
-                                                    <li class="clearfix">Saturday<span>10am - 2pm</span></li>
-                                                    <li class="clearfix">Sunday<span class="closed">Close</span></li>
+                                                    @foreach ($horario as $item)
+                                                        <li class="clearfix">{{ $item['dia'] }}<span class="{{ $item['abierto'] ? '' : 'closed' }}">{{ $item['hora'] }}</span></li>
+                                                    @endforeach
                                                 </ul>
                                             </div>
                                         </div>
@@ -282,7 +278,7 @@
             <div class="auto-container">
                 <div class="row clearfix">
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <div class="copyright">Copyrights © 2020 All Rights Reserved by Motores502.</div>
+                        <div class="copyright">Copyrights © 2020 Todos los derechos reservados de Motores502.</div>
                     </div>
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <ul class="footer-nav">
@@ -323,6 +319,7 @@
     <script src="{{ asset('template_new/js/appear.js') }}"></script>
     <script src="{{ asset('template_new/js/wow.js') }}"></script>
     <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
+    <script src="{{ asset('template_new/js/validate.js') }}"></script>
     <script src="{{ asset('template_new/js/script.js') }}"></script>  
     <script type="text/javascript" src="{{ asset('whatsapp/jquery-3.3.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>

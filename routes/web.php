@@ -35,3 +35,7 @@ Route::name('blog.seleccionado')->get('blog/{slug}/{value}', 'BlogController@sel
 
 Route::name('lineas')->get('lineas/{marca}', 'LineaController@lineas');
 
+Route::name('contacto.index')->get('contacto', 'ContactoController@index');
+
+Route::name('comparar.index')->get('comparar', 'CompararController@comparar');
+

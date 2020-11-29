@@ -382,7 +382,7 @@
                 </div>
                 <div class="modal-body" style="background: #eaeded; color: #595758;">
                     <div class="cars-form">
-                        <form action="{{ route('cotizar.store') }}" role="form" method="post" autocomplete="off">
+                        <form action="{{ route('cotizar.store') }}" role="form" method="post" autocomplete="off" id="mas-informacion-form">
                             @csrf
                             <input type="hidden" name="transports_id" value="{{ $id }}">
                             <div class="row clearfix">
