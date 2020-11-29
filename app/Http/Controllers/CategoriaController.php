@@ -8,6 +8,7 @@ class CategoriaController extends Controller
 {
     public function categoria($slug, $value)
     {
+        $slug = str_replace('_', ' ', $slug);
         $title = "categoría de vehículos $slug";
         $description = "todos los vehículos de la categoria $slug";
         $keywords = array();
