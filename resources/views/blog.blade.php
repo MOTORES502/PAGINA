@@ -12,8 +12,9 @@
     <!--News Page Section-->
     <section class="news-page-section" id="blogs_index">
     	<div class="auto-container">
-            <div class="row clearfix">
-                @foreach ($data as $item)
+            @foreach($data->chunk(3) as $bloque)
+                <div class="row clearfix">
+                @foreach ($bloque as $item)
                     <!--News Block-->
                     <div class="news-block col-lg-4 col-md-6 col-sm-6 col-xs-12">
                         <div class="inner-box">
@@ -31,8 +32,9 @@
                             </div>
                         </div>
                     </div>   
-                @endforeach             
-            </div>
+                @endforeach  
+                </div>           
+            @endforeach 
         </div>
             
         <!--Styled Pagination-->
