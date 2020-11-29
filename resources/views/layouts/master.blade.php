@@ -26,6 +26,7 @@
     
     <!-- Extras -->
     <link rel="stylesheet" href="{{ asset('whatsapp/floating-wpp.css') }}">
+    <link rel="stylesheet" href="{{ asset('select2/css/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/intlTelInput.css') }}">    
 </head>
 <body class="msb-x">
@@ -322,6 +323,7 @@
     <script src="{{ asset('template_new/js/script.js') }}"></script>  
     <script type="text/javascript" src="{{ asset('whatsapp/jquery-3.3.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
+    <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/buscar_lineas.js') }}"></script>
 </body> 
     @yield('script')    
@@ -342,6 +344,14 @@
     </script>   
     <script>        
         $(document).ready(function(){
+            $('.js-example-basic-single').select2({
+                theme: "classic",
+                width: 'resolve'
+            });
+            $('.js-example-basic-multiple').select2({
+                theme: "classic",
+                width: 'resolve'
+            });
             $('#search').keyup(function(){ 
                 var query = $(this).val();
                 $('#registros').fadeOut(); 
