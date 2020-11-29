@@ -8,6 +8,7 @@
     {!! Twitter::generate() !!}
     {!! JsonLd::generate() !!}
     <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <!-- Responsive -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,9 +26,8 @@
     
     <!-- Extras -->
     <link rel="stylesheet" href="{{ asset('whatsapp/floating-wpp.css') }}">
-
     <link rel="stylesheet" href="{{ asset('select2/css/select2.css') }}">
-    
+    <link rel="stylesheet" href="{{ asset('assets/css/intlTelInput.css') }}">    
 </head>
 <body class="msb-x">
     <div class="page-wrapper">
@@ -127,7 +127,7 @@
                                     <li><a href="about.html">About Us</a></li>
                                     <li><a href="{{ route('vehiculos') }}">Vehículos Publicados</a></li>
                                     <li><a href="vehicle-compare.html">Compare Vehicle</a></li>
-                                    <li><a href="blog.html">Blog</a></li>
+                                    <li><a href="{{ route('blog.index') }}">Blog</a></li>
                                     <li><a href="faq.html">FAQs</a></li>
                                     <li><a href="contact.html">Contact</a></li>
                                 </ul>
@@ -142,7 +142,158 @@
         <!--End Main Header -->
     </div>
 
+    @if (count($errors) > 0)
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="fa fa-ban"></i> ¡Error!</h5>
+            <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+            </ul>
+        </div> 
+    @elseif(Session::has('success'))
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="fa fa-check"></i> ¡Éxito!</h5>
+            {{Session::get('success')}}
+        </div>
+    @elseif(Session::has('warning'))
+        <div class="alert alert-warning alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="fa fa-exclamation-triangle"></i> ¡Advertencia!</h5>
+            {{Session::get('warning')}}
+        </div>
+    @elseif(Session::has('danger'))
+        <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="fa fa-exclamation-triangle"></i> ¡Error!</h5>
+            {{Session::get('danger')}}
+        </div>
+    @elseif(Session::has('info'))
+        <div class="alert alert-info alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="fa fa-info"></i> ¡Información!</h5>
+            {{Session::get('info')}}
+        </div>
+    @endif 
+
     @yield('content') 
+
+
+    <!--Main Footer-->
+    <footer class="main-footer" style="background-image:url({{ asset('template_new/images/background/1.jpg') }});">
+        <div class="auto-container">
+            <!--Widgets Section-->
+            <div class="widgets-section">
+                <div class="row clearfix">
+
+                    <!--big column-->
+                    <div class="big-column col-md-6 col-sm-12 col-xs-12">
+                        <div class="row clearfix">
+
+                            <!--Footer Column-->
+                            <div class="footer-column col-md-6 col-sm-6 col-xs-12">
+                                <div class="footer-widget about-widget">
+                                    <h2>About Us</h2>
+                                    <div class="text">
+                                        <p>Must explain to how all this mistaken idea of denouncing pleasure & praising pain was born and system.</p>
+                                        <p>There anyone who loves or pursues or desires to obtain pain  itself, because it is pain, but because occasionally occur in whichgreat pleasure. </p>
+                                    </div>
+                                    <a href="about.html" class="theme-btn btn-style-three">Read More</a>
+                                </div>
+                            </div>
+
+                            <!--Footer Column-->
+                            <div class="footer-column col-md-6 col-sm-6 col-xs-12">
+                                <div class="footer-widget links-widget">
+                                    <h2>Usefull Links</h2>
+                                    <div class="widget-content">
+                                        <ul class="footer-links">
+                                            <li><a href="about.html">About Us</a></li>
+
+                                            <li><a href="inventory-grid.html">Recent Tickets</a></li>
+                                            <li><a href="vehicle-compare.html">Compare Cars</a></li>
+                                            <li><a href="blog.html">Blog</a></li>
+                                            <li><a href="faq.html">FAQs</a></li>
+                                            <li><a href="contact.html">Contact</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!--big column-->
+                    <div class="big-column col-md-6 col-sm-12 col-xs-12">
+                        <div class="row clearfix">
+                            <!--Footer Column-->
+                            <div class="footer-column col-md-6 col-sm-6 col-xs-12">
+                                <div class="footer-widget links-widget">
+                                    <h2>Contact Details</h2>
+                                    <div class="widget-content">
+                                        <ul class="list-style-one">
+                                            <li><span class="icon flaticon-maps-and-flags"></span>motores502, Newyork 10012, USA</li>
+                                            <li><span class="icon flaticon-telephone"></span>Phone: +92 123 456789</li>
+                                            <li><span class="icon flaticon-fax"></span>Fax: +92 123 456789</li>
+                                            <li><span class="icon flaticon-web"></span>Supportteam@motores502.com</li>
+                                        </ul>
+                                    </div>
+                                    <h2>Follow Us</h2>
+                                    <ul class="social-icon-four">
+                                        <li><a href="javascript:"><span class="fa fa-facebook"></span></a></li>
+                                        <li><a href="javascript:"><span class="fa fa-twitter"></span></a></li>
+                                        <li><a href="javascript:"><span class="fa fa-youtube-play"></span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!--Footer Column-->
+                            <div class="footer-column col-md-6 col-sm-6 col-xs-12">
+                                <div class="footer-widget offer-widget">
+                                    <div class="column">
+                                        <div class="hours-block">
+                                            <div class="inner-box p-0">
+                                                <h2>Working Hours</h2>
+                                                <ul>
+                                                    <li class="clearfix">Monday<span>9am - 8pm</span></li>
+                                                    <li class="clearfix">Tuesday<span>9am - 6pm</span></li>
+                                                    <li class="clearfix">Wednesday<span>10am - 8pm</span></li>
+                                                    <li class="clearfix">Thursday<span>9am - 8pm</span></li>
+                                                    <li class="clearfix">Friday<span>9am - 6pm</span></li>
+                                                    <li class="clearfix">Saturday<span>10am - 2pm</span></li>
+                                                    <li class="clearfix">Sunday<span class="closed">Close</span></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!--Footer Bottom-->
+        <div class="footer-bottom">
+            <div class="auto-container">
+                <div class="row clearfix">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="copyright">Copyrights © 2020 All Rights Reserved by Motores502.</div>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <ul class="footer-nav">
+                            <li><a href="http://www.xenialsolution.com" target="_blank">Powered By: Xenial Solution</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!--End Main Footer-->
 
     <div id="whatsapp"></div>
     
@@ -176,6 +327,7 @@
     <script type="text/javascript" src="{{ asset('whatsapp/jquery-3.3.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
     <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/buscar_lineas.js') }}"></script>
 </body> 
     @yield('script')    
     <script type="text/javascript">
@@ -187,7 +339,6 @@
                 showOnIE: true,
                 headerTitle: 'Whatsapp - Motores 502',
                 position: 'right',
-                autoOpenTimeout: 10000,
                 headerColor: '#545454',
                 size: '50px',
                 backgroundColor: '#eaeded'

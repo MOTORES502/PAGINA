@@ -12,8 +12,7 @@
     <!--Inventory Section-->
     <section class="inventory-section inventory-single">
     	<div class="auto-container">
-        	<div class="row clearfix">
-            	
+        	<div class="row clearfix">    
                 <!--Column-->
             	<div class="column col-lg-8 col-md-8 col-sm-12 col-xs-12">
                 	<!--Inventory Details-->
@@ -45,17 +44,15 @@
                                         <li>
                                             <figure class="image">
                                                 <img src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
-                                                <a class="lightbox-image fancy-btn" data-fancybox-group="example-gallery" href="{{ asset('img/encima_motores502.png') }}" title="{{ $item->concat }}" 
-                                                    style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
+                                                <a class="lightbox-image fancy-btn" data-fancybox-group="example-gallery" href="{{ $item->image }}" title="{{ $item->concat }}">
                                                     <span class="fa fa-search-plus"></span>
                                                 </a>
                                             </figure>
                                         </li>
-                                    @endforeach                                   
-                                    <li><figure class="image"><img src="{{ asset('template_new/images/resource/inventory-image-7.jpg') }}" alt=""><a class="lightbox-image fancy-btn" data-fancybox-group="example-gallery" href="https://www.youtube.com/watch?v=icbp9z1pw40" title="Image Title Here"><span class="fa fa-play"></span></a></figure></li>
+                                    @endforeach    
                                 </ul>
                             </div>
-                            
+
                             <!--Product Thumbs Carousel-->
                             <div class="prod-thumbs-carousel owl-theme owl-carousel">
                                 @foreach ($images as $key => $item)
@@ -64,8 +61,7 @@
                                             <img src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
                                         </figure>
                                     </div>
-                                @endforeach                                   
-                                <div class="thumb-item"><figure class="thumb-box"><img src="images/resource/inv-thumb-3.jpg" alt=""><div class="video-icon"><span class="fa fa-play"></span></div></figure></div>
+                                @endforeach                                
                             </div>
                             
                         </div><!--End Product Carousel-->
@@ -117,45 +113,53 @@
                                     	<!--Tab / Active Tab-->
                                     	<div class="tab active-tab" id="tab-one">
                                             <div class="listing-outer clearfix">
-                                                <ul class="list-style-eight">
-                                                <li class="clearfix">
-                                                    <span class="ttl">Descripción</span>
-                                                    <span class="dtl">{!! $general->description !!}</span>
-                                                </li>
-                                                </ul>
+                                                <div class="list-column">
+                                                    <ul class="list-style-eight">
+                                                        <li class="clearfix">
+                                                            <span class="ttl">Descripción</span>
+                                                            <span class="dtl">{!! $general->description !!}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div><!--End Tab-->
                                         <!--Tab-->
                                     	<div class="tab" id="tab-two">
                                             <div class="listing-outer clearfix">
-                                                <ul class="list-style-eight">
-                                                <li class="clearfix">
-                                                    <span class="ttl">Descripción</span>
-                                                    <span class="dtl">{!! $comfort->description !!}</span>
-                                                </li>
-                                                </ul>
+                                                <div class="list-column">
+                                                    <ul class="list-style-eight">
+                                                        <li class="clearfix">
+                                                            <span class="ttl">Descripción</span>
+                                                            <span class="dtl">{!! $comfort->description !!}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div><!--End Tab-->
                                         <!--Tab-->
                                     	<div class="tab" id="tab-three">
                                             <div class="listing-outer clearfix">
-                                                <ul class="list-style-eight">
-                                                <li class="clearfix">
-                                                    <span class="ttl">Descripción</span>
-                                                    <span class="dtl">{!! $seguridad->description !!}</span>
-                                                </li>
-                                                </ul>
+                                                <div class="list-column">
+                                                    <ul class="list-style-eight">
+                                                        <li class="clearfix">
+                                                            <span class="ttl">Descripción</span>
+                                                            <span class="dtl">{!! $seguridad->description !!}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div><!--End Tab-->
                                         <!--Tab-->
                                     	<div class="tab" id="tab-four">
                                             <div class="listing-outer clearfix">
-                                                <ul class="list-style-eight">
-                                                <li class="clearfix">
-                                                    <span class="ttl">Descripción</span>
-                                                    <span class="dtl">{!! $extra->description !!}</span>
-                                                </li>
-                                                </ul>
+                                                <div class="list-column">
+                                                    <ul class="list-style-eight">
+                                                        <li class="clearfix">
+                                                            <span class="ttl">Descripción</span>
+                                                            <span class="dtl">{!! $extra->description !!}</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div><!--End Tab-->
                                         
@@ -191,25 +195,23 @@
                             	<!--Offer Column-->
                                 <div class="offer-column col-md-7 col-sm-12 col-xs-12">
                                 	<div class="inner-box">
-                                    	<h3>Audi A8 3.0 TDI S12 Quattro Tiptronic </h3>
-                                        <div class="subtitle">Special Offer</div>
+                                    	<h3>{{ $vehiculo->nombre_completo }} </h3>
+                                        <div class="subtitle">Ofertas Especiales</div>
                                         <ul class="offer-info">
-                                        	<li><h4>Sales Offer:</h4><div class="clearfix"><span class="pull-left">1.5APR ,Deal Available untill Aug 21</span><span class="pull-right">*2 Years  Free Service</span></div></li>
-                                            <li><h4>Service Offer:</h4><div class="clearfix"><span class="pull-left">Get 50% Discount on Every Service<br>3 Years Warrant for all Products</span><span class="pull-right">* 1 Year Free Service</span></div></li>
-                                            <li><div class="conditions-apply"><a href="javascript:">* Conditions Apply.</a></div></li>
+                                            @foreach ($ofertas as $key => $item)
+                                                <li><h4>Oferta No. {{ $key+1 }}:</h4><div class="clearfix"><span class="pull-left">{{ $item->precio_formato }}</span><span class="pull-right"><div class="price">-{{ $item->porcentaje }} <span class="percent">%</span></div></span></div></li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                 </div>
                                 <!--Offer Banner-->
                                 <div class="offer-banner col-md-5 col-sm-6 col-xs-12">
                                 	<div class="inner-box">
-                                    	<figure class="image"><img src="images/resource/inventory-image-10.jpg" alt=""></figure>
+                                    	<figure class="image"><img src="{{ asset('template_new/images/resource/inventory-image-10.jpg') }}" alt=""></figure>
                                         <div class="upper-info">
-                                        	<h3>Audi A4 3.0</h3>
-                                            <div class="text">100% Safety and 0% Emissions</div>
+                                        	<h3>{{ $vehiculo->nombre_completo }}</h3>
                                             <div class="link"><a data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#masInformacion" class="theme-btn btn-style-one">Más Información</a></div>
                                         </div>
-                                        <div class="limit">* Get some special offers now</div>
                                     </div>
                                 </div>
                             </div>
@@ -247,38 +249,39 @@
                             <div class="form-box">
                                 <!--Cars Form-->
                                 <div class="cars-form">
-                                    <form method="post" action="">
+                                    <form action="{{ route('cotizar.store') }}" role="form" method="post" autocomplete="off">
+                                        @csrf
+                                        <input type="hidden" name="transports_id" value="{{ $id }}">
                                         <div class="row clearfix">
-                                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                                                <label>Name</label>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                <label for="name">Nombre Completo</label>
                                                 <div class="field-inner">
-                                                    <input type="text" name="field-name" value="" placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                                                <label>Email</label>
-                                                <div class="field-inner">
-                                                    <input type="email" name="field-name" value="" placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                                                <label>Phone</label>
-                                                <div class="field-inner">
-                                                    <input type="text" name="field-name" value="" placeholder="">
-                                                </div>
-                                            </div>
-                                            <div class="form-group col-md-6 col-sm-6 col-xs-12">
-                                                <label>Date &amp; Time</label>
-                                                <div class="field-inner">
-                                                    <span class="fa fa-clock-o"></span>
-                                                    <input class="date-time-picker" type="text" name="field-name" value="" placeholder="">
+                                                    <input type="text" name="name" placeholder="escribir el nombre completo" onkeyup="mayus(this);" value="{{ old('name') }}" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                                                <button class="theme-btn btn-style-one">Request Now</button>
+                                                <label for="email">Correo electrónico</label>
+                                                <div class="field-inner">
+                                                    <input type="email" name="email" placeholder="escribir un correo electrónico para comunicarnos" onkeyup="min(this);" value="{{ old('email') }}" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                <label for="number_test">Número de Teléfono</label>
+                                                <div class="field-inner">
+                                                    <input type="tel" name="number_test" placeholder="escribir número de teléfono" value="{{ old('number_test') }}" class="form-control" id="number_test">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                <label for="date_time">Fecha &amp; Hora</label>
+                                                <div class="field-inner">
+                                                    <span class="fa fa-clock-o"></span>
+                                                    <input class="date-time-picker" type="text" placeholder="seleccionar la fecha y hora" name="date_time" value="{{ old('date_time') }}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                <button type="submit" id="guardar_test" class="theme-btn btn-style-one">Registrar información</button>
                                             </div>
                                         </div>
-
                                     </form>
                                 </div>
                             </div>
@@ -336,13 +339,13 @@
                             <div class="car-block col-sm-12">
                                 <div class="inner-box">
                                     <div class="image">
-                                    <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                                    <a href="{{ route('vehiculo_recomendacion', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
                                         <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
                                     </a>
                                     <div class="price">{{ $item->precio }}</div>
                                     </div>
                                     <h3>
-                                    <a  href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                                    <a  href="{{ route('vehiculo_recomendacion', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
                                         {{ $item->completo }} <br> {{ $item->codigo }}
                                     </a>
                                     </h3>
@@ -368,86 +371,8 @@
     </section>
     <!--End Inventory Section-->
 
-
-    <div class="row">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            <br><br>
-            @if (count($errors) > 0)
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h5><i class="fa fa-ban"></i> ¡Error!</h5>
-                    <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                    </ul>
-                </div> 
-            @elseif(Session::has('success'))
-                <div class="alert alert-success alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h5><i class="fa fa-check"></i> ¡Éxito!</h5>
-                    {{Session::get('success')}}
-                </div>
-            @elseif(Session::has('warning'))
-                <div class="alert alert-warning alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h5><i class="fa fa-exclamation-triangle"></i> ¡Advertencia!</h5>
-                    {{Session::get('warning')}}
-                </div>
-            @elseif(Session::has('danger'))
-                <div class="alert alert-danger alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h5><i class="fa fa-exclamation-triangle"></i> ¡Error!</h5>
-                    {{Session::get('danger')}}
-                </div>
-            @elseif(Session::has('info'))
-                <div class="alert alert-info alert-dismissible">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                    <h5><i class="fa fa-info"></i> ¡Información!</h5>
-                    {{Session::get('info')}}
-                </div>
-            @endif 
-        </div>
-    </div>
-    <div class="row" style="background-color: #d0d0d0;"> 
-        <div class="col-sm-12 col-md-6 col-lg-6 fondo-motores">
-            <div class="row">
-                <div class="col-sm-12 col-md-12 col-lg-12 text-right">
-                    <br><br>
-                    <a 
-                        href="{{ 'https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fmotores502.com%2Fvehiculo%3Fid%3D' .  $vehiculo->facebook}}"
-                        class="btn-info btn-lg btn-fb" 
-                        style="margin-right: 15px;"
-                        type="button" 
-                        role="button"
-                    >
-                        <i class="fa fa-facebook-f"></i>
-                    </a>
-                    <a 
-                        href="mailto:info@motores502.com"
-                        class="btn-info btn-lg btn-fb" 
-                        style="margin-right: 15px;"
-                        type="button" 
-                        role="button"
-                    >
-                        <i class="fa fa-envelope"></i>
-                    </a>
-                    <a 
-                        href="tel:+50255792225"
-                        class="btn-info btn-lg btn-fb" 
-                        type="button" 
-                        role="button"
-                    >
-                        <i class="fa fa-phone"></i>
-                    </a>
-                    <br><br>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="masInformacion" tabindex="-2" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background: #595758; color: #eaeded;">
                     Formulario para cotización
@@ -456,116 +381,160 @@
                     </button>
                 </div>
                 <div class="modal-body" style="background: #eaeded; color: #595758;">
-                    <form action="{{ route('cotizar.store') }}" role="form" method="post" autocomplete="off">
-                        @csrf
-                        <input type="text" name="transports_id" value="{{ $id }}" hidden>
-                        <div class="form-group">
-                            <label for="names">Nombres</label>
-                            <input type="text" name="names" onkeyup="mayus(this);" value="{{ old('names') }}" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="surnames">Apellidos</label>
-                            <input type="text" name="surnames" onkeyup="mayus(this);" value="{{ old('surnames') }}" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Correo electrónico</label>
-                            <input type="email" name="email" onkeyup="min(this);" value="{{ old('email') }}" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="type_phone_id">Tipo de teléfono</label>
-                            <select class="form-control js-example-basic-single" style="width: 100%" name="type_phone_id">
-                                <option value="">Seleccionar uno por favor</option>
-                                @foreach ($tipos_telefono as $item)
-                                    <option value="{{ $item->id }}" {{ ($item->id == old('type_phone_id')) ? 'selected' : '' }}>{{ $item->name}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="number">Número de Teléfono</label>
-                            <br>
-                            <input type="tel" name="number" style="width: 100%" value="{{ old('number') }}" class="form-control" id="phone">
-                            <span id="error-msg" class="hide"></span>
-                        </div>
-                        <div class="form-group">
-                            <label for="channel_id">¿Medio por donde se entero de nosotros?</label>
-                            <select class="form-control js-example-basic-multiple" style="width: 100%" multiple="multiple" name="channel_id[]">
-                                <option value="">Seleccionar uno o más por favor</option>
-                                @foreach ($canales as $item)
-                                    <option value="{{ $item->id }}"><small>{{ $item->name }}</small></option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <button type="submit" id="guardar" class="btn btn-info btn-large pull-right">Cotizar</button>
-                    </form>
+                    <div class="cars-form">
+                        <form action="{{ route('cotizar.store') }}" role="form" method="post" autocomplete="off">
+                            @csrf
+                            <input type="hidden" name="transports_id" value="{{ $id }}">
+                            <div class="row clearfix">
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <label for="names">Nombres</label>
+                                    <div class="field-inner">
+                                        <input type="text" name="names" placeholder="escribir los nombres" onkeyup="mayus(this);" value="{{ old('names') }}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <label for="surnames">Apellidos</label>
+                                    <div class="field-inner">
+                                        <input type="text" name="surnames" placeholder="escribir los apellidos" onkeyup="mayus(this);" value="{{ old('surnames') }}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <label for="email">Correo electrónico</label>
+                                    <div class="field-inner">
+                                        <input type="email" name="email" placeholder="escribir el correo eletrónico" onkeyup="min(this);" value="{{ old('email') }}" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <label for="type_phone_id">Tipo de teléfono</label>
+                                    <div class="field-inner">
+                                        <select class="form-control js-example-basic-single" style="width: 100%" name="type_phone_id">
+                                            <option value="">Seleccionar uno por favor</option>
+                                            @foreach ($tipos_telefono as $item)
+                                                <option value="{{ $item->id }}" {{ ($item->id == old('type_phone_id')) ? 'selected' : '' }}>{{ $item->name}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <label for="number">Número de Teléfono</label>
+                                    <div class="field-inner">
+                                        <input type="tel" name="number" placeholder="escribir el número de teléfono" style="width: 100%" value="{{ old('number') }}" class="form-control" id="phone">
+                                        <span id="error-msg" class="hide"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <label for="channel_id">¿Medio por donde se entero de nosotros?</label>
+                                    <div class="field-inner">
+                                        <select class="form-control js-example-basic-multiple" style="width: 100%" multiple="multiple" name="channel_id[]">
+                                            <option value="">Seleccionar uno o más por favor</option>
+                                            @foreach ($canales as $item)
+                                                <option value="{{ $item->id }}"><small>{{ $item->name }}</small></option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <button type="submit" id="guardar" class="theme-btn btn-style-one">Enviar información</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>  
                 </div>
             </div>
         </div>
     </div>
-    
-<script>
-$(document).ready(function(){
-    $("#calcular").click();
-});
-
-function mayus(e) {
-    e.value = e.value.toUpperCase();
-}
-
-function min(e) {
-    e.value = e.value.toLowerCase();
-}
-
-var input = document.querySelector("#phone"),
-    errorMsg = document.querySelector("#error-msg");
-
-// here, the index maps to the error code returned from getValidationError - see readme
-var errorMap = ["Número inválido", "Código de país no válido", "Cantidad de dígitos inválido", "Cantidad de dígitos inválido", "Número inválido", "Número inválido"];
-
-// initialise plugin
-var iti = window.intlTelInput(input, {
-  initialCountry: "auto",
-  geoIpLookup: function(callback) {
-    $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
-      var countryCode = (resp && resp.country) ? resp.country : "gt";
-      callback(countryCode);
-    });
-  },   
-  utilsScript: "{{ asset('assets/js/utils.js') }}"
-});
-
-var reset = function() {
-  input.classList.remove("text-danger");
-  errorMsg.innerHTML = "";
-  errorMsg.classList.add("hide");
-};
-
-// on blur: validate
-input.addEventListener('keyup', function() {
-  reset();
-  if (input.value.trim()) {
-    if (iti.isValidNumber()) {
-      input.classList.remove("text-danger");
-      input.classList.add("text-success");
-      $('#guardar').show();
-    } else {
-      input.classList.remove("text-success");
-      input.classList.add("text-danger");
-      var errorCode = iti.getValidationError();
-      errorMsg.innerHTML = errorMap[errorCode];
-      errorMsg.classList.remove("hide");
-      errorMsg.classList.add("text-danger");
-      $('#guardar').hide();
-    }
-  }
-});
-
-// on keyup / change flag: reset
-input.addEventListener('keyup', reset);
-input.addEventListener('change', reset);
-
-</script>
 @stop
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="{{ asset('assets/js/intlTelInput.js') }}"></script>
-<script src="{{ asset('js/quotes.js') }}"></script>
+@section('script')
+    <script src="{{ asset('assets/js/intlTelInput.js') }}"></script>
+    <script src="{{ asset('js/quotes.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            $("#calcular").click();
+        });
+
+        function mayus(e) {
+            e.value = e.value.toUpperCase();
+        }
+
+        function min(e) {
+            e.value = e.value.toLowerCase();
+        }
+
+        var input = document.querySelector("#phone"),
+            errorMsg = document.querySelector("#error-msg"), 
+            number_test = document.querySelector("#number_test");
+
+        // here, the index maps to the error code returned from getValidationError - see readme
+        var errorMap = ["Número inválido", "Código de país no válido", "Cantidad de dígitos inválido", "Cantidad de dígitos inválido", "Número inválido", "Número inválido"];
+
+        // initialise plugin
+        var iti = window.intlTelInput(input, {
+            initialCountry: "auto",
+            geoIpLookup: function(callback) {
+                $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+                var countryCode = (resp && resp.country) ? resp.country : "gt";
+                callback(countryCode);
+                });
+            },   
+            utilsScript: "{{ asset('assets/js/utils.js') }}"
+        });
+        var iit_number_test = window.intlTelInput(number_test, {
+            initialCountry: "auto",
+            geoIpLookup: function(callback) {
+                $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
+                var countryCode = (resp && resp.country) ? resp.country : "gt";
+                callback(countryCode);
+                });
+            },   
+            utilsScript: "{{ asset('assets/js/utils.js') }}"
+        });
+
+        var reset = function() {
+            input.classList.remove("text-danger");
+            errorMsg.innerHTML = "";
+            errorMsg.classList.add("hide");
+        };
+
+        // on blur: validate
+        input.addEventListener('keyup', function() {
+        reset();
+            if (input.value.trim()) {
+                if (iti.isValidNumber()) {
+                input.classList.remove("text-danger");
+                input.classList.add("text-success");
+                $('#guardar').show();
+                } else {
+                input.classList.remove("text-success");
+                input.classList.add("text-danger");
+                var errorCode = iti.getValidationError();
+                errorMsg.innerHTML = errorMap[errorCode];
+                errorMsg.classList.remove("hide");
+                errorMsg.classList.add("text-danger");
+                $('#guardar').hide();
+                }
+            }
+        });
+
+        number_test.addEventListener('keyup', function() {
+            if (number_test.value.trim()) {
+                if (iit_number_test.isValidNumber()) {
+                    number_test.classList.remove("text-danger");
+                    number_test.classList.add("text-success");
+                    $('#guardar_test').show();
+                } else {
+                    number_test.classList.remove("text-success");
+                    number_test.classList.add("text-danger");
+                    $('#guardar_test').hide();
+                }
+            }
+        });
+
+        // on keyup / change flag: reset
+        input.addEventListener('keyup', reset);
+        input.addEventListener('change', reset);
+        number_test.addEventListener('keyup');
+        number_test.addEventListener('change');
+
+    </script>
+@endsection

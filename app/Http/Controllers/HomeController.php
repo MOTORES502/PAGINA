@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Sistema\ViewPage;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -17,7 +18,7 @@ class HomeController extends Controller
         
         $this->seo($title, $description, $keywords, null, $image, 'wbesite');
 
-        $subs = DB::table('sub_categories')
+        $subs = DB::connection('mysql')->table('sub_categories')
         ->select(
             'id', 
             'name', 
@@ -29,15 +30,7 @@ class HomeController extends Controller
         )
         ->whereNull('deleted_at')->paginate(8, ['*'], 'categorias');
 
-        $marcas = DB::table('transports')
-        ->join('brands', 'transports.brands_id', 'brands.id')
-        ->select('brands.id', 'brands.name')
-        ->where('transports.status', 'DISPONIBLE')
-        ->whereNull('transports.deleted_at')
-        ->groupByRaw('brands.id')
-        ->groupByRaw('brands.name')
-        ->orderBy('brands.name')
-        ->get();
+        $marcas = $this->marcas();
 
         $carros = $this->categorias_carros();
         if ($request->ajax()) {
@@ -45,11 +38,18 @@ class HomeController extends Controller
         }
 
         $ofertas = $this->ofertas();
-        $total_carros = DB::table('transports')
+
+        $total_carros = DB::connection('mysql')->table('transports')
         ->where('transports.status', 'DISPONIBLE')
         ->whereNull('transports.deleted_at')
         ->count();
         
-        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros'));
+        $visitas = DB::connection('mysql')->table('views')
+        ->count();
+
+        $arra_precio_bajo = $this->precios_minimos();
+        $arra_precio_alto = $this->precios_maximos();
+        
+        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto'));
     }
 }

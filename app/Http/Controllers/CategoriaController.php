@@ -16,12 +16,12 @@ class CategoriaController extends Controller
 
         $this->seo($title, $description, $keywords, $url, $image, 'wbesite');
 
-        $sub_categoria = DB::table('sub_categories')
+        $sub_categoria = DB::connection('mysql')->table('sub_categories')
                         ->select('name', 'icon')
                         ->where('id', base64_decode($value))
                         ->first();
 
-        $marcas = DB::table('sub_categories_transports')
+        $marcas = DB::connection('mysql')->table('sub_categories_transports')
         ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->select(
@@ -38,12 +38,12 @@ class CategoriaController extends Controller
         $array = array();
 
         foreach ($marcas as $marca) {
-            $data['marca'] = DB::table('brands')
+            $data['marca'] = DB::connection('mysql')->table('brands')
                             ->select('id', 'name', 'image', 'code')
                             ->where('id', $marca->id)
                             ->first();
 
-            $data['carros'] = DB::table('sub_categories_transports')
+            $data['carros'] = DB::connection('mysql')->table('sub_categories_transports')
             ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
             ->join('brands', 'brands.id', 'transports.brands_id')
             ->join('lines', 'lines.id', 'transports.lines_id')
@@ -51,15 +51,19 @@ class CategoriaController extends Controller
             ->join('models', 'models.id', 'transports.models_id')
             ->join('versions', 'versions.id', 'transports.versions_id')
             ->join('coins', 'transports.coins_id', 'coins.id')
+            ->join('fuels', 'fuels.id', 'transports.fuels_id')
+            ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+            ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
             ->select(
                 'transports.code AS codigo',
                 'transports.status AS estado',
-                DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-                DB::RAW('CONCAT("Marcar: ",brands.name) AS marca'),
-                DB::RAW('CONCAT("Linea: ",lines.name," ",versions.name) AS linea'),
-                DB::RAW('CONCAT("Modelo: ",models.anio) AS modelo'),
-                DB::RAW('CONCAT("Kilometraje: ",transports.mileage) AS kilometro'),
+                'models.anio AS modelo',
+                'transports.mileage AS kilometro',
+                'fuels.name AS combustible',
+                'transmisions.name AS transmision',
                 DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
+                DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
+                DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
                 DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
                 DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
                 DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')

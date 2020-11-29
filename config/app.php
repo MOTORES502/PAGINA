@@ -166,6 +166,7 @@ return [
          * Package Service Providers...
          */
         Artesaos\SEOTools\Providers\SEOToolsServiceProvider::class,
+        Biscolab\ReCaptcha\ReCaptchaServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -229,7 +230,8 @@ return [
         'OpenGraph'     => Artesaos\SEOTools\Facades\OpenGraph::class,
         'Twitter'       => Artesaos\SEOTools\Facades\TwitterCard::class,
         'JsonLd'        => Artesaos\SEOTools\Facades\JsonLd::class,
-        'JsonLdMulti'   => Artesaos\SEOTools\Facades\JsonLdMulti::class
+        'JsonLdMulti'   => Artesaos\SEOTools\Facades\JsonLdMulti::class,
+        'ReCaptcha' => Biscolab\ReCaptcha\Facades\ReCaptcha::class,
     ],
 
 ];

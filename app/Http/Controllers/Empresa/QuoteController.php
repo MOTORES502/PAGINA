@@ -103,7 +103,6 @@ class QuoteController extends Controller
             //'notify' => 'required|boolean',
             'surnames' => 'required|max:50',
             'transports_id' => 'required|integer|exists:transports,id',
-            'body' => 'required|max:2500',
             'type_phone_id' => 'required|integer|exists:type_phone,id'
         ];
     }

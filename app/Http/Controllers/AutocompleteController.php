@@ -14,7 +14,7 @@ class AutocompleteController extends Controller
             $query = mb_strtoupper($request->get('query'));
             $quitar_espacios = str_replace(' ','',$query);
 
-            $marca = DB::table('brands')
+            $marca = DB::connection('mysql')->table('brands')
             ->select(
                 DB::RAW("1 AS condicion"),                 
                 'name'
@@ -31,7 +31,7 @@ class AutocompleteController extends Controller
             ->groupBy('name')
             ->groupBy('condicion');
         
-            $marca_linea = DB::table('brands')
+            $marca_linea = DB::connection('mysql')->table('brands')
             ->join('lines', 'brands.id', 'lines.brands_id')
             ->select(
                 DB::RAW("2 AS condicion"),   
@@ -51,7 +51,7 @@ class AutocompleteController extends Controller
             ->groupBy('name')
             ->groupBy('condicion');
 
-            $marca_modelo = DB::table('brands')
+            $marca_modelo = DB::connection('mysql')->table('brands')
             ->join('lines', 'brands.id', 'lines.brands_id')
             ->join('generations', 'lines.id', 'generations.lines_id')
             ->join('models', 'generations.id', 'models.generations_id')
@@ -75,7 +75,7 @@ class AutocompleteController extends Controller
             ->groupBy('name')
             ->groupBy('condicion');
 
-            $marca_linea_version = DB::table('brands')
+            $marca_linea_version = DB::connection('mysql')->table('brands')
             ->join('lines', 'brands.id', 'lines.brands_id')
             ->join('generations', 'lines.id', 'generations.lines_id')
             ->join('models', 'generations.id', 'models.generations_id')

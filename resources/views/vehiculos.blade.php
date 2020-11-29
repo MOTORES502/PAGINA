@@ -23,13 +23,13 @@
                     <div class="car-block col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="inner-box">
                         <div class="image">
-                            <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
-                            <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
+                            <a href="{{ route('vehiculo_inventario', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                                <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
                             </a>
                             <div class="price">{{ $item->precio }}</div>
                         </div>
                         <h3>
-                            <a  href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                            <a  href="{{ route('vehiculo_inventario', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
                             {{ $item->completo }} <br> {{ $item->codigo }}
                             </a>
                         </h3>

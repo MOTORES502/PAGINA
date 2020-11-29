@@ -25,13 +25,13 @@ class Controller extends BaseController
             array_push($keywords, mb_strtolower($value));
         }
 
-        $categorias = DB::table('categories')
+        $categorias = DB::connection('mysql')->table('categories')
         ->select('name');
 
-        $sub_categorias = DB::table('sub_categories')
+        $sub_categorias = DB::connection('mysql')->table('sub_categories')
         ->select('name');
 
-        $marcas = DB::table('brands')
+        $marcas = DB::connection('mysql')->table('brands')
         ->select('name')
         ->union($categorias)
         ->union($sub_categorias)
@@ -99,7 +99,7 @@ class Controller extends BaseController
     protected function ofertas()
     {
         return
-            DB::table('transports_offers')
+            DB::connection('mysql')->table('transports_offers')
             ->join('coins', 'transports_offers.coins_id', 'coins.id')
             ->join('transports', 'transports_offers.transports_id', 'transports.id')
             ->join('brands', 'brands.id', 'transports.brands_id')
@@ -138,7 +138,7 @@ class Controller extends BaseController
 
     public function categorias_carros()
     {
-        $carros = DB::table('transports')
+        $carros = DB::connection('mysql')->table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
         ->join('generations', 'generations.id', 'transports.generations_id')
@@ -169,9 +169,7 @@ class Controller extends BaseController
 
     public function nuevo_ingreso($sub_categoria_id)
     {
-        $array_uno = array();
-
-        $carros = DB::table('sub_categories_transports')
+        $carros = DB::connection('mysql')->table('sub_categories_transports')
         ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
@@ -179,14 +177,21 @@ class Controller extends BaseController
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-            DB::RAW('CONCAT("Marcar: ",brands.name) AS marca'),
-            DB::RAW('CONCAT("Linea: ",lines.name," ",versions.name) AS linea'),
-            DB::RAW('CONCAT("Modelo: ",models.anio) AS modelo'),
-            DB::RAW('CONCAT("Kilometraje: ",transports.mileage) AS kilometro'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
+            DB::RAW('CONCAT("Marca: ",brands.name) AS marca'),
+            DB::RAW('CONCAT("Linea: ",lines.name) AS linea'),
+            DB::RAW('CONCAT("Versión: ",versions.name) AS version'),
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
             DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
             DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
@@ -195,30 +200,10 @@ class Controller extends BaseController
         ->where('sub_categories_transports.sub_categories_id', $sub_categoria_id)
         ->whereNull('transports.deleted_at')
         ->orderByDesc('transports.created_at')
-        ->limit(12)
+        ->limit(18)
         ->get();
 
-        $items_carrusel = 4;
-
-        for ($i = 0; $i < (count($carros) / $items_carrusel); $i++) {
-            $carrusel['numero'] = $i;
-            $carrusel['vehiculos'] = array();
-            $contador = $items_carrusel;
-
-            foreach ($carros as $llave => $value_dos) {
-                if ($contador == 0) {
-                    break;
-                } else {
-                    array_push($carrusel['vehiculos'], $value_dos);
-                    $contador--;
-                    unset($carros[$llave]);
-                }
-            }
-
-            array_push($array_uno, $carrusel);
-        }
-
-        return $array_uno;
+        return $carros;
     }
 
     public function parserCarrusel($carros)
@@ -245,5 +230,44 @@ class Controller extends BaseController
         }
 
         return $array_uno;
+    }
+
+    public function precios_minimos()
+    {
+        $arra_precio_bajo = array();
+
+        for ($i = 0; $i < 350001; $i = $i + 50000) {
+            $registro['numero'] = $i;
+            $registro['numero_formato'] = "Q " . number_format($i, 0, '.', ',');
+            array_push($arra_precio_bajo, $registro);
+        }
+
+        return $arra_precio_bajo;
+    }
+
+    public function precios_maximos()
+    {
+        $arra_precio_alto = array();
+
+        for ($i = 50000; $i < 400001; $i = $i + 50000) {
+            $registro['numero'] = $i;
+            $registro['numero_formato'] = "Q " . number_format($i, 0, '.', ',');
+            array_push($arra_precio_alto, $registro);
+        }
+        
+        return $arra_precio_alto;
+    }
+
+    public function marcas()
+    {
+        return
+        DB::connection('mysql')->table('transports')
+        ->join('brands', 'transports.brands_id', 'brands.id')
+        ->select('brands.id', 'brands.name')
+        ->where('transports.status', 'DISPONIBLE')
+        ->whereNull('transports.deleted_at')
+        ->groupByRaw('brands.id, brands.name')
+        ->orderBy('brands.name')
+        ->get();
     }
 }

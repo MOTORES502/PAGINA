@@ -6,8 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class TransportView extends Model
 {
-    const PAGINA_INICIO = 'PAGINA DE INICIO';
-    const PAGINA_ESPECIFICA = 'PAGINA ESPECIFICA';
+    const PAGINA_INICIO = 'PAGINA INICIO';
+    const RECOMENDACION = 'RECOMENDACION';
+    const BUSCADOR = 'BUSCADOR';
+    const INVENTARIO = 'INVENTARIO';
 
     protected $code = 'UTF-8';
     protected $table = 'transports_views';
@@ -16,6 +18,6 @@ class TransportView extends Model
         'updated_at' => 'datetime: d/m/Y h:i:s',
     ];
     protected $fillable = [
-        'type_view', 'visitor', 'transports_id'
+        'type_view', 'visitor', 'transports_id', 'anio'
     ];
 }

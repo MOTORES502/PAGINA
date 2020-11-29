@@ -27,11 +27,11 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::defaultView('vendor.pagination.bootstrap-4');
         view()->composer('layouts.master', function ($view) {
-            $categorias = DB::table('categories')->select('id', 'name')->whereNull('deleted_at')->get();
+            $categorias = DB::connection('mysql')->table('categories')->select('id', 'name')->whereNull('deleted_at')->get();
             $menus = array();
 
             foreach ($categorias as $key => $value) {
-                $subs = DB::table('sub_categories')->select('id', 'name')->where('categories_id', $value->id)->whereNull('deleted_at')->get();
+                $subs = DB::connection('mysql')->table('sub_categories')->select('id', 'name')->where('categories_id', $value->id)->whereNull('deleted_at')->get();
 
                 if(count($subs) > 0) {
                     $data['nombre'] = $value->name;

@@ -25,13 +25,13 @@
                     <div class="car-block col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="inner-box">
                         <div class="image">
-                            <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                            <a href="{{ route('vehiculo_buscar', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
                             <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
                             </a>
                             <div class="price">{{ $item->precio }}</div>
                         </div>
                         <h3>
-                            <a  href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                            <a  href="{{ route('vehiculo_buscar', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
                             {{ $item->completo }} <br> {{ $item->codigo }}
                             </a>
                         </h3>
@@ -57,23 +57,15 @@
 </section>
 <!--End Popular Cars Section-->
 @else
-    <br><br>
-    <div class="row">
-        <div class="col-12">
-            <div class="jumbotron image-no-result">
-                <h1 class="display-4">¡Lo Sentimos!</h1>
-                <p class="lead">En nuestra base de datos no se encuentran {{ $titulo }} registrados.</p>
-                <hr class="my-4">
-                <p>Le invitamos a seguir buscando más información.</p>
-                <p class="lead text-center">
-                    <img src="{{ asset('img/logo_s_fondo_mrm.png') }}" alt="Motores 502">
-                    <br>
-                    <a class="btn btn-info btn-lg" href="{{ route('home') }}" role="button">Regresar a la página de inicio</a>
-                </p>
+    <section class="error-section" style="background-image:url({{ asset('template_new/images/background/1.jpg') }});">
+    	<div class="auto-container">
+        	<div class="inner-section">
+                <h2>{{ "No pudimos encontrar vehículos con las siguientes especficaciones $titulo" }}</h2>
+                <div class="text">Te invitamos a que sigas navegando en nuestra página</div>
             </div>
         </div>
-    </div>  
-    <br><br>  
+    </section>
+    <!--End Error Section-->
 @endif
 @stop
 

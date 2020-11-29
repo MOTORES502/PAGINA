@@ -1,102 +1,119 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <div class="jumbotron jumbotron-fluid">
-                <div class="container">
-                    <h1 style="font-size: 3vw;" class="text-center"><strong>Categoría {{ $sub_categoria->name }}</strong></h1>
-                </div>
-            </div>
+    <!--Page Title-->
+    <section class="page-title" style="background-image:url({{ asset('template_new/images/background/1.jpg') }});">
+        <div class="auto-container">
+            <h1>Categoría {{ $sub_categoria->name }}</h1>
         </div>
-    </div>
-    <div class="row">
-      <div class="col-6"><h3 class="mb-3" style="color: #808080;"><strong>Últimos Ingresos</strong></h3></div>
-      @if (count($nuevo_ingreso) > 1)
-      <div class="col-6 text-right">
-        <a class="btn btn-primary mb-3 mr-1" href="#carrusel_categoria" role="button" data-slide="prev">Atrás</a>
-        <a class="btn btn-primary mb-3" href="#carrusel_categoria" role="button" data-slide="next">Siguiente</a>
-      </div>          
-      @endif
-      <div class="col-12">
-        <div id="carrusel_categoria" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-            @foreach ($nuevo_ingreso as $carrusel)
-              <div class="{{ $carrusel['numero'] == 0 ? "carousel-item active" : "carousel-item" }}">
-                <div class="row">
-                  @foreach ($carrusel['vehiculos'] as $vehiculo)
-                  <div class="col-md-3 mb-3">
-                    <div class="card box">
-                        @if ($vehiculo->estado != 'DISPONIBLE')
-                            <div class="ribbon ribbon-top-left"><span>{{ $vehiculo->estado }}</span></div>
-                        @endif
-                        <a href="{{ route('vehiculo', ['slug' => $vehiculo->slug, 'value' => base64_encode($vehiculo->codigo)]) }}">
-                        <img class="img-fluid" alt="{{ $vehiculo->alt }}" src="{{ asset('img/encima_motores502.png') }}" style="background-blend-mode: normal; background-image: url({{ $vehiculo->image }}); background-size: 100% 100%; background-repeat: no-repeat;" />
-                        </a>
-                        <div class="card-body">
-                            <h4 class="card-title">{{ $vehiculo->codigo }}</h4>
-                            <p class="card-text">
-                                <ul>
-                                    <li>{{ $vehiculo->marca }}</li>
-                                    <li>{{ $vehiculo->linea }}</li>
-                                    <li>{{ $vehiculo->modelo }}</li>
-                                    <li>{{ $vehiculo->kilometro }}</li>
-                                    <li>{{ $vehiculo->oferta ? $vehiculo->oferta : $vehiculo->precio }}</li>
+    </section>
+
+    <!--Offer Section-->
+    <section class="offer-section">
+        <div class="auto-container">
+            <!--Sec Title-->
+            <div class="sec-title light centered">
+                <h2>Últimos ingresos</h2>
+            </div>
+            <div class="three-item-carousel owl-carousel owl-theme">
+                <!--Offer Block-->
+                @foreach ($nuevo_ingreso as $item)
+                <div class="offer-block">
+                    <div class="inner-box">
+                        <div class="image">
+                            <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                                <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
+                            </a>
+                        </div>
+                        <h3>
+                            <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
+                            {{ $item->completo }} <br> {{ $item->codigo }}
+                            </a>
+                        </h3>
+                        <div class="lower-box">
+                            <div class="plus-box">
+                                <span class="icon fa fa-plus"></span>
+                                <ul class="tooltip-data">
+                                    <li>{{ $item->marca }}</li>
+                                    <li>{{ $item->linea }}</li>
+                                    <li>{{ $item->version }}</li>
+                                    <li>{{ $item->estado }}</li>
                                 </ul>
-                            </p>
+                            </div>
+                            <div class="lower-price">{{ $item->oferta ? $item->oferta : $item->precio }}</div>
+                            <ul>
+                                <li><span class="icon fa fa-road"></span>{{ number_format($item->kilometro, 0, '.', ',') }}</li>
+                                <li><span class="icon fa fa-car"></span>{{ $item->combustible }}</li>
+                                <li><span class="icon fa fa-clock-o"></span>{{ $item->modelo }}</li>
+                                <li><span class="icon fa fa-gear"></span>{{ $item->transmision }}</li>
+                            </ul>
                         </div>
                     </div>
-                  </div>                      
-                  @endforeach
                 </div>
-              </div>
-            @endforeach
-          </div>
+                @endforeach
+            </div>
         </div>
-      </div>
-    </div>
-    @foreach ($array as $item)
-    <div class="row">
-      <div class="col-12"><hr style="height: 10px; width: 80%; background-color:#343a40;"></div>
-      <div class="col-12">
-          <div class="row">
-            <div class="col-6 text-right">
-                <img class="img-fluid" width="10%" alt="{{ $item['marca']->name }}" src="{{ $item['marca']->image }}" />
-            </div>
-            <div class="col-6 text-left">
-                <h2 style="color: #808080;">{{  $item['marca']->name }} / {{ $item['marca']->code }}</h2>
-            </div>
+    </section>
+    <!--End Offer Section-->
+
+    <!--End Page Title-->
+    <section class="inventory-section invent-style-two">
+    	<div class="auto-container">
+        @foreach ($array as $item)
+          <div class="sec-title">
+              <h2>{{  $item['marca']->name }} / {{ $item['marca']->code }}</h2>
           </div>
-      </div>
-      <div class="col-12">
-        <br><br>
-        <div class="row">
-            @foreach ($item['carros'] as $vehiculo)
-            <div class="col-md-3 mb-3">
-            <div class="card box">
-                @if ($vehiculo->estado != 'DISPONIBLE')
-                    <div class="ribbon ribbon-top-left"><span>{{ $vehiculo->estado }}</span></div>
-                @endif
-                <a href="{{ route('vehiculo', ['slug' => $vehiculo->slug, 'value' => base64_encode($vehiculo->codigo)]) }}">
-                <img class="img-fluid" alt="{{ $vehiculo->alt }}" src="{{ asset('img/encima_motores502.png') }}" style="background-blend-mode: normal; background-image: url({{ $vehiculo->image }}); background-size: 100% 100%; background-repeat: no-repeat;" />
-                </a>
-                <div class="card-body">
-                <h4 class="card-title">{{ $vehiculo->codigo }}</h4>
-                <p class="card-text">
-                    <ul>
-                        <li>{{ $vehiculo->marca }}</li>
-                        <li>{{ $vehiculo->linea }}</li>
-                        <li>{{ $vehiculo->modelo }}</li>
-                        <li>{{ $vehiculo->kilometro }}</li>
-                        <li>{{ $vehiculo->oferta ? $vehiculo->oferta : $vehiculo->precio }}</li>
-                    </ul>
-                </p>
+          @foreach ($item['carros']->chunk(4) as $bloque)
+            <div class="row clearfix">
+              @foreach ($bloque as $vehiculo)
+            	<!--Column-->
+            	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                	<div class="layout-box clearfix">
+                    <div class="car-block-two">
+                        <div class="inner-box">
+                        	<div class="row clearfix">
+                            	<div class="image-column col-md-4 col-sm-4 col-xs-12">
+                                    <div class="image">
+                                        <a href="{{ route('vehiculo', ['slug' => $vehiculo->slug, 'value' => base64_encode($vehiculo->codigo)]) }}">
+                                          <img alt="{{ $vehiculo->alt }}" src="{{ asset('img/encima_motores502.png') }}" style="background-blend-mode: normal; background-image: url({{ $vehiculo->image }}); background-size: 100% 100%; background-repeat: no-repeat;" />
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="content-column col-md-8 col-sm-8 col-xs-12">
+                                    <h3><a href="inventory-single.html">{{ $vehiculo->completo }}</a></h3>
+                                    <div class="price">{{ $vehiculo->oferta ? $vehiculo->oferta : $vehiculo->precio }}</div>
+                                    <div class="info-box">
+                                        <ul class="car-info">
+                                            <li><span class="fa fa-road icon"></span><span class="info-title">Kms</span>{{ $vehiculo->kilometro }}</li>
+                                            <li><span class="icon fa fa-car"></span><span class="info-title">Combustible</span>{{ $vehiculo->combustible }}</li>
+                                            <li><span class="icon fa fa-clock-o"></span><span class="info-title">Modelo</span>{{ $vehiculo->modelo }}</li>
+                                            <li><span class="fa fa-gears icon"></span><span class="info-title">Transmisión</span>{{ $vehiculo->transmision }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="lower-box clearfix">
+                                    	<!--Btns-->
+                                        <div class="btns-box">
+                                        	<ul class="btns clearfix">
+                                        		<li><a href="javascript:" class="theme-btn btn-style-four">{{ $vehiculo->codigo }}</a></li>
+                                            </ul>
+                                        </div>
+                                        <!--Logos-->
+                                        <div class="logos-box">
+                                        	<ul class="logos clearfix">
+                                            <li class="logo"><a href="javascript:"><img width="25%" src="{{ $item['marca']->image }}" alt="{{  $item['marca']->name }}"></a></li>
+                                          </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+              </div>              
+              @endforeach
             </div>
-            </div>                      
-            @endforeach
-        </div>
+          @endforeach
+        @endforeach
       </div>
-    </div>
-    @endforeach
+    </section>
 @stop
