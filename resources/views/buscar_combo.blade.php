@@ -84,7 +84,7 @@
                                 @csrf
                                 <!--Form Group-->
                                 <div class="form-group">
-                                    <select id="marca_id" name="marca_id" class="form-control js-example-basic-single">
+                                    <select id="marca_id" name="marca_id" class="custom-select-box">
                                         <option value="">Seleccione marca</option>
                                     @foreach ($marcas as $item)
                                         <option value="{{ route('lineas', $item->id) }}">{{ $item->name }}</option>
@@ -94,14 +94,14 @@
 
                                 <!--Form Group-->
                                 <div class="form-group">
-                                    <select id="linea_id" name="linea_id" class="form-control js-example-basic-single">
+                                    <select id="linea_id" name="linea_id" class="custom-select-box">
                                         <option value="">Seleccione línea</option>
                                     </select>
                                 </div> 
                                 
                                 <!--Form Group-->
                                 <div class="form-group">
-                                    <select name="precio_minimo" class="form-control js-example-basic-single">
+                                    <select name="precio_minimo" class="custom-select-box">
                                         <option value="">Seleccione el precio mínimo</option>
                                         @foreach ($arra_precio_bajo as $item)
                                             <option value="{{ $item['numero'] }}">{{ $item['numero_formato'] }}</option>
@@ -111,7 +111,7 @@
 
                                 <!--Form Group-->
                                 <div class="form-group">
-                                    <select name="precio_maximo" class="form-control js-example-basic-single">
+                                    <select name="precio_maximo" class="custom-select-box">
                                         <option value="">Seleccione el precio máximo</option>
                                         @foreach ($arra_precio_alto as $item)
                                             <option value="{{ $item['numero'] }}">{{ $item['numero_formato'] }}</option>

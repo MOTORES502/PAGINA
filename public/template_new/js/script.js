@@ -12,7 +12,7 @@
 	
 	//Custom Seclect Box
 	if($('.custom-select-box').length){
-		$('.custom-select-box').selectmenu().selectmenu('menuWidget').addClass('overflow');
+		//$('.custom-select-box').selectmenu().selectmenu('menuWidget').addClass('overflow');
 	}
 	
 	//Date Picker

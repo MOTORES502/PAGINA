@@ -20,7 +20,68 @@
     </section>
     <!--End Main Slider-->
 
+    <!--Car Search Form-->
+    <div class="car-search-form">
+        <div class="container">
+            <div class="inner-section">
+    <form action="{{ route('buscar.buscador_combo') }}" method="post" id="buscador">
+        @csrf
+        <div class="row clearfix">
+            <div class="column col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                <div class="row clearfix">
+                    <!--Form Group-->
+                    <div class="form-group col-md-6">
+                        <select id="marca_id" name="marca_id" class="custom-select-box">
+                            <option value="">Seleccione marca</option>
+                        @foreach ($marcas as $item)
+                            <option value="{{ route('lineas', $item->id) }}">{{ $item->name }}</option>
+                        @endforeach
+                        </select>
+                    </div>
 
+                    <!--Form Group-->
+                    <div class="form-group col-md-6">
+                        <select id="linea_id" name="linea_id" class="custom-select-box">
+                            <option value="">Seleccione línea</option>
+                        </select>
+                    </div>
+
+                </div>
+            </div>
+            <div class="column col-lg-5 col-md-12 col-sm-12 col-xs-12">
+                <div class="row clearfix">
+                    <!--Form Group-->
+                    <div class="form-group col-md-6">
+                        <select name="precio_minimo" class="custom-select-box">
+                            <option value="">Seleccione el precio mínimo</option>
+                            @foreach ($arra_precio_bajo as $item)
+                                <option value="{{ $item['numero'] }}">{{ $item['numero_formato'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!--Form Group-->
+                    <div class="form-group col-md-6">
+                        <select name="precio_maximo" class="custom-select-box">
+                            <option value="">Seleccione el precio máximo</option>
+                            @foreach ($arra_precio_alto as $item)
+                                <option value="{{ $item['numero'] }}">{{ $item['numero_formato'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group col-md-2">
+                <button id="buscador" class="theme-btn search-btn" type="submit" name="submit-form">Buscar</button>
+            </div>
+        </div>
+    </form>         
+            </div>
+        </div>
+    </div>
+    <!--End Car Search Form-->
 
     <!--Popular Cars Section Two-->
     <section class="Category-display">
