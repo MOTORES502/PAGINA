@@ -73,7 +73,7 @@ class CategoriaController extends Controller
             ->where('brands.id', $marca->id)
             ->whereNull('transports.deleted_at')
             ->whereNull('brands.deleted_at')
-            ->limit(100)
+            ->limit(60)
             ->get();        
             
             array_push($array, $data);
