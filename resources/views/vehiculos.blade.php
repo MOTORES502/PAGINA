@@ -26,7 +26,7 @@
                             <a href="{{ route('vehiculo_inventario', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
                                 <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
                             </a>
-                            <div class="price">{{ $item->precio }}</div>
+                            <div class="price">{{ $item->oferta ? $item->oferta : $item->precio }}</div>
                         </div>
                         <h3>
                             <a  href="{{ route('vehiculo_inventario', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">

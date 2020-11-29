@@ -260,13 +260,13 @@ class Controller extends BaseController
 
     public function marcas()
     {
-        return
-        DB::connection('mysql')->table('transports')
+        return DB::connection('mysql')->table('transports')
         ->join('brands', 'transports.brands_id', 'brands.id')
-        ->select('brands.id', 'brands.name')
+        ->join('categories', 'brands.categories_id', 'categories.id')
+        ->select(DB::RAW('CONCAT(categories.name," MARCA ",brands.name) AS name'), 'brands.id', 'brands.name AS otor')
+        ->distinct('brands.name')
         ->where('transports.status', 'DISPONIBLE')
         ->whereNull('transports.deleted_at')
-        ->groupByRaw('brands.id, brands.name')
         ->orderBy('brands.name')
         ->get();
     }

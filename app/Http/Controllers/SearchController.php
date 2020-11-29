@@ -63,13 +63,13 @@ class SearchController extends Controller
         $buscar = str_replace('_', ' ', $slug);
 
         //SEO
-        $title = "vehículos de la marca y linea $buscar";
-        $description = "todos los vehículos de la marca y linea $buscar";
+        $title = "vehículos de la marca y línea $buscar";
+        $description = "todos los vehículos de la marca y línea $buscar";
         $keywords = [$buscar];
         $image = asset('img/logo_s_fondo_mrm.png');
         $url = "/buscar/marca-linea/$slug/$value";
 
-        $this->seo($title, $description, $keywords, $url, $image, 'marca y linea');
+        $this->seo($title, $description, $keywords, $url, $image, 'marca y línea');
 
         $titulo = "vehículos de la marca y línea $buscar";
         $quitar_espacios = mb_strtoupper(str_replace(' ', '', $buscar));
@@ -395,7 +395,6 @@ class SearchController extends Controller
         )
         ->whereNull('transports.deleted_at')
         ->where('transports.status', 'DISPONIBLE')
-        ->where('brands.id', $marca)
         ->where('lines.id', $linea)
         ->paginate(12);
 
