@@ -395,64 +395,28 @@
         <div class="auto-container">
             <!--Sec Title-->
             <div class="sec-title centered">
-                <h2>Our Latest Blogs</h2>
+                <h2>Nuestros blogs</h2>
             </div>
             <div class="row clearfix">
-            
-                <!--News Block-->
-                <div class="news-block col-md-4 col-sm-6 col-xs-12">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="{{ asset('template_new/images/resource/news-1.jpg') }}" alt="" />
-                            <a class="overlay-link" href="blog-single.html"><span class="icon fa fa-link"></span></a>
-                        </div>
-                        <div class="lower-box">
-                            <div class="post-date">21 <br> Nov</div>
-                            <div class="content">
-                                <div class="author">By Jack Stonney</div>
-                                <h3><a href="blog-single.html">Distributed throughout the all over country.</a></h3>
-                                <div class="text">Great explorer of the truth, the master builder of human happiness.</div>
+                @foreach ($blogs as $item)
+                    <!--News Block-->
+                    <div class="news-block col-md-4 col-sm-6 col-xs-12">
+                        <div class="inner-box">
+                            <div class="image">
+                                <img src="{{ $item->image }}" alt="{{ $item->name }}" />
+                                <a class="overlay-link" href="{{ route('blog.seleccionado', ['slug' => $item->slug, 'value' => base64_encode($item->id)]) }}"><span class="icon fa fa-link"></span></a>
+                            </div>
+                            <div class="lower-box">
+                                <div class="post-date">{{ date('d', strtotime($item->created_at)) }} <br> {{ date('M', strtotime($item->created_at)) }}</div>
+                                <div class="content">
+                                    <div class="author">{{ $item->usuario }}</div>
+                                    <h3><a href="{{ route('blog.seleccionado', ['slug' => $item->slug, 'value' => base64_encode($item->id)]) }}">{{ $item->name }}</a></h3>
+                                    <div class="text">{{ $item->description }}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                
-                <!--News Block-->
-                <div class="news-block col-md-4 col-sm-6 col-xs-12">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="{{ asset('template_new/images/resource/news-2.jpg') }}" alt="" />
-                            <a class="overlay-link" href="blog-single.html"><span class="icon fa fa-link"></span></a>
-                        </div>
-                        <div class="lower-box">
-                            <div class="post-date">14 <br> Oct</div>
-                            <div class="content">
-                                <div class="author">By Joe Venanda</div>
-                                <h3><a href="blog-single.html">Get some usefull maintanence tips from our expets.</a></h3>
-                                <div class="text">There anyone who loves or pursues or sed desires to obtain pain of itself.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!--News Block-->
-                <div class="news-block col-md-4 col-sm-6 col-xs-12">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="{{ asset('template_new/images/resource/news-3.jpg') }}" alt="" />
-                            <a class="overlay-link" href="blog-single.html"><span class="icon fa fa-link"></span></a>
-                        </div>
-                        <div class="lower-box">
-                            <div class="post-date">05 <br> Jun</div>
-                            <div class="content">
-                                <div class="author">By Lee Philipson</div>
-                                <h3><a href="blog-single.html">High quality cars only we selling to our customers.</a></h3>
-                                <div class="text">Which toil and pain can procure him some great pleasure to take a trivial.</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
+                    </div>   
+                @endforeach                 
             </div>
         </div>
     </section>

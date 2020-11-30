@@ -14,7 +14,7 @@ class BlogController extends Controller
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
 
-        $this->seo($title, $description, $keywords, null, $image, 'wbesite');
+        $this->seo($title, $description, $keywords, null, $image, 'website');
 
         $data = DB::connection('mysql')->table('blog')
         ->join('users', 'blog.users_id', 'users.id')
@@ -44,7 +44,7 @@ class BlogController extends Controller
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
 
-        $this->seo($title, $description, $keywords, null, $image, 'wbesite');
+        $this->seo($title, $description, $keywords, null, $image, 'website');
 
         $blog = DB::connection('mysql')->table('blog')
         ->join('users', 'blog.users_id', 'users.id')

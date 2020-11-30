@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class CompararController extends Controller
+class QuienesSomosController extends Controller
 {
     public function index()
     {
-        $title = 'Comparador';
-        $description = 'Comparar vehículos motores 502.';
+        $title = 'Quienes somos';
+        $description = 'Información de motores 502.';
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
 
         $this->seo($title, $description, $keywords, null, $image, 'website');
 
-        return view('comparar');
+        return view('quienes_somos');
     }
 }

@@ -125,11 +125,11 @@
                             <div class="navbar-collapse collapse clearfix">
                                 <ul class="navigation clearfix">
                                     <li class="current"><a href="{{ route('home') }}">Inicio</a></li>
-                                    <li><a href="about.html">About Us</a></li>
+                                    <li><a href="{{ route('quienes_somos.index') }}">Quienes Somos</a></li>
                                     <li><a href="{{ route('vehiculos') }}">Vehículos Publicados</a></li>
                                     <li><a href="vehicle-compare.html">Compare Vehicle</a></li>
                                     <li><a href="{{ route('blog.index') }}">Blog</a></li>
-                                    <li><a href="faq.html">FAQs</a></li>
+                                    <li><a href="{{ route('preguntas_frecuentes.index') }}">Preguntas Frecuentes</a></li>
                                     <li><a href="{{ route('contacto.index') }}">Contacto</a></li>
                                 </ul>
                             </div>
@@ -195,28 +195,27 @@
                                 <!--Footer Column-->
                                 <div class="footer-column col-md-6 col-sm-6 col-xs-12">
                                     <div class="footer-widget about-widget">
-                                        <h2>About Us</h2>
+                                        <h2>Sobre nosotros</h2>
                                         <div class="text">
                                             <p>Must explain to how all this mistaken idea of denouncing pleasure & praising pain was born and system.</p>
                                             <p>There anyone who loves or pursues or desires to obtain pain  itself, because it is pain, but because occasionally occur in whichgreat pleasure. </p>
                                         </div>
-                                        <a href="about.html" class="theme-btn btn-style-three">Read More</a>
+                                        <a href="{{ route('quienes_somos.index') }}" class="theme-btn btn-style-three">Leer sobre nosotros</a>
                                     </div>
                                 </div>
 
                                 <!--Footer Column-->
                                 <div class="footer-column col-md-6 col-sm-6 col-xs-12">
                                     <div class="footer-widget links-widget">
-                                        <h2>Usefull Links</h2>
+                                        <h2>Enlaces útiles</h2>
                                         <div class="widget-content">
                                             <ul class="footer-links">
-                                                <li><a href="about.html">About Us</a></li>
-
-                                                <li><a href="inventory-grid.html">Recent Tickets</a></li>
-                                                <li><a href="vehicle-compare.html">Compare Cars</a></li>
-                                                <li><a href="blog.html">Blog</a></li>
-                                                <li><a href="faq.html">FAQs</a></li>
-                                                <li><a href="contact.html">Contact</a></li>
+                                                <li><a href="{{ route('quienes_somos.index') }}">Quienes Somos</a></li>
+                                                <li><a href="{{ route('vehiculos') }}">Vehículos Publicados</a></li>
+                                                <li><a href="vehicle-compare.html">Compare Vehicle</a></li>
+                                                <li><a href="{{ route('blog.index') }}">Blog</a></li>
+                                                <li><a href="{{ route('preguntas_frecuentes.index') }}">Preguntas Frecuentes</a></li>
+                                                <li><a href="{{ route('contacto.index') }}">Contacto</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -234,10 +233,9 @@
                                         <h2>Contact Details</h2>
                                         <div class="widget-content">
                                             <ul class="list-style-one">
-                                                <li><span class="icon flaticon-maps-and-flags"></span>motores502, Newyork 10012, USA</li>
-                                                <li><span class="icon flaticon-telephone"></span>Phone: +92 123 456789</li>
-                                                <li><span class="icon flaticon-fax"></span>Fax: +92 123 456789</li>
-                                                <li><span class="icon flaticon-web"></span>Supportteam@motores502.com</li>
+                                                <li><span class="icon flaticon-maps-and-flags"></span>Km 13 Carretera a El Salvador Muxbal The Shops at Muxbal Guatemala, 01000</li>
+                                                <li><span class="icon flaticon-telephone"></span>Teléfono: +(502) 6646-7000</li>
+                                                <li><span class="icon flaticon-web"></span>info@motores502.com</li>
                                             </ul>
                                         </div>
                                         <h2>Siguenos</h2>
@@ -292,10 +290,11 @@
         <!--End Main Footer-->
 
         <div id="whatsapp"></div>
-        
-        <!--Scroll to top-->
-        <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon fa fa-angle-up"></span></div>        
+               
     </div>
+    
+    <!--Scroll to top-->
+    <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon fa fa-angle-up"></span></div> 
    
     <script src="{{ asset('template_new/js/jquery.js') }}"></script> 
     <script src="{{ asset('template_new/js/bootstrap.min.js') }}"></script>

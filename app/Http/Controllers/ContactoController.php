@@ -17,7 +17,7 @@ class ContactoController extends Controller
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
 
-        $this->seo($title, $description, $keywords, null, $image, 'wbesite');
+        $this->seo($title, $description, $keywords, null, $image, 'website');
 
         $horario = $this->horario_atencion();
         $ubicacion = $this->ubicacion();
@@ -33,6 +33,7 @@ class ContactoController extends Controller
             'people_phones.number AS numero'
         )
         ->whereNull('users.deleted_at')
+        ->orderByRaw('RAND()')
         ->distinct('users.id')
         ->get();
         

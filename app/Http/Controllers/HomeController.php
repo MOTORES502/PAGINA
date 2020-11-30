@@ -16,7 +16,7 @@ class HomeController extends Controller
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
         
-        $this->seo($title, $description, $keywords, null, $image, 'wbesite');
+        $this->seo($title, $description, $keywords, null, $image, 'website');
 
         $subs = DB::connection('mysql')->table('sub_categories')
         ->select(
@@ -49,7 +49,21 @@ class HomeController extends Controller
 
         $arra_precio_bajo = $this->precios_minimos();
         $arra_precio_alto = $this->precios_maximos();
+
+        $blogs = DB::connection('mysql')->table('blog')
+        ->join('users', 'blog.users_id', 'users.id')
+        ->join('people', 'users.people_id', 'people.id')
+        ->select(
+            'blog.id AS id',
+            'blog.image AS image',
+            'blog.name AS name',
+            'blog.description AS description',
+            'blog.created_at AS created_at',
+            DB::RAW('REPLACE(LOWER(blog.name)," ","_") AS slug'),
+            DB::RAW('CONCAT(people.names," ",people.surnames) AS usuario')
+        )
+        ->whereNull('blog.deleted_at')->orderByRaw('RAND()')->limit(3)->get();
         
-        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto'));
+        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs'));
     }
 }

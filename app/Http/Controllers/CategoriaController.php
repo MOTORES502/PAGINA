@@ -15,7 +15,7 @@ class CategoriaController extends Controller
         $image = asset('img/logo_s_fondo_mrm.png');
         $url = "/categoria/$slug/$value";
 
-        $this->seo($title, $description, $keywords, $url, $image, 'wbesite');
+        $this->seo($title, $description, $keywords, $url, $image, 'website');
 
         $sub_categoria = DB::connection('mysql')->table('sub_categories')
                         ->select('name', 'icon')

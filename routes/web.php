@@ -37,5 +37,9 @@ Route::name('lineas')->get('lineas/{marca}', 'LineaController@lineas');
 
 Route::name('contacto.index')->get('contacto', 'ContactoController@index');
 
-Route::name('comparar.index')->get('comparar', 'CompararController@comparar');
+Route::name('comparar.index')->get('comparar', 'CompararController@index');
+
+Route::name('quienes_somos.index')->get('quienes_somos', 'QuienesSomosController@index');
+
+Route::name('preguntas_frecuentes.index')->get('preguntas_frecuentes', 'PreguntasFrecuentesController@index');
 

@@ -65,9 +65,9 @@
                     	<div class="inner-box">
                         	<h2>Motores 502</h2>
                             <ul class="list-style-six">
-                            	<li><span class="icon flaticon-maps-and-flags"></span><span class="bold">Dirección:</span>321 Car World, Breaking Str, 2nn st, Newyork ,USA 10002.</li>
-                                <li><span class="icon flaticon-telephone"></span><span class="bold">Teléfono:</span><br>+321 4567 89 012 & 79 023</li>
-                                <li><span class="icon flaticon-e-mail-envelope"></span><span class="bold">Correo:</span><br>Supportteam@motores502.com</li>
+                            	<li><span class="icon flaticon-maps-and-flags"></span><span class="bold">Dirección:</span>Km 13 Carretera a El Salvador Muxbal The Shops at Muxbal Guatemala, 01000 .</li>
+                                <li><span class="icon flaticon-telephone"></span><span class="bold">Teléfono:</span><br>+(502) 6646-7000</li>
+                                <li><span class="icon flaticon-e-mail-envelope"></span><span class="bold">Correo:</span><br>info@motores502.com</li>
                             </ul>
                             <ul class="social-icon-four">
                                 @foreach ($canales as $item)
