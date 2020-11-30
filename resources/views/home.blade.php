@@ -31,7 +31,7 @@
                 <div class="row clearfix">
                     <!--Form Group-->
                     <div class="form-group col-md-6">
-                        <select id="marca_id" name="marca_id" class="js-example-basic-single">
+                        <select id="marca_id" name="marca_id" class="form-control js-example-basic-single">
                             <option value="">Seleccione marca</option>
                         @foreach ($marcas as $item)
                             <option value="{{ route('lineas', $item->id) }}">{{ $item->name }}</option>
@@ -41,7 +41,7 @@
 
                     <!--Form Group-->
                     <div class="form-group col-md-6">
-                        <select id="linea_id" name="linea_id" class="js-example-basic-single">
+                        <select id="linea_id" name="linea_id" class="form-control js-example-basic-single">
                             <option value="">Seleccione línea</option>
                         </select>
                     </div>
@@ -52,7 +52,7 @@
                 <div class="row clearfix">
                     <!--Form Group-->
                     <div class="form-group col-md-6">
-                        <select name="precio_minimo" class="js-example-basic-single">
+                        <select name="precio_minimo" class="form-control js-example-basic-single">
                             <option value="">Seleccione el precio mínimo</option>
                             @foreach ($arra_precio_bajo as $item)
                                 <option value="{{ $item['numero'] }}">{{ $item['numero_formato'] }}</option>
@@ -62,7 +62,7 @@
 
                     <!--Form Group-->
                     <div class="form-group col-md-6">
-                        <select name="precio_maximo" class="js-example-basic-single">
+                        <select name="precio_maximo" class="form-control js-example-basic-single">
                             <option value="">Seleccione el precio máximo</option>
                             @foreach ($arra_precio_alto as $item)
                                 <option value="{{ $item['numero'] }}">{{ $item['numero_formato'] }}</option>

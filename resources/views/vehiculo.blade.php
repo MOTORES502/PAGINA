@@ -49,7 +49,19 @@
                                                 </a>
                                             </figure>
                                         </li>
-                                    @endforeach    
+                                    @endforeach   
+                                    @foreach ($videos as $item)
+                                        <li>
+                                            <figure class="image">
+                                                @foreach ($images->take(1) as $item_dos)
+                                                    <img src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item_dos->concat }}" style="background-blend-mode: normal; background-image: url({{ $item_dos->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
+                                                    <a class="lightbox-image fancy-btn" data-fancybox-group="example-gallery" href="{{ $item->link }}" title="Motores 502">
+                                                        <span class="fa fa-play"></span>
+                                                    </a>
+                                                @endforeach
+                                            </figure>
+                                        </li>
+                                    @endforeach 
                                 </ul>
                             </div>
 
@@ -61,7 +73,19 @@
                                             <img src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
                                         </figure>
                                     </div>
-                                @endforeach                                
+                                @endforeach   
+                                @foreach ($videos as $item)
+                                    <div class="thumb-item">
+                                        <figure class="thumb-box">
+                                            @foreach ($images->take(1) as $item_dos)
+                                            <img src="{{ $item_dos->image }}" alt="Motores 502">
+                                            <div class="video-icon">
+                                                <span class="fa fa-play"></span>
+                                            </div>
+                                            @endforeach
+                                        </figure>
+                                    </div>
+                                @endforeach                              
                             </div>
                             
                         </div><!--End Product Carousel-->

@@ -1,5 +1,6 @@
 $(document).on('change', '#marca_id', function (e) {
     var url = $(this).val();
+    console.log('llego');
 
     if (url) {
         $('.preloader').show()

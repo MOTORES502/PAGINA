@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sistema\TransportView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\Sistema\TransportView;
 
 class VehiculoController extends Controller
 {
@@ -89,7 +89,6 @@ class VehiculoController extends Controller
             'coins.symbol AS symbol',
             'transports.mileage',
             'transports.people_id AS people_id',
-            DB::RAW('substring(transports.code, INSTR(transports.code, "|")+1) AS facebook'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
             DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
             DB::RAW('(SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta_sf')
@@ -120,7 +119,7 @@ class VehiculoController extends Controller
 
         $sub_categoria = DB::connection('mysql')->table('sub_categories_transports')->where('transports_id', $vehiculo->id)->whereIn('option', [1,2])->pluck('sub_categories_id');
   
-        $precio = is_null($vehiculo->oferta_sf) ? intval($vehiculo->precio) : intval($vehiculo->oferta_sf);
+        $precio = !$vehiculo->oferta_sf ? intval($vehiculo->precio_sf) : intval($vehiculo->oferta_sf);
         $precios_carros = $this->recomendacion($precio, $vehiculo->moneda, $sub_categoria, $vehiculo->id);
         $enganche = $this->calcular_enganche($precio, $vehiculo->symbol);
 
@@ -138,6 +137,13 @@ class VehiculoController extends Controller
         )
         ->where('transports_engineers.transports_id', $vehiculo->id)
         ->first();
+
+        $videos = DB::connection('mysql')->table('transports_youtube')
+        ->select('transports_youtube.link')
+        ->where('transports_youtube.transports_id', $vehiculo->id)
+        ->orderByRaw('RAND()')
+        ->limit(1)
+        ->get();
 
         $comfort = DB::connection('mysql')->table('transports_mod_cons')
         ->select('transports_mod_cons.description AS description')
@@ -195,7 +201,7 @@ class VehiculoController extends Controller
             ]
         );
 
-        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales', 'id', 'ofertas'));
+        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales', 'id', 'ofertas', 'videos'));
     }
 
     public function vehiculo_recomendacion($slug, $value, Request $request)
@@ -260,8 +266,8 @@ class VehiculoController extends Controller
         $images = DB::connection('mysql')->table('transports_images')
         ->select('image', 'concat')
         ->where('transports_images.transports_id', $vehiculo->id)
-            ->orderBy('order')
-            ->get();
+        ->orderBy('order')
+        ->get();
 
         $sub_categoria = DB::connection('mysql')->table('sub_categories_transports')->where('transports_id', $vehiculo->id)->whereIn('option', [1, 2])->pluck('sub_categories_id');
 
@@ -281,8 +287,15 @@ class VehiculoController extends Controller
             'fabrications.name AS fabrications',
             'transports_engineers.description AS description'
         )
-            ->where('transports_engineers.transports_id', $vehiculo->id)
-            ->first();
+        ->where('transports_engineers.transports_id', $vehiculo->id)
+        ->first();
+
+        $videos = DB::connection('mysql')->table('transports_youtube')
+        ->select('transports_youtube.link')
+        ->where('transports_youtube.transports_id', $vehiculo->id)
+        ->orderByRaw('RAND()')
+        ->limit(1)
+        ->get();
 
         $comfort = DB::connection('mysql')->table('transports_mod_cons')
         ->select('transports_mod_cons.description AS description')
@@ -340,7 +353,7 @@ class VehiculoController extends Controller
             ]
         );
 
-        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales', 'id', 'ofertas'));
+        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales', 'id', 'ofertas', 'videos'));
     }
 
     public function vehiculo_buscar($slug, $value, Request $request)
@@ -426,8 +439,15 @@ class VehiculoController extends Controller
             'fabrications.name AS fabrications',
             'transports_engineers.description AS description'
         )
-            ->where('transports_engineers.transports_id', $vehiculo->id)
-            ->first();
+        ->where('transports_engineers.transports_id', $vehiculo->id)
+        ->first();
+
+        $videos = DB::connection('mysql')->table('transports_youtube')
+        ->select('transports_youtube.link')
+        ->where('transports_youtube.transports_id', $vehiculo->id)
+        ->orderByRaw('RAND()')
+        ->limit(1)
+        ->get();
 
         $comfort = DB::connection('mysql')->table('transports_mod_cons')
         ->select('transports_mod_cons.description AS description')
@@ -485,7 +505,7 @@ class VehiculoController extends Controller
             ]
         );
 
-        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales', 'id', 'ofertas'));
+        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales', 'id', 'ofertas', 'videos'));
     }
 
     public function vehiculo_inventario($slug, $value, Request $request)
@@ -571,8 +591,15 @@ class VehiculoController extends Controller
             'fabrications.name AS fabrications',
             'transports_engineers.description AS description'
         )
-            ->where('transports_engineers.transports_id', $vehiculo->id)
-            ->first();
+        ->where('transports_engineers.transports_id', $vehiculo->id)
+        ->first();
+
+        $videos = DB::connection('mysql')->table('transports_youtube')
+        ->select('transports_youtube.link')
+        ->where('transports_youtube.transports_id', $vehiculo->id)
+        ->orderByRaw('RAND()')
+        ->limit(1)
+        ->get();
 
         $comfort = DB::connection('mysql')->table('transports_mod_cons')
         ->select('transports_mod_cons.description AS description')
@@ -630,7 +657,7 @@ class VehiculoController extends Controller
             ]
         );
 
-        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales', 'id', 'ofertas'));
+        return view('vehiculo', compact('vehiculo', 'images', 'precios_carros', 'precio', 'enganche', 'general', 'comfort', 'seguridad', 'diferencia', 'extra', 'ubicacion', 'tipos_telefono', 'canales', 'id', 'ofertas', 'videos'));
     }
 
     public function calcular_enganche($precio, $moneda)

@@ -1,13 +1,14 @@
-<html lang="es">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Language" content="es">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     {!! SEOMeta::generate() !!}
     {!! OpenGraph::generate() !!}
     {!! Twitter::generate() !!}
-    {!! JsonLd::generate() !!}
-    <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
+    {!! JsonLd::generate() !!}    <!--Favicon-->
+    <link rel="shortcut icon" href="{{ asset('img/favicon.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('img/favicon.png') }}" type="image/x-icon">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <!-- Responsive -->
@@ -28,6 +29,24 @@
     <link rel="stylesheet" href="{{ asset('whatsapp/floating-wpp.css') }}">
     <link rel="stylesheet" href="{{ asset('select2/css/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/intlTelInput.css') }}">    
+
+
+    <script src="{{ asset('template_new/js/jquery.js') }}"></script> 
+    <script src="{{ asset('template_new/js/bootstrap.min.js') }}"></script>
+    
+    <!--Revolution Slider-->
+    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.revolution.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.tools.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.actions.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.carousel.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.kenburn.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.migration.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.navigation.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
+    <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
 </head>
 <body class="msb-x">
     <div class="page-wrapper">
@@ -296,20 +315,6 @@
     <!--Scroll to top-->
     <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon fa fa-angle-up"></span></div>
 
-    <script src="{{ asset('template_new/js/jquery.js') }}"></script> 
-    <script src="{{ asset('template_new/js/bootstrap.min.js') }}"></script>
-    <!--Revolution Slider-->
-    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.revolution.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.tools.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.actions.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.carousel.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.kenburn.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.migration.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.navigation.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
     <script src="{{ asset('template_new/js/jquery.datetimepicker.js') }}"></script>
     <!--End Revolution Slider-->
     <script src="{{ asset('template_new/js/jquery-ui.js') }}"></script>
@@ -320,15 +325,23 @@
     <script src="{{ asset('template_new/js/wow.js') }}"></script>
     <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
     <script src="{{ asset('template_new/js/validate.js') }}"></script>
-    <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('template_new/js/script.js') }}"></script>  
     <script type="text/javascript" src="{{ asset('whatsapp/jquery-3.3.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/buscar_lineas.js') }}"></script>
-</body> 
+    <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
+</body>
     @yield('script')    
     <script type="text/javascript">
-        $(function () {
+        $(function () {		
+            $('.js-example-basic-single').select2({
+                theme: "classic",
+                width: 'resolve'
+            });
+            $('.js-example-basic-multiple').select2({
+                theme: "classic",
+                width: 'resolve'
+            });
             $('#whatsapp').floatingWhatsApp({
                 phone: '50255792225',
                 popupMessage: '¿Hola, en que podemos ayudarle?',
@@ -343,7 +356,15 @@
         });
     </script>   
     <script>        
-        $(document).ready(function(){
+        $(document).ready(function(){	
+            $('.js-example-basic-single').select2({
+                theme: "classic",
+                width: 'resolve'
+            });
+            $('.js-example-basic-multiple').select2({
+                theme: "classic",
+                width: 'resolve'
+            });
             $('#search').keyup(function(){ 
                 var query = $(this).val();
                 $('#registros').fadeOut(); 
@@ -374,4 +395,4 @@
             });
         });
     </script>
-</html>
+</html> 

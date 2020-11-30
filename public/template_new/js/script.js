@@ -12,7 +12,7 @@
 	
 	//Custom Seclect Box
 	if($('.custom-select-box').length){
-		//$('.custom-select-box').selectmenu().selectmenu('menuWidget').addClass('overflow');
+		$('.custom-select-box').selectmenu().selectmenu('menuWidget').addClass('overflow');
 	}
 
 
@@ -437,7 +437,6 @@
 		});
 	}
 	
-	
 	// Elements Animation
 	if($('.wow').length){
 		var wow = new WOW(
@@ -478,14 +477,5 @@
 			$(".middleBar").removeClass("middleBarClick");
 			$(".bottomBar").removeClass("bottomBarClick");
 		}
-	});
-
-	$('.js-example-basic-single').select2({
-		theme: "classic",
-		width: 'resolve'
-	});
-	$('.js-example-basic-multiple').select2({
-		theme: "classic",
-		width: 'resolve'
 	});
 }());
