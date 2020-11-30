@@ -14,6 +14,8 @@
 	if($('.custom-select-box').length){
 		//$('.custom-select-box').selectmenu().selectmenu('menuWidget').addClass('overflow');
 	}
+
+
 	
 	//Date Picker
 	if($('input.date-time-picker').length){
@@ -476,5 +478,14 @@
 			$(".middleBar").removeClass("middleBarClick");
 			$(".bottomBar").removeClass("bottomBarClick");
 		}
+	});
+
+	$('.js-example-basic-single').select2({
+		theme: "classic",
+		width: 'resolve'
+	});
+	$('.js-example-basic-multiple').select2({
+		theme: "classic",
+		width: 'resolve'
 	});
 }());

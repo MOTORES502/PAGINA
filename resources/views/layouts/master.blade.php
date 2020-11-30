@@ -344,14 +344,6 @@
     </script>   
     <script>        
         $(document).ready(function(){
-            $('.js-example-basic-single').select2({
-                theme: "classic",
-                width: 'resolve'
-            });
-            $('.js-example-basic-multiple').select2({
-                theme: "classic",
-                width: 'resolve'
-            });
             $('#search').keyup(function(){ 
                 var query = $(this).val();
                 $('#registros').fadeOut(); 
