@@ -28,26 +28,7 @@
     <!-- Extras -->
     <link rel="stylesheet" href="{{ asset('whatsapp/floating-wpp.css') }}">
     <link rel="stylesheet" href="{{ asset('select2/css/select2.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/intlTelInput.css') }}">    
-
-
-    <script src="{{ asset('template_new/js/jquery.js') }}"></script> 
-    <script src="{{ asset('template_new/js/bootstrap.min.js') }}"></script>
-    
-    <!--Revolution Slider-->
-    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.revolution.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.tools.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.actions.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.carousel.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.kenburn.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.migration.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.navigation.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
-    <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
-    <!--End Revolution Slider-->
+    <link rel="stylesheet" href="{{ asset('assets/css/intlTelInput.css') }}"> 
 </head>
 <body class="msb-x">
     <div class="page-wrapper">
@@ -160,162 +141,179 @@
         
         </header>
         <!--End Main Header -->
-    </div>
 
-    @if (count($errors) > 0)
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h5><i class="fa fa-ban"></i> ¡Error!</h5>
-            <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-            </ul>
-        </div> 
-    @elseif(Session::has('success'))
-        <div class="alert alert-success alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h5><i class="fa fa-check"></i> ¡Éxito!</h5>
-            {{Session::get('success')}}
-        </div>
-    @elseif(Session::has('warning'))
-        <div class="alert alert-warning alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h5><i class="fa fa-exclamation-triangle"></i> ¡Advertencia!</h5>
-            {{Session::get('warning')}}
-        </div>
-    @elseif(Session::has('danger'))
-        <div class="alert alert-danger alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h5><i class="fa fa-exclamation-triangle"></i> ¡Error!</h5>
-            {{Session::get('danger')}}
-        </div>
-    @elseif(Session::has('info'))
-        <div class="alert alert-info alert-dismissible">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-            <h5><i class="fa fa-info"></i> ¡Información!</h5>
-            {{Session::get('info')}}
-        </div>
-    @endif 
+        @if (count($errors) > 0)
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="fa fa-ban"></i> ¡Error!</h5>
+                <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+                </ul>
+            </div> 
+        @elseif(Session::has('success'))
+            <div class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="fa fa-check"></i> ¡Éxito!</h5>
+                {{Session::get('success')}}
+            </div>
+        @elseif(Session::has('warning'))
+            <div class="alert alert-warning alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="fa fa-exclamation-triangle"></i> ¡Advertencia!</h5>
+                {{Session::get('warning')}}
+            </div>
+        @elseif(Session::has('danger'))
+            <div class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="fa fa-exclamation-triangle"></i> ¡Error!</h5>
+                {{Session::get('danger')}}
+            </div>
+        @elseif(Session::has('info'))
+            <div class="alert alert-info alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="fa fa-info"></i> ¡Información!</h5>
+                {{Session::get('info')}}
+            </div>
+        @endif 
 
-    @yield('content') 
+        @yield('content') 
 
 
-    <!--Main Footer-->
-    <footer class="main-footer" style="background-image:url({{ asset('template_new/images/background/1.jpg') }});">
-        <div class="auto-container">
-            <!--Widgets Section-->
-            <div class="widgets-section">
-                <div class="row clearfix">
+        <!--Main Footer-->
+        <footer class="main-footer" style="background-image:url({{ asset('template_new/images/background/1.jpg') }});">
+            <div class="auto-container">
+                <!--Widgets Section-->
+                <div class="widgets-section">
+                    <div class="row clearfix">
 
-                    <!--big column-->
-                    <div class="big-column col-md-6 col-sm-12 col-xs-12">
-                        <div class="row clearfix">
+                        <!--big column-->
+                        <div class="big-column col-md-6 col-sm-12 col-xs-12">
+                            <div class="row clearfix">
 
-                            <!--Footer Column-->
-                            <div class="footer-column col-md-6 col-sm-6 col-xs-12">
-                                <div class="footer-widget about-widget">
-                                    <h2>About Us</h2>
-                                    <div class="text">
-                                        <p>Must explain to how all this mistaken idea of denouncing pleasure & praising pain was born and system.</p>
-                                        <p>There anyone who loves or pursues or desires to obtain pain  itself, because it is pain, but because occasionally occur in whichgreat pleasure. </p>
-                                    </div>
-                                    <a href="about.html" class="theme-btn btn-style-three">Read More</a>
-                                </div>
-                            </div>
-
-                            <!--Footer Column-->
-                            <div class="footer-column col-md-6 col-sm-6 col-xs-12">
-                                <div class="footer-widget links-widget">
-                                    <h2>Usefull Links</h2>
-                                    <div class="widget-content">
-                                        <ul class="footer-links">
-                                            <li><a href="about.html">About Us</a></li>
-
-                                            <li><a href="inventory-grid.html">Recent Tickets</a></li>
-                                            <li><a href="vehicle-compare.html">Compare Cars</a></li>
-                                            <li><a href="blog.html">Blog</a></li>
-                                            <li><a href="faq.html">FAQs</a></li>
-                                            <li><a href="contact.html">Contact</a></li>
-                                        </ul>
+                                <!--Footer Column-->
+                                <div class="footer-column col-md-6 col-sm-6 col-xs-12">
+                                    <div class="footer-widget about-widget">
+                                        <h2>About Us</h2>
+                                        <div class="text">
+                                            <p>Must explain to how all this mistaken idea of denouncing pleasure & praising pain was born and system.</p>
+                                            <p>There anyone who loves or pursues or desires to obtain pain  itself, because it is pain, but because occasionally occur in whichgreat pleasure. </p>
+                                        </div>
+                                        <a href="about.html" class="theme-btn btn-style-three">Read More</a>
                                     </div>
                                 </div>
-                            </div>
 
+                                <!--Footer Column-->
+                                <div class="footer-column col-md-6 col-sm-6 col-xs-12">
+                                    <div class="footer-widget links-widget">
+                                        <h2>Usefull Links</h2>
+                                        <div class="widget-content">
+                                            <ul class="footer-links">
+                                                <li><a href="about.html">About Us</a></li>
+
+                                                <li><a href="inventory-grid.html">Recent Tickets</a></li>
+                                                <li><a href="vehicle-compare.html">Compare Cars</a></li>
+                                                <li><a href="blog.html">Blog</a></li>
+                                                <li><a href="faq.html">FAQs</a></li>
+                                                <li><a href="contact.html">Contact</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
-                    </div>
 
-                    <!--big column-->
-                    <div class="big-column col-md-6 col-sm-12 col-xs-12">
-                        <div class="row clearfix">
-                            <!--Footer Column-->
-                            <div class="footer-column col-md-6 col-sm-6 col-xs-12">
-                                <div class="footer-widget links-widget">
-                                    <h2>Contact Details</h2>
-                                    <div class="widget-content">
-                                        <ul class="list-style-one">
-                                            <li><span class="icon flaticon-maps-and-flags"></span>motores502, Newyork 10012, USA</li>
-                                            <li><span class="icon flaticon-telephone"></span>Phone: +92 123 456789</li>
-                                            <li><span class="icon flaticon-fax"></span>Fax: +92 123 456789</li>
-                                            <li><span class="icon flaticon-web"></span>Supportteam@motores502.com</li>
+                        <!--big column-->
+                        <div class="big-column col-md-6 col-sm-12 col-xs-12">
+                            <div class="row clearfix">
+                                <!--Footer Column-->
+                                <div class="footer-column col-md-6 col-sm-6 col-xs-12">
+                                    <div class="footer-widget links-widget">
+                                        <h2>Contact Details</h2>
+                                        <div class="widget-content">
+                                            <ul class="list-style-one">
+                                                <li><span class="icon flaticon-maps-and-flags"></span>motores502, Newyork 10012, USA</li>
+                                                <li><span class="icon flaticon-telephone"></span>Phone: +92 123 456789</li>
+                                                <li><span class="icon flaticon-fax"></span>Fax: +92 123 456789</li>
+                                                <li><span class="icon flaticon-web"></span>Supportteam@motores502.com</li>
+                                            </ul>
+                                        </div>
+                                        <h2>Siguenos</h2>
+                                        <ul class="social-icon-four">
+                                            @foreach ($canales as $item)
+                                                <li><a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer"><span class="{{ $item['icon'] }}"></span></a></li>
+                                            @endforeach                                        
                                         </ul>
                                     </div>
-                                    <h2>Siguenos</h2>
-                                    <ul class="social-icon-four">
-                                        @foreach ($canales as $item)
-                                            <li><a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer"><span class="{{ $item['icon'] }}"></span></a></li>
-                                        @endforeach                                        
-                                    </ul>
                                 </div>
-                            </div>
 
-                            <!--Footer Column-->
-                            <div class="footer-column col-md-6 col-sm-6 col-xs-12">
-                                <div class="footer-widget offer-widget">
-                                    <div class="column">
-                                        <div class="hours-block">
-                                            <div class="inner-box p-0">
-                                                <h2>Horario de atención en instalaciones</h2>
-                                                <ul>
-                                                    @foreach ($horario as $item)
-                                                        <li class="clearfix">{{ $item['dia'] }}<span class="{{ $item['abierto'] ? '' : 'closed' }}">{{ $item['hora'] }}</span></li>
-                                                    @endforeach
-                                                </ul>
+                                <!--Footer Column-->
+                                <div class="footer-column col-md-6 col-sm-6 col-xs-12">
+                                    <div class="footer-widget offer-widget">
+                                        <div class="column">
+                                            <div class="hours-block">
+                                                <div class="inner-box p-0">
+                                                    <h2>Horario de atención en instalaciones</h2>
+                                                    <ul>
+                                                        @foreach ($horario as $item)
+                                                            <li class="clearfix">{{ $item['dia'] }}<span class="{{ $item['abierto'] ? '' : 'closed' }}">{{ $item['hora'] }}</span></li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--Footer Bottom-->
+            <div class="footer-bottom">
+                <div class="auto-container">
+                    <div class="row clearfix">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="copyright">Copyrights © 2020 Todos los derechos reservados de Motores502.</div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <ul class="footer-nav">
+                                <li><a href="http://www.xenialsolution.com" target="_blank">Powered By: Xenial Solution</a></li>
+                            </ul>
                         </div>
                     </div>
-
                 </div>
             </div>
-        </div>
-        <!--Footer Bottom-->
-        <div class="footer-bottom">
-            <div class="auto-container">
-                <div class="row clearfix">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <div class="copyright">Copyrights © 2020 Todos los derechos reservados de Motores502.</div>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <ul class="footer-nav">
-                            <li><a href="http://www.xenialsolution.com" target="_blank">Powered By: Xenial Solution</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!--End Main Footer-->
+        </footer>
+        <!--End Main Footer-->
 
-    <div id="whatsapp"></div>
+        <div id="whatsapp"></div>
+        
+        <!--Scroll to top-->
+        <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon fa fa-angle-up"></span></div>        
+    </div>
+   
+    <script src="{{ asset('template_new/js/jquery.js') }}"></script> 
+    <script src="{{ asset('template_new/js/bootstrap.min.js') }}"></script>
     
-    <!--Scroll to top-->
-    <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon fa fa-angle-up"></span></div>
-
+    <!--Revolution Slider-->
+    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.revolution.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.tools.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.actions.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.carousel.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.kenburn.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.migration.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.navigation.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
+    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
+    <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
+    <!--End Revolution Slider-->
     <script src="{{ asset('template_new/js/jquery.datetimepicker.js') }}"></script>
     <script src="{{ asset('template_new/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('template_new/js/jquery.fancybox.pack.js') }}"></script>
