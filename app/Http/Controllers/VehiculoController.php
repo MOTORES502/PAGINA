@@ -27,12 +27,15 @@ class VehiculoController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),

@@ -38,6 +38,7 @@
                                 <li><span class="icon fa fa-road"></span>{{ number_format($item->kilometro, 0, '.', ',') }}</li>
                                 <li><span class="icon fa fa-car"></span>{{ $item->combustible }}</li>
                                 <li><span class="icon fa fa-clock-o"></span>{{ $item->modelo }}</li>
+                                <li><span class="icon fa fa-gears"></span>{{ $item->transmision }}</li>
                                 <li><span class="icon fa fa-binoculars"></span><span class="badge badge-secondary">{{ $item->estado }}</span></li>
                             </ul>
                         </div>

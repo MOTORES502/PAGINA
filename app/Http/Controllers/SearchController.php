@@ -32,12 +32,15 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -82,12 +85,15 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -131,12 +137,15 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -182,12 +191,15 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -234,12 +246,15 @@ class SearchController extends Controller
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('sub_categories', 'sub_categories_transports.sub_categories_id', 'sub_categories.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -380,12 +395,15 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -411,12 +429,15 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -443,6 +464,8 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))*8 AS order_by'),
             'transports.code AS codigo',
@@ -450,6 +473,7 @@ class SearchController extends Controller
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -471,6 +495,8 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)) AS order_by'),
             'transports.code AS codigo',
@@ -478,6 +504,7 @@ class SearchController extends Controller
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -508,6 +535,8 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))*8 AS order_by'),
             'transports.code AS codigo',
@@ -515,6 +544,7 @@ class SearchController extends Controller
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -536,6 +566,8 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)) AS order_by'),
             'transports.code AS codigo',
@@ -543,6 +575,7 @@ class SearchController extends Controller
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -573,6 +606,8 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))*8 AS order_by'),
             'transports.code AS codigo',
@@ -580,6 +615,7 @@ class SearchController extends Controller
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
@@ -600,6 +636,8 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
         ->select(
             DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)) AS order_by'),
             'transports.code AS codigo',
@@ -607,6 +645,7 @@ class SearchController extends Controller
             'models.anio AS modelo',
             'transports.mileage AS kilometro',
             'fuels.name AS combustible',
+            'transmisions.name AS transmision',
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
