@@ -320,10 +320,10 @@
     <script src="{{ asset('template_new/js/wow.js') }}"></script>
     <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
     <script src="{{ asset('template_new/js/validate.js') }}"></script>
+    <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
     <script src="{{ asset('template_new/js/script.js') }}"></script>  
     <script type="text/javascript" src="{{ asset('whatsapp/jquery-3.3.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
-    <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/buscar_lineas.js') }}"></script>
 </body> 
     @yield('script')    
