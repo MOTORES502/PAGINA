@@ -47,6 +47,7 @@
     <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
     <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
     <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
+    <!--End Revolution Slider-->
 </head>
 <body class="msb-x">
     <div class="page-wrapper">
@@ -316,7 +317,6 @@
     <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon fa fa-angle-up"></span></div>
 
     <script src="{{ asset('template_new/js/jquery.datetimepicker.js') }}"></script>
-    <!--End Revolution Slider-->
     <script src="{{ asset('template_new/js/jquery-ui.js') }}"></script>
     <script src="{{ asset('template_new/js/jquery.fancybox.pack.js') }}"></script>
     <script src="{{ asset('template_new/js/jquery.fancybox-media.js') }}"></script>
