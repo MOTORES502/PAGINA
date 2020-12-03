@@ -33,9 +33,9 @@
                     <div class="form-group col-md-6">
                         <select id="marca_id" name="marca_id" class="form-control js-example-basic-single">
                             <option value="">Seleccione marca</option>
-                        @foreach ($marcas as $item)
-                            <option value="{{ route('lineas', $item->id) }}">{{ $item->name }}</option>
-                        @endforeach
+                            @foreach ($marcas as $item)
+                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            @endforeach
                         </select>
                     </div>
 
@@ -225,7 +225,7 @@
                             <div class="content">
                                 <div class="count-outer count-box">
                                     <div class="icon-box"><span class="icon flaticon-transport-1"></span></div>
-                                    <span class="count-text" data-speed="10" data-stop="{{ $total_carros }}">0</span>
+                                    <span class="count-text" data-speed="4000" data-stop="{{ $total_carros }}">0</span>
                                 </div>
                                 <h4 class="counter-title">Vehículos Disponibles</h4>
                             </div>
@@ -238,7 +238,7 @@
                             <div class="content">
                                 <div class="count-outer count-box">
                                     <div class="icon-box"><span class="icon flaticon-good-mood-emoticon"></span></div>
-                                    <span class="count-text" data-speed="10" data-stop="{{ $visitas }}">0</span>
+                                    <span class="count-text" data-speed="4000" data-stop="{{ $visitas }}">0</span>
                                 </div>
                                 <h4 class="counter-title">Visitas</h4>
                             </div>
@@ -251,7 +251,7 @@
                             <div class="content">
                                 <div class="count-outer count-box">
                                     <div class="icon-box"><span class="icon flaticon-black"></span></div>
-                                    <span class="count-text" data-speed="3000" data-stop="295">0</span>+
+                                    <span class="count-text" data-speed="4000" data-stop="295">0</span>+
                                 </div>
                                 <h4 class="counter-title">Experts Reviews</h4>
                             </div>
@@ -264,7 +264,7 @@
                             <div class="content">
                                 <div class="count-outer count-box">
                                     <div class="icon-box"><span class="icon flaticon-interface-1"></span></div>
-                                    <span class="count-text" data-speed="3000" data-stop="7">0</span>
+                                    <span class="count-text" data-speed="4000" data-stop="7">0</span>
                                 </div>
                                 <h4 class="counter-title">Certification Hold</h4>
                             </div>
@@ -283,7 +283,7 @@
         <div class="auto-container">
             <!--Sec Title-->
             <div class="sec-title style-two">
-                <h2>Why Choose Us</h2>
+                <h2>¿Por qué elegirnos?</h2>
             </div>
             <div class="row clearfix">
             
@@ -291,13 +291,14 @@
                 <div class="services-block-two col-md-4 col-sm-6 col-xs-12">
                     <div class="inner-box">
                         <div class="icon-box"><span class="icon flaticon-car-washing"></span></div>
-                        <h3><a href="javascript:">Auto Loan Facility</a></h3>
-                        <div class="sub-title">Easy Finance</div>
-                        <div class="text">How all this mistakens idea off ut denouncing pleasures and praisings ut pain.</div>
+                        <h3><a href="javascript:">Para vendedores:</a></h3>
+                        <div class="sub-title">Lo que ofrecemos</div>
+                        <div class="text">Ofrecemos ayudarte a vender en consignación, tu auto, moto, avión, etc. ¡Cualquier medio de transporte que tenga un motor!.</div>
                         <ul>
-                            <li>Professional Finance</li>
-                            <li>Affordable EMI</li>
-                            <li>Less Interest Rate</li>
+                            <li>Toma de fotografías y vídeo</li>
+                            <li>Publicación en nuestras plataformas digitales</li>
+                            <li>Promoción por medio de una estrategia digital</li>
+                            <li>¡Pronto pago!</li>
                         </ul>
                     </div>
                 </div>
@@ -306,13 +307,14 @@
                 <div class="services-block-two col-md-4 col-sm-6 col-xs-12">
                     <div class="inner-box">
                         <div class="icon-box"><span class="icon flaticon-contract"></span></div>
-                        <h3><a href="javascript:">Free Documentation</a></h3>
-                        <div class="sub-title">No Hidden Charges</div>
-                        <div class="text">Denouncing pleasures and ut praisings pains was born work will gives you.</div>
+                        <h3><a href="javascript:">Para compradores:</a></h3>
+                        <div class="sub-title">Lo que obtendrás</div>
+                        <div class="text">¡Cualquier medio de transporte que tenga un motor, podemos ayudarte a conseguirlo</div>
                         <ul>
-                            <li>Quick Documentation</li>
-                            <li>Very Confidential</li>
-                            <li>On Time Processing</li>
+                            <li>Atención personalizada</li>
+                            <li>Transparencia en la negociación</li>
+                            <li>Papelería en orden</li>
+                            <li>¡Precio justo!</li>
                         </ul>
                     </div>
                 </div>
@@ -321,13 +323,15 @@
                 <div class="services-block-two col-md-4 col-sm-6 col-xs-12">
                     <div class="inner-box">
                         <div class="icon-box"><span class="icon flaticon-telemarketer"></span></div>
-                        <h3><a href="javascript:">Customer Support</a></h3>
-                        <div class="sub-title">24/7 Online Support</div>
-                        <div class="text">Idea of denouncing pleasure ut and praisings pain born and system and expound.</div>
+                        <h3><a href="javascript:">Servicios Motores 502</a></h3>
+                        <div class="sub-title">Lo que necesitarás</div>
+                        <div class="text">En Motores 502 no solo te ayudamos a comprar o vender. Te ofrecemos estos servicios adicionales</div>
                         <ul>
-                            <li>Experienced Team</li>
-                            <li>Humble Talk</li>
-                            <li>Quick Response</li>
+                            <li>Traspasos electrónicos</li>
+                            <li>Corretaje de seguros</li>
+                            <li>Car Wash & Detailing</li>
+                            <li>Asesoría en Marketing Digital</li>
+                            <li>¡Todo en un solo lugar!</li>
                         </ul>
                     </div>
                 </div>
@@ -340,45 +344,55 @@
     <!--Client Section-->
     <section class="client-section" style="background-image:url({{ asset('template_new/images/background/1.jpg') }});">
         <div class="auto-container">
-            <div class="row clearfix">
+            <div class="row clearfix" style="display: flex; align-items: center;">
                 <!--Title Column-->
                 <div class="title-column col-md-4 col-sm-12 col-xs-12">
                     <div class="sec-title light no-border">
-                        <h2>Who Trust us</h2>
+                        <h2>¿Quienes confian en nosotros?</h2>
                     </div>
-                    <div class="style-text">Here are some of the brands that have trusted us for car performance.</div>
-                    <div class="text">Great explorer of the truth, the master-builder of human happiness one rejects, dislikes, or avoids sed pleasure because it is pleasure.</div>
+                    <div class="style-text">Contamos con socios estratégicos a nivel financiero, legal y técnico automotriz que confían en nosotros para prestar un servicio de excelencia..</div>
                 </div>
                 <!--Client Column-->
                 <div class="client-column col-md-8 col-sm-12 col-xs-12">
                     <div class="clients-box">
                         <div class="clearfix">
-                        
                             <!--Client Box-->
-                            <div class="client-box col-md-3 col-sm-6 col-xs-12">
+                            <div class="client-box col-md-4 col-sm-6 col-xs-12">
                                 <div class="image">
-                                    <a href="javascript:"><img src="{{ asset('template_new/images/clients/5.png') }}" alt="" /></a>
+                                    <a href="javascript:"><img src="{{ asset('img/bancos/credomatic.png') }}" alt="Credomatic" /></a>
                                 </div>
                             </div>
                             
                             <!--Client Box-->
-                            <div class="client-box col-md-3 col-sm-6 col-xs-12">
+                            <div class="client-box col-md-4 col-sm-6 col-xs-12">
                                 <div class="image">
-                                    <a href="javascript:"><img src="{{ asset('template_new/images/clients/6.png') }}" alt="" /></a>
+                                    <a href="javascript:"><img src="{{ asset('img/bancos/bam.png') }}" alt="BAM" /></a>
                                 </div>
                             </div>
                             
                             <!--Client Box-->
-                            <div class="client-box col-md-3 col-sm-6 col-xs-12">
+                            <div class="client-box col-md-4 col-sm-6 col-xs-12">
                                 <div class="image">
-                                    <a href="javascript:"><img src="{{ asset('template_new/images/clients/7.png') }}" alt="" /></a>
+                                    <a href="javascript:"><img src="{{ asset('img/bancos/gyt.png') }}" alt="G&T" /></a>
                                 </div>
                             </div>
+                        </div>
+                    </div>
                             
+                    <div class="clients-box">
+                        <div class="clearfix">
+
                             <!--Client Box-->
-                            <div class="client-box col-md-3 col-sm-6 col-xs-12">
+                            <div class="client-box col-md-4 col-sm-6 col-xs-12">
                                 <div class="image">
-                                    <a href="javascript:"><img src="{{ asset('template_new/images/clients/8.png') }}" alt="" /></a>
+                                    <a href="javascript:"><img src="{{ asset('img/bancos/bi.png') }}" alt="BI" /></a>
+                                </div>
+                            </div>
+
+                            <!--Client Box-->
+                            <div class="client-box col-md-4 col-sm-6 col-xs-12">
+                                <div class="image">
+                                    <a href="javascript:"><img src="{{ asset('img/bancos/visa.png') }}" alt="VISA" /></a>
                                 </div>
                             </div>
                             

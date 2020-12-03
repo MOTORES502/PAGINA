@@ -16,98 +16,131 @@
             <div class="row clearfix">
                 <!--Options Cars Column-->
                 <div class="options-cars-column col-sm-12">
-                    <div class="row clearfix">
+                    <form action="{{ route('comparar.store') }}" method="post">
+                        @csrf
+                        <div class="row clearfix">
+                            <!--Car Block-->
+                            <div class="car-option-block col-md-6 col-sm-6 col-xs-12">
+                                <div class="inner-box">
+                                    <h2>Seleccionar el primer vehículo</h2>
+                                    <div class="icon-box">
+                                        <span class="icon flaticon-cabriolet"></span>
+                                    </div>
 
-                        <!--Car Block-->
-                        <div class="car-option-block col-md-6 col-sm-6 col-xs-12">
-                            <div class="inner-box">
-                                <h2>Seleccionar carro</h2>
-                                <div class="icon-box">
-                                    <span class="icon flaticon-cabriolet"></span>
+                                    <!--Calculate Form-->
+                                    <div class="default-form">
+                                        <div class="form-group">
+                                            <select id="marca_id_one" name="marca_id_one" class="form-control js-example-basic-single">
+                                                <option value="">Seleccione marca</option>
+                                                @foreach ($marcas as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select id="linea_id_one" name="linea_id_one" class="form-control js-example-basic-single">
+                                                <option value="">Seleccione línea</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <select id="codigo_id_one" name="codigo_id_one" class="form-control js-example-basic-single">
+                                                <option value="">Seleccione un código de vehículo</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
 
-                                <!--Calculate Form-->
-                                <div class="default-form">
-                                    <form method="post" action="http://t.commonsupport.com/motores502/calculater-form">
+                            <!--Car Block-->
+                            <div class="car-option-block col-md-6 col-sm-6 col-xs-12">
+                                <div class="inner-box">
+                                    <h2>Seleccionar el segundo vehículo</h2>
+                                    <div class="icon-box">
+                                        <span class="icon flaticon-cabriolet"></span>
+                                    </div>
+
+                                    <!--Calculate Form-->
+                                    <div class="default-form">
                                         <div class="form-group">
-                                            <select class="custom-select-box">
-                                                <option>BMW</option>
-                                                <option>Ferari</option>
-                                                <option>Honda</option>
-                                                <option>Toyota</option>
+                                            <select id="marca_id_two" name="marca_id_two" class="form-control js-example-basic-single">
+                                                <option value="">Seleccione marca</option>
+                                                @foreach ($marcas as $item)
+                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <select class="custom-select-box">
-                                                <option>BMW F12 6 Series</option>
-                                                <option>Ferari F12 6 Series</option>
-                                                <option>Honda F12 6 Series</option>
-                                                <option>Toyota F12 6 Series</option>
+                                            <select id="linea_id_two" name="linea_id_two" class="form-control js-example-basic-single">
+                                                <option value="">Seleccione línea</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
-                                            <select class="custom-select-box">
-                                                <option>Varient</option>
-                                                <option>Varient One</option>
-                                                <option>Varient Two</option>
-                                                <option>Varient Three</option>
-                                                <option>Varient Four</option>
+                                            <select id="codigo_id_two" name="codigo_id_two" class="form-control js-example-basic-single">
+                                                <option value="">Seleccione un código de vehículo</option>
                                             </select>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
-
                             </div>
                         </div>
-
-                        <!--Car Block-->
-                        <div class="car-option-block col-md-6 col-sm-6 col-xs-12">
-                            <div class="inner-box">
-                                <h2>Seleccionar carro</h2>
-                                <div class="icon-box">
-                                    <span class="icon flaticon-cabriolet"></span>
-                                </div>
-
-                                <!--Calculate Form-->
-                                <div class="default-form">
-                                    <form method="post" action="http://t.commonsupport.com/motores502/calculater-form">
-                                        <div class="form-group">
-                                            <select class="custom-select-box">
-                                                <option>Hyndai</option>
-                                                <option>Ferari</option>
-                                                <option>Honda</option>
-                                                <option>Toyota</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <select class="custom-select-box">
-                                                <option>Coupe 1.0FL</option>
-                                                <option>Coupe 2.0FL</option>
-                                                <option>Coupe 3.0FL</option>
-                                                <option>Coupe 4.0FL</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <select class="custom-select-box">
-                                                <option>Varient</option>
-                                                <option>Varient One</option>
-                                                <option>Varient Two</option>
-                                                <option>Varient Three</option>
-                                                <option>Varient Four</option>
-                                            </select>
-                                        </div>
-                                    </form>
-                                </div>
-
-                            </div>
+                        <div class="text-center">
+                            <button type="submit" class="theme-btn btn-style-one compare-btn">Comparar Vehículo</button>
                         </div>
-                    </div>
-                    <div class="text-center">
-                        <a href="javascript:" class="theme-btn btn-style-one compare-btn">compare Cars</a>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
     </section>
     <!--End Cars Compare Section-->    
+
+    <!--Comparison Section-->
+    <section class="comparison-section grey-bg">
+        <div class="auto-container">
+            <!--Sec Title-->
+            <div class="sec-title centered">
+                <h2>Latest Comparisons</h2>
+            </div>
+
+            @foreach ($carros->chunk(2) as $bloque)
+            <div class="row clearfix">
+                @foreach ($bloque as $item)
+                <!--Comparison Block-->
+                <div class="comparison-block col-md-6 col-sm-12 col-xs-12">
+                    <div class="inner-box">
+                        <a href="vehicle-compare-2.html" class="overlay-link"></a>
+                        <div class="vs">Vs</div>
+                        <div class="clearfix">
+                            <div class="inner-car-block col-md-6 col-sm-6 col-xs-12">
+                                <div class="inner">
+                                    <div class="image">
+                                        <img alt="{{ $item->alt_one }}" style="background-blend-mode: normal; background-image: url({{ $item->image_one }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
+                                    </div>
+                                    <div class="lower-box">
+                                        <div class="car-name">{{ $item->completo_one }} <br> {{ $item->code_one }}</div>
+                                        <div class="price">{{ $item->oferta_one ? $item->oferta_one : $item->precio_one }}</div>
+                                        <div class="overlay-text">{{ $item->completo_one }} <br> {{ $item->code_one }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inner-car-block col-md-6 col-sm-6 col-xs-12">
+                                <div class="inner">
+                                    <div class="image">
+                                        <img alt="{{ $item->alt_two }}" style="background-blend-mode: normal; background-image: url({{ $item->image_two }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
+                                    </div>
+                                    <div class="lower-box">
+                                        <div class="car-name">{{ $item->completo_two }} <br> {{ $item->code_two }}</div>
+                                        <div class="price">{{ $item->oferta_two ? $item->oferta_two : $item->precio_two }}</div>
+                                        <div class="overlay-text">{{ $item->completo_two }} <br> {{ $item->code_two }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach                
+            </div>
+            @endforeach
+        </div>
+    </section>
+    <!--End Comparison Section-->
 @stop

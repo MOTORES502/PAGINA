@@ -34,10 +34,13 @@ Route::name('blog.index')->get('blog', 'BlogController@index');
 Route::name('blog.seleccionado')->get('blog/{slug}/{value}', 'BlogController@seleccionado');
 
 Route::name('lineas')->get('lineas/{marca}', 'LineaController@lineas');
+Route::name('codigos')->get('codigos/{linea}', 'LineaController@codigos');
+Route::name('imagenes')->get('imagenes/{codigo}', 'LineaController@imagenes');
 
 Route::name('contacto.index')->get('contacto', 'ContactoController@index');
 
 Route::name('comparar.index')->get('comparar', 'CompararController@index');
+Route::name('comparar.store')->post('comparar', 'CompararController@store');
 
 Route::name('quienes_somos.index')->get('quienes_somos', 'QuienesSomosController@index');
 

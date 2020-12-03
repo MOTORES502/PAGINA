@@ -87,7 +87,7 @@
                                     <select id="marca_id" name="marca_id" class="form-control js-example-basic-single">
                                         <option value="">Seleccione marca</option>
                                     @foreach ($marcas as $item)
-                                        <option value="{{ route('lineas', $item->id) }}">{{ $item->name }}</option>
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
                                     @endforeach
                                     </select>
                                 </div>

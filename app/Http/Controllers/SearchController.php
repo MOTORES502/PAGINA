@@ -319,8 +319,9 @@ class SearchController extends Controller
             $this->seo($title, $description, $keywords, $url, $image, 'vehículo');
             $titulo = "Sin registro";
 
-            $marca = (isset($request->marca_id) && !is_null($request->marca_id) && !empty($request->marca_id)) ? explode("lineas/", $request->marca_id) : array();
-            $marca = count($marca) > 1 ? $marca[1] : null;
+            /*$marca = (isset($request->marca_id) && !is_null($request->marca_id) && !empty($request->marca_id)) ? explode("lineas/", $request->marca_id) : array();
+            $marca = count($marca) > 1 ? $marca[1] : null;*/
+            $marca = (isset($request->marca_id) && !is_null($request->marca_id) && !empty($request->marca_id)) ? $request->marca_id : null;
             $linea = (isset($request->linea_id) && !is_null($request->linea_id) && !empty($request->linea_id)) ? $request->linea_id : 0;
             $precio_minimo = (isset($request->precio_minimo) && !is_null($request->precio_minimo) && !empty($request->precio_minimo)) ? $request->precio_minimo : 0;
             $precio_maximo = (isset($request->precio_maximo) && !is_null($request->precio_maximo) && !empty($request->precio_maximo)) ? $request->precio_maximo : 0;

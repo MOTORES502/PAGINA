@@ -10,22 +10,22 @@ trait informacion
 
         $info['dia'] = 'Lunes';
         $info['abierto'] = true;
-        $info['hora'] = '09:00am - 08:00pm';
+        $info['hora'] = '09:00am - 06:00pm';
         array_push($horario, $info);
 
         $info['dia'] = 'Martes';
         $info['abierto'] = true;
-        $info['hora'] = '09:00am - 08:00pm';
+        $info['hora'] = '09:00am - 06:00pm';
         array_push($horario, $info);
 
         $info['dia'] = 'Miércoles';
         $info['abierto'] = true;
-        $info['hora'] = '09:00am - 08:00pm';
+        $info['hora'] = '09:00am - 06:00pm';
         array_push($horario, $info);
 
         $info['dia'] = 'Jueves';
         $info['abierto'] = true;
-        $info['hora'] = '09:00am - 08:00pm';
+        $info['hora'] = '09:00am - 06:00pm';
         array_push($horario, $info);
 
         $info['dia'] = 'Viernes';
@@ -35,7 +35,7 @@ trait informacion
 
         $info['dia'] = 'Sábado';
         $info['abierto'] = true;
-        $info['hora'] = '10:00am - 02:00pm';
+        $info['hora'] = '09:00am - 04:00pm';
         array_push($horario, $info);
 
         $info['dia'] = 'Domingo';

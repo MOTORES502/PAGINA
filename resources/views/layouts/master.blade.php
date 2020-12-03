@@ -127,7 +127,7 @@
                                     <li class="current"><a href="{{ route('home') }}">Inicio</a></li>
                                     <li><a href="{{ route('quienes_somos.index') }}">Quienes Somos</a></li>
                                     <li><a href="{{ route('vehiculos') }}">Vehículos Publicados</a></li>
-                                    <li><a href="vehicle-compare.html">Compare Vehicle</a></li>
+                                    <li><a href="{{ route('comparar.index') }}">Comparar Vehículo</a></li>
                                     <li><a href="{{ route('blog.index') }}">Blog</a></li>
                                     <li><a href="{{ route('preguntas_frecuentes.index') }}">Preguntas Frecuentes</a></li>
                                     <li><a href="{{ route('contacto.index') }}">Contacto</a></li>
@@ -197,8 +197,8 @@
                                     <div class="footer-widget about-widget">
                                         <h2>Sobre nosotros</h2>
                                         <div class="text">
-                                            <p>Must explain to how all this mistaken idea of denouncing pleasure & praising pain was born and system.</p>
-                                            <p>There anyone who loves or pursues or desires to obtain pain  itself, because it is pain, but because occasionally occur in whichgreat pleasure. </p>
+                                            <p>Somos una empresa que está integrada por profesionales en mercadeo, compra y ventas, con más de 15 años de experiencia.</p>
+                                            <p>Buscaremos y encontraremos la mejor forma de comercializar tu motor, en base a una amplia cartera de clientes satisfechos y una gran experiencia de ventas y mercadeo en todas las plataformas aplicables. </p>
                                         </div>
                                         <a href="{{ route('quienes_somos.index') }}" class="theme-btn btn-style-three">Leer sobre nosotros</a>
                                     </div>
@@ -212,7 +212,7 @@
                                             <ul class="footer-links">
                                                 <li><a href="{{ route('quienes_somos.index') }}">Quienes Somos</a></li>
                                                 <li><a href="{{ route('vehiculos') }}">Vehículos Publicados</a></li>
-                                                <li><a href="vehicle-compare.html">Compare Vehicle</a></li>
+                                                <li><a href="{{ route('comparar.index') }}">Comparar Vehículo</a></li>
                                                 <li><a href="{{ route('blog.index') }}">Blog</a></li>
                                                 <li><a href="{{ route('preguntas_frecuentes.index') }}">Preguntas Frecuentes</a></li>
                                                 <li><a href="{{ route('contacto.index') }}">Contacto</a></li>
@@ -323,7 +323,6 @@
     <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
     <script src="{{ asset('template_new/js/validate.js') }}"></script>
     <script src="{{ asset('template_new/js/script.js') }}"></script>  
-    <script type="text/javascript" src="{{ asset('whatsapp/jquery-3.3.1.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/buscar_lineas.js') }}"></script>
     <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
