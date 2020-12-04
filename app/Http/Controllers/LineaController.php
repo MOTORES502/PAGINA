@@ -42,10 +42,15 @@ class LineaController extends Controller
         if ($request->ajax()) {
             try {
                 $data = DB::connection('mysql')->table('transports')
-                ->join('lines', 'transports.lines_id', 'lines.id')
+                ->join('brands', 'brands.id', 'transports.brands_id')
+                ->join('lines', 'lines.id', 'transports.lines_id')
+                ->join('generations', 'generations.id', 'transports.generations_id')
+                ->join('models', 'models.id', 'transports.models_id')
+                ->join('versions', 'versions.id', 'transports.versions_id')
                 ->select(
                     'transports.id AS id',
-                    'transports.code AS name'
+                    DB::RAW('CONCAT(models.anio,", ",versions.name," ",transports.code) AS name'),
+                    'transports.code'
                 )
                 ->where('lines.id', $linea->id)
                 ->where('transports.status', 'DISPONIBLE')
@@ -57,7 +62,7 @@ class LineaController extends Controller
 
                 return response()->json($data);
             } catch (\Throwable $th) {
-                //throw $th;
+                return response()->json($th->getMessage());
             }
         } else {
             return redirect()->back()->with('warning', 'La consulta no es válida');
