@@ -20,4 +20,9 @@ class Category extends Model
     protected $fillable = [
         'name', 'icon'
     ];
+
+    public function brands()
+    {
+        return $this->hasMany(Brand::class, 'categories_id', 'id');
+    }
 }

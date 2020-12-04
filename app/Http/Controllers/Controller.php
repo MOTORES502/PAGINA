@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Catalogos\Category;
 use Illuminate\Support\Facades\DB;
 use Artesaos\SEOTools\Facades\JsonLd;
 use Artesaos\SEOTools\Facades\SEOMeta;
@@ -263,14 +264,16 @@ class Controller extends BaseController
 
     public function marcas()
     {
-        return DB::connection('mysql')->table('transports')
+        /*return DB::connection('mysql')->table('transports')
         ->join('brands', 'transports.brands_id', 'brands.id')
         ->join('categories', 'brands.categories_id', 'categories.id')
-        ->select(DB::RAW('CONCAT(categories.name," MARCA ",brands.name) AS name'), 'brands.id', 'brands.name AS otor')
+        ->select(DB::RAW('CONCAT(categories.name," MARCA ",brands.name) AS name'), 'brands.id')
         ->distinct('brands.name')
         ->where('transports.status', 'DISPONIBLE')
         ->whereNull('transports.deleted_at')
         ->orderBy('brands.name')
-        ->get();
+        ->get();*/
+
+        return Category::all();
     }
 }

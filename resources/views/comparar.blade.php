@@ -37,9 +37,12 @@
                                             <select id="marca_id_one" name="marca_id_one" class="form-control js-example-basic-single">
                                                 <option value="">Seleccione marca</option>
                                                 @foreach ($marcas as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    <option value="0" disabled><strong>{{ $item->name }}</strong></option>
+                                                    @foreach ($item->brands as $marca)
+                                                        <option value="{{ $marca->id }}"><b>{{ $marca->name }}</b></option>
+                                                    @endforeach
                                                 @endforeach
-                                            </select>
+                                            </select>   
                                         </div>
                                         <div class="form-group">
                                             <select id="linea_id_one" name="linea_id_one" class="form-control js-example-basic-single">
@@ -73,9 +76,12 @@
                                             <select id="marca_id_two" name="marca_id_two" class="form-control js-example-basic-single">
                                                 <option value="">Seleccione marca</option>
                                                 @foreach ($marcas as $item)
-                                                    <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                                    <option value="0" disabled><strong>{{ $item->name }}</strong></option>
+                                                    @foreach ($item->brands as $marca)
+                                                        <option value="{{ $marca->id }}"><b>{{ $marca->name }}</b></option>
+                                                    @endforeach
                                                 @endforeach
-                                            </select>
+                                            </select>  
                                         </div>
                                         <div class="form-group">
                                             <select id="linea_id_two" name="linea_id_two" class="form-control js-example-basic-single">

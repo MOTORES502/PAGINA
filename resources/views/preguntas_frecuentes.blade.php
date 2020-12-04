@@ -103,10 +103,13 @@
                                 <div class="form-group">
                                     <select id="marca_id" name="marca_id" class="form-control js-example-basic-single">
                                         <option value="">Seleccione marca</option>
-                                    @foreach ($marcas as $item)
-                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                    @endforeach
-                                    </select>
+                                        @foreach ($marcas as $item)
+                                            <option value="0" disabled><strong>{{ $item->name }}</strong></option>
+                                            @foreach ($item->brands as $marca)
+                                                <option value="{{ $marca->id }}"><b>{{ $marca->name }}</b></option>
+                                            @endforeach
+                                        @endforeach
+                                    </select>  
                                 </div>
 
                                 <!--Form Group-->
