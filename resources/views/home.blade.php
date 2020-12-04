@@ -264,9 +264,9 @@
                             <div class="content">
                                 <div class="count-outer count-box">
                                     <div class="icon-box"><span class="icon flaticon-interface-1"></span></div>
-                                    <span class="count-text" data-speed="4000" data-stop="7">0</span>
+                                    <span class="count-text" data-speed="4000" data-stop="{{ $comparaciones }}">0</span>
                                 </div>
-                                <h4 class="counter-title">Certification Hold</h4>
+                                <h4 class="counter-title">Vehículos comparados</h4>
                             </div>
                         </div>
                     </div>

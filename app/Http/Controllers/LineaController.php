@@ -68,18 +68,20 @@ class LineaController extends Controller
     {
         if ($request->ajax()) {
             try {
+                $marca = asset('img/encima_motores502.png');
                 $data = DB::connection('mysql')->table('transports_images')
                 ->select(
-                    'image',
-                    'concat'
+                    'transports_images.image AS image',
+                    'transports_images.concat AS concat'
                 )
+                ->selectRaw("'$marca' AS marca")
                 ->where('transports_id', $codigo->id)
-                ->where('order', 100)
+                ->where('order', 1)
                 ->first();
 
                 return response()->json($data);
             } catch (\Throwable $th) {
-                //throw $th;
+                return response()->json($th->getMessage());
             }
         } else {
             return redirect()->back()->with('warning', 'La consulta no es válida');

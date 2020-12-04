@@ -41,6 +41,7 @@ Route::name('contacto.index')->get('contacto', 'ContactoController@index');
 
 Route::name('comparar.index')->get('comparar', 'CompararController@index');
 Route::name('comparar.store')->post('comparar', 'CompararController@store');
+Route::name('comparar.compracion_historica')->get('comparacion/{slug_uno}/v/{comparacion}/s/{slug_dos}', 'CompararController@compracion_historica');
 
 Route::name('quienes_somos.index')->get('quienes_somos', 'QuienesSomosController@index');
 

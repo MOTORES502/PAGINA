@@ -275,13 +275,8 @@
             <div class="footer-bottom">
                 <div class="auto-container">
                     <div class="row clearfix">
-                        <div class="col-md-6 col-sm-6 col-xs-12">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="copyright">Copyrights © 2020 Todos los derechos reservados de Motores502.</div>
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-xs-12">
-                            <ul class="footer-nav">
-                                <li><a href="http://www.xenialsolution.com" target="_blank">Powered By: Xenial Solution</a></li>
-                            </ul>
                         </div>
                     </div>
                 </div>
@@ -361,6 +356,10 @@
                 theme: "classic",
                 width: 'resolve'
             });
+            $('#icono_carro_one').show()
+            $('#imagen_carro_one').hide()
+            $('#icono_carro_two').show()
+            $('#imagen_carro_two').hide()
             $('#search').keyup(function(){ 
                 var query = $(this).val();
                 $('#registros').fadeOut(); 

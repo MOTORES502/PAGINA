@@ -47,6 +47,9 @@ class HomeController extends Controller
         $visitas = DB::connection('mysql')->table('views')
         ->count();
 
+        $comparaciones = DB::connection('mysql')->table('comparations')
+        ->count();
+
         $arra_precio_bajo = $this->precios_minimos();
         $arra_precio_alto = $this->precios_maximos();
 
@@ -64,6 +67,6 @@ class HomeController extends Controller
         )
         ->whereNull('blog.deleted_at')->orderByRaw('RAND()')->limit(3)->get();
         
-        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs'));
+        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs', 'comparaciones'));
     }
 }

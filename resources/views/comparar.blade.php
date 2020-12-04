@@ -23,7 +23,11 @@
                             <div class="car-option-block col-md-6 col-sm-6 col-xs-12">
                                 <div class="inner-box">
                                     <h2>Seleccionar el primer vehículo</h2>
-                                    <div class="icon-box">
+                                    <div class="icon-box" id="icono_carro_one">
+                                        <span class="icon flaticon-cabriolet"></span>
+                                    </div>
+
+                                    <div class="icon-box" id="imagen_carro_one">
                                         <span class="icon flaticon-cabriolet"></span>
                                     </div>
 
@@ -55,7 +59,11 @@
                             <div class="car-option-block col-md-6 col-sm-6 col-xs-12">
                                 <div class="inner-box">
                                     <h2>Seleccionar el segundo vehículo</h2>
-                                    <div class="icon-box">
+                                    <div class="icon-box" id="icono_carro_two">
+                                        <span class="icon flaticon-cabriolet"></span>
+                                    </div>
+
+                                    <div class="icon-box" id="imagen_carro_two">
                                         <span class="icon flaticon-cabriolet"></span>
                                     </div>
 
@@ -98,7 +106,7 @@
         <div class="auto-container">
             <!--Sec Title-->
             <div class="sec-title centered">
-                <h2>Latest Comparisons</h2>
+                <h2>Últimas comparaciones</h2>
             </div>
 
             @foreach ($carros->chunk(2) as $bloque)
@@ -107,7 +115,7 @@
                 <!--Comparison Block-->
                 <div class="comparison-block col-md-6 col-sm-12 col-xs-12">
                     <div class="inner-box">
-                        <a href="vehicle-compare-2.html" class="overlay-link"></a>
+                        <a href="{{ route('comparar.compracion_historica', ['slug_uno' => $item->slug_one, 'slug_dos' => $item->slug_two, 'comparacion' => $item->id]) }}" class="overlay-link"></a>
                         <div class="vs">Vs</div>
                         <div class="clearfix">
                             <div class="inner-car-block col-md-6 col-sm-6 col-xs-12">
