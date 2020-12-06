@@ -210,6 +210,44 @@ class Controller extends BaseController
         return $carros;
     }
 
+    public function nuevo_ingreso_marca($marca)
+    {
+        $carros = DB::connection('mysql')->table('transports')
+        ->join('brands', 'brands.id', 'transports.brands_id')
+        ->join('lines', 'lines.id', 'transports.lines_id')
+        ->join('generations', 'generations.id', 'transports.generations_id')
+        ->join('models', 'models.id', 'transports.models_id')
+        ->join('versions', 'versions.id', 'transports.versions_id')
+        ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->select(
+            'transports.code AS codigo',
+            'transports.status AS estado',
+            DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
+            DB::RAW('CONCAT("Marca: ",brands.name) AS marca'),
+            DB::RAW('CONCAT("Linea: ",lines.name) AS linea'),
+            DB::RAW('CONCAT("Versión: ",versions.name) AS version'),
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
+            'transmisions.name AS transmision',
+            DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
+            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
+            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
+            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+        )
+            ->where('brands.name', $marca)
+            ->whereNull('transports.deleted_at')
+            ->orderByDesc('transports.created_at')
+            ->limit(18)
+            ->get();
+
+        return $carros;
+    }
+
     public function parserCarrusel($carros)
     {
         $array_uno = array();

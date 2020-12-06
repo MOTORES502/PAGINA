@@ -60,21 +60,48 @@
                                 <ul>
                                     <li class="panel panel-default">
                                         <a data-toggle="collapse" href="javascript:">
-                                            <i class="fa fa-list"></i>Categorias<i class="fa fa-close"></i>
+                                            <i class="fa fa-list"></i>Menú Motores 502<i class="fa fa-close"></i>
                                         </a>
                                     </li>
 
                                     @foreach ($menus as $item)
                                     <li class="panel panel-default">
                                         <a data-toggle="collapse" href="{{ '#'.str_replace(" ","-",$item['nombre']) }}">
-                                            <i class="fa fa-car"></i>{{ $item['nombre'] }} <i class="fa fa-chevron-down"></i>
+                                            <!--<i class="fa fa-car"></i>-->{{ $item['nombre'] }} <i class="fa fa-chevron-down"></i>
                                         </a>
                                         <div id="{{ str_replace(" ","-",$item['nombre']) }}" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
-                                                    @foreach ($item['subs'] as $sub)
-                                                        <li><a href="{{ route('categoria', ['slug' => str_replace(' ', '_', mb_strtolower($sub->name)), 'value' => base64_encode($sub->id)]) }}">{{ $sub->name }}</a></li>             
-                                                    @endforeach
+                                                    <!-- Dropdown level 2 -->
+                                                    <li class="panel panel-default">
+                                                        <a data-toggle="collapse" href="#sub">
+                                                            <!--<i class="glyphicon glyphicon-off"></i>--> Categorías <i class="fa fa-chevron-down"></i>
+                                                        </a>
+                                                        <div id="sub" class="panel-collapse collapse">
+                                                            <div class="panel-body">
+                                                                <ul class="nav navbar-nav">
+                                                                    @foreach ($item['subs'] as $sub)
+                                                                        <li><a href="{{ route('categoria', ['slug' => str_replace(' ', '_', mb_strtolower($sub->name)), 'value' => base64_encode($sub->id)]) }}">{{ $sub->name }}</a></li>             
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                    <!-- Dropdown level 2 -->
+                                                    <li class="panel panel-default">
+                                                        <a data-toggle="collapse" href="#marca">
+                                                            <!--<i class="glyphicon glyphicon-off"></i>--> Marcas <i class="fa fa-chevron-down"></i>
+                                                        </a>
+                                                        <div id="marca" class="panel-collapse collapse">
+                                                            <div class="panel-body">
+                                                                <ul class="nav navbar-nav">
+                                                                    @foreach ($item['brands'] as $sub)
+                                                                        <li><a href="{{ route('marca', ['slug' => str_replace(' ', '_', mb_strtolower($sub->name)), 'value' => base64_encode($sub->name)]) }}">{{ $sub->name }}</a></li>             
+                                                                    @endforeach
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -276,7 +303,7 @@
                 <div class="auto-container">
                     <div class="row clearfix">
                         <div class="col-md-12 col-sm-12 col-xs-12">
-                            <div class="copyright">Copyrights © 2020 Todos los derechos reservados de Motores502.</div>
+                            <div class="copyright">Copyrights © 2019 Todos los derechos reservados de Motores 502.</div>
                         </div>
                     </div>
                 </div>

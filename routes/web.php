@@ -14,6 +14,7 @@
 Route::name('home_dos')->get('/', 'HomeController@index');
 Route::name('home')->get('/home', 'HomeController@index_page');
 Route::name('categoria')->get('categoria/{slug}/{value}', 'CategoriaController@categoria');
+Route::name('marca')->get('marca/{slug}/{value}', 'MarcaController@index');
 Route::name('vehiculo')->get('vehiculo/{slug}/{value}', 'VehiculoController@vehiculo');
 Route::name('vehiculo_recomendacion')->get('vehiculo_recomendacion/{slug}/{value}', 'VehiculoController@vehiculo_recomendacion');
 Route::name('vehiculo_buscar')->get('vehiculo_buscar/{slug}/{value}', 'VehiculoController@vehiculo_buscar');

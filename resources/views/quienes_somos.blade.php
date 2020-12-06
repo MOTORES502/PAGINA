@@ -128,7 +128,7 @@
                                 	<span class="icon flaticon-support"></span>
                                 </div>
                                 <h3><a href="javascript:">Servicio al cliente</a></h3>
-                                <div class="sub-title">24/7 Online</div>
+                                <div class="sub-title">Te atenderemos a la brevedad posible</div>
                                 <div class="text">No dudes en contactar a tu asesor a cualquier hora, el estará responsiendo tus inquietudes a la brevedad posible.</div>
                             </div>
                         </div>
@@ -140,12 +140,12 @@
                 	<div class="inner-box">
                     	<div class="upper-box">
                         	<div class="icon flaticon-24-hours"></div>
-                            <h3>Atención al cliente 24/7</h3>
-                            <div class="title">Para servicio de emergencia</div>
+                            <h3>Atención al cliente</h3>
+                            <div class="title">Para servicio al cliente</div>
                         </div>
                         <div class="lower-box">
                         	<div class="number">+(502) 6646-7000</div>
-                            <div class="text">Podemos proporcionar un servicio experto de emergencia las 24 horas, ¡póngase en contacto cuando lo necesite!.</div>
+                            <div class="text">¿Quiere vender o comprar con nosotros? ¿Tiene alguna sugerencia? ¡Póngase en contacto cuándo lo necesite!.</div>
                             <h4>Para consultas:</h4>
                             <ul>
                             	<li><span class="theme_color">Tel:</span> +(502) 6646-7000</li>

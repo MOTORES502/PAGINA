@@ -35,10 +35,12 @@ class AppServiceProvider extends ServiceProvider
 
             foreach ($categorias as $key => $value) {
                 $subs = DB::connection('mysql')->table('sub_categories')->select('id', 'name')->where('categories_id', $value->id)->whereNull('deleted_at')->get();
+                $brands = DB::connection('mysql')->table('brands')->select('id', 'name')->where('categories_id', $value->id)->whereNull('deleted_at')->get();
 
-                if(count($subs) > 0) {
+                if(count($subs) > 0 && count($brands) > 0) {
                     $data['nombre'] = $value->name;
                     $data['subs'] = $subs;
+                    $data['brands'] = $brands;
 
                     array_push($menus, $data);
                 }
