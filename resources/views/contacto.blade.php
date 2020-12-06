@@ -14,7 +14,7 @@
     	<div class="auto-container">
         	<div class="sec-title">
             	<h2>Envíanos un mensaje</h2>
-                <div class="text">No dude en preguntarnos algo, nuestro equipo de atención al cliente siempre está listo para ayudarlo, <br> estamos disponibles 24/7.</div>
+                <div class="text">¿Quieres vender con nosotros? ¿Quieres comprar con nosotros? ¿Tienes alguna sugerencia? ¡Estamos para servirle! No dude en llenar el formulario que nuestro equipo de atención al cliente siempre está listo para ayudarlo a la brevedad posible.</div>
             </div>
         	
             <!--Contact Form-->
