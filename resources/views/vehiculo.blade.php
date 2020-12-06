@@ -100,7 +100,7 @@
                                     	<div class="list-column">
                                         	<ul class="list-style-seven">
                                             	<li class="clearfix"><span class="ttl">Fabricación</span><span class="dtl">{{ $general->fabrications }}</span></li>
-                                                <li class="clearfix"><span class="ttl">Total Kilometros</span><span class="dtl">{{ $vehiculo->mileage }}Km’s</span></li>
+                                                <li class="clearfix"><span class="ttl">Total Kilometros</span><span class="dtl">{{ $vehiculo->mileage }}Kms</span></li>
                                                 <li class="clearfix"><span class="ttl">Combustible</span><span class="dtl">{{ $vehiculo->fuels }}</span></li>
                                                 <li class="clearfix"><span class="ttl">Estado</span><span class="dtl">{{ $vehiculo->estado }}</span></li>
                                             </ul>

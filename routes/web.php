@@ -11,7 +11,8 @@
 |
 */
 
-Route::name('home')->get('/', 'HomeController@index');
+Route::name('home_dos')->get('/', 'HomeController@index');
+Route::name('home')->get('/home', 'HomeController@index_page');
 Route::name('categoria')->get('categoria/{slug}/{value}', 'CategoriaController@categoria');
 Route::name('vehiculo')->get('vehiculo/{slug}/{value}', 'VehiculoController@vehiculo');
 Route::name('vehiculo_recomendacion')->get('vehiculo_recomendacion/{slug}/{value}', 'VehiculoController@vehiculo_recomendacion');

@@ -40,7 +40,7 @@ trait informacion
 
         $info['dia'] = 'Domingo';
         $info['abierto'] = false;
-        $info['hora'] = 'Cerrado';
+        $info['hora'] = 'Previa cita';
         array_push($horario, $info);
 
         return $horario;
