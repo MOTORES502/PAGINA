@@ -107,6 +107,9 @@
                                         </div>
                                     </li>
                                     @endforeach
+                                    <li class="panel panel-default">
+                                        <a href="{{ route('contacto.index') }}">Contacto</a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
