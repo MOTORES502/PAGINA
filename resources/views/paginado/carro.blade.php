@@ -1,19 +1,20 @@
 <!--Car Block-->
-@foreach($carros->chunk(4) as $bloque)
+@foreach($carros->chunk(3) as $bloque)
     <div class="row clearfix">
     @foreach ($bloque as $item)
-        <div class="car-block col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="car-block col-lg-4 col-md-4 col-sm-6 col-xs-12">
         <div class="inner-box">
             <div class="image">
-                <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
-                <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
+                @if ($item->estado != 'DISPONIBLE')
+                    <div class="ribbon ribbon-top-left"><span>{{ $item->estado }}</span></div>
+                @endif
+                <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}" title="{{ $item->alt }}">
+                    <img alt="{{ $item->alt }}" src="{{ Storage::disk('images')->url($item->image) }}" />
                 </a>
-                <div class="price">{{ $item->precio }}</div>
+                <div class="price">{{ $item->oferta ? $item->oferta : $item->precio }}</div>
             </div>
             <h3>
-                <a  href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
                 {{ $item->completo }} <br> {{ $item->codigo }}
-                </a>
             </h3>
             <div class="lower-box">
                 <ul class="car-info">

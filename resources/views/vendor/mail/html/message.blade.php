@@ -21,7 +21,7 @@
 {{-- Footer --}}
 @slot('footer')
 @component('mail::footer')
-© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
+Copyrights © 2019 Todos los derechos reservados de Motores 502.
 @endcomponent
 @endslot
 @endcomponent

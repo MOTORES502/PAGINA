@@ -25,7 +25,7 @@
                         <div class="clearfix">
                             <div class="pull-left">
                                 <div class="signature">
-                                    <img src="{{ asset('template_new/images/resource/signature.png') }}" alt="FIRMA" />
+                                    <img class="lazyload" data-src="{{ asset('template_new/images/resource/signature.png') }}" alt="FIRMA" />
                                 </div>
                             </div>
                             <div class="pull-right">
@@ -42,10 +42,10 @@
                         <div class="about-block col-md-6 col-sm-6 col-xs-12">
                             <div class="inner-box">
                                 <div class="image">
-                                    <img src="{{ asset('template_new/images/resource/about-1.jpg') }}" alt="" />
+                                    <img class="lazyload" data-src="{{ asset('template_new/images/resource/about-1.jpg') }}" alt="Motores 502" />
                                 </div>
                                 <div class="lower-box">
-                                    <h3><a href="javascript:">Nuestra misión</a></h3>
+                                    <h3>Nuestra misión</h3>
                                     <div class="text">
                                         Hacer que cada negocio sea una transacción justa, en el cual todas las partes involucradas estén satisfechas.
                                         <br>
@@ -59,10 +59,10 @@
                         <div class="about-block col-md-6 col-sm-6 col-xs-12">
                             <div class="inner-box">
                                 <div class="image">
-                                    <img src="{{ asset('template_new/images/resource/about-2.jpg') }}" alt="" />
+                                    <img class="lazyload" data-src="{{ asset('template_new/images/resource/about-2.jpg') }}" alt="Motores 502" />
                                 </div>
                                 <div class="lower-box">
-                                    <h3><a href="javascript:">Nuestra visión</a></h3>
+                                    <h3>Nuestra visión</h3>
                                     <div class="text">Ser el portal más importante, confiable y seguro de venta de autos, motos y aviones en América Latina.</div>
                                 </div>
                             </div>
@@ -91,7 +91,7 @@
                             	<div class="icon-box">
                                 	<span class="icon flaticon-car-search"></span>
                                 </div>
-                                <h3><a href="javascript:">20 años de experiencia</a></h3>
+                                <h3>20 años de experiencia</h3>
                                 <div class="sub-title">Calidad en el servicio</div>
                                 <div class="text">Amplia cartera de clientes en todas las ramas.</div>
                             </div>
@@ -103,7 +103,7 @@
                             	<div class="icon-box">
                                 	<span class="icon flaticon-steering-wheel"></span>
                                 </div>
-                                <h3><a href="javascript:">Calidad de producto</a></h3>
+                                <h3>Calidad de producto</h3>
                                 <div class="sub-title">Al precio justo</div>
                                 <div class="text">El negocio en donde todos hacen un trato justo.</div>
                             </div>
@@ -115,7 +115,7 @@
                             	<div class="icon-box">
                                 	<span class="icon flaticon-networking"></span>
                                 </div>
-                                <h3><a href="javascript:">Ambiente agradable</a></h3>
+                                <h3>Ambiente agradable</h3>
                                 <div class="sub-title">En confianza</div>
                                 <div class="text">El equipo de Motores 502 está integrado por amigos apasionados por el tema.</div>
                             </div>
@@ -127,7 +127,7 @@
                             	<div class="icon-box">
                                 	<span class="icon flaticon-support"></span>
                                 </div>
-                                <h3><a href="javascript:">Servicio al cliente</a></h3>
+                                <h3>Servicio al cliente</h3>
                                 <div class="sub-title">Te atenderemos a la brevedad posible</div>
                                 <div class="text">No dudes en contactar a tu asesor a cualquier hora, el estará responsiendo tus inquietudes a la brevedad posible.</div>
                             </div>
@@ -175,12 +175,12 @@
                             <div class="clearfix">
                                 <div class="image-column col-md-6 col-sm-6 col-xs-12">
                                     <div class="image">
-                                        <img src="{{ $item->foto ? $item->foto : asset('template_new/images/resource/author-11.jpg') }}" alt="{{ $item->asesor }}" />
+                                        <img class="lazyload" data-src="{{ $item->foto ? $item->foto : asset('template_new/images/resource/author-11.jpg') }}" alt="{{ $item->asesor }}" />
                                     </div>
                                 </div>
                                 <div class="content-column col-md-6 col-sm-6 col-xs-12">
                                     <div class="content-inner">
-                                        <h3><a href="javascript:">{{ $item->asesor }}</a></h3>
+                                        <h3>{{ $item->asesor }}</h3>
                                         <ul class="list-style-three">
                                             <li><span class="icon fa fa-phone"></span>{{ $item->numero }}</li>
                                             <li><span class="icon fa fa-envelope"></span>{{ $item->email }}</li>
@@ -215,49 +215,49 @@
                         	<!--Client Box-->
                         	<div class="client-box col-md-3 col-sm-6 col-xs-12">
                             	<div class="image">
-                                	<a href="javascript:"><img src="{{ asset('img/proveedores/credomatic.png') }}" alt="CREDOMATIC" /></a>
+                                    <img class="lazyload" data-src="{{ asset('img/proveedores/credomatic.png') }}" width="175" height="125" alt="Credomatic" />
                                 </div>
                             </div>
                             
                             <!--Client Box-->
                         	<div class="client-box col-md-3 col-sm-6 col-xs-12">
                             	<div class="image">
-                                	<a href="javascript:"><img src="{{ asset('img/proveedores/gyt.png') }}" alt="G&T" /></a>
+                                    <img class="lazyload" data-src="{{ asset('img/proveedores/gyt.png') }}" width="175" height="125" alt="G&T" />
                                 </div>
                             </div>
                             
                             <!--Client Box-->
                         	<div class="client-box col-md-3 col-sm-6 col-xs-12">
                             	<div class="image">
-                                	<a href="javascript:"><img src="{{ asset('img/proveedores/bi.png') }}" alt="BI" /></a>
+                                    <img class="lazyload" data-src="{{ asset('img/proveedores/bi.png') }}" width="175" height="125" alt="BI" />
                                 </div>
                             </div>
                             
                             <!--Client Box-->
                         	<div class="client-box col-md-3 col-sm-6 col-xs-12">
                             	<div class="image">
-                                	<a href="javascript:"><img src="{{ asset('img/proveedores/visa.png') }}" alt="VISA" /></a>
+                                    <img class="lazyload" data-src="{{ asset('img/proveedores/visa.png') }}" width="175" height="125" alt="VISA" />
                                 </div>
                             </div>
                             
                             <!--Client Box-->
                         	<div class="client-box col-md-3 col-sm-6 col-xs-12">
                             	<div class="image">
-                                	<a href="javascript:"><img src="{{ asset('img/proveedores/brembo.png') }}" alt="BREMBO" /></a>
+                                    <img class="lazyload" data-src="{{ asset('img/proveedores/brembo.png') }}" width="175" height="125" alt="BREMBO" />
                                 </div>
                             </div>
                             
                             <!--Client Box-->
                         	<div class="client-box col-md-3 col-sm-6 col-xs-12">
                             	<div class="image">
-                                	<a href="javascript:"><img src="{{ asset('img/proveedores/cropped.jpg') }}" alt="CROPPED" /></a>
+                                    <img class="lazyload" data-src="{{ asset('img/proveedores/cropped.jpg') }}" width="175" height="125" alt="CROPPED" />
                                 </div>
                             </div>
                             
                             <!--Client Box-->
                         	<div class="client-box col-md-3 col-sm-6 col-xs-12">
                             	<div class="image">
-                                	<a href="javascript:"><img src="{{ asset('img/proveedores/sonax.png') }}" alt="SONAX" /></a>
+                                    <img class="lazyload" data-src="{{ asset('img/proveedores/sonax.png') }}" width="175" height="125" alt="SONAX" />
                                 </div>
                             </div>
                             

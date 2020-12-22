@@ -28,8 +28,7 @@ class AutocompleteController extends Controller
                     ->whereRaw('transports.brands_id = brands.id');
             }) 
             ->whereNotNull('name')
-            ->groupBy('name')
-            ->groupBy('condicion');
+            ->distinct('name');
         
             $marca_linea = DB::connection('mysql')->table('brands')
             ->join('lines', 'brands.id', 'lines.brands_id')
@@ -37,7 +36,7 @@ class AutocompleteController extends Controller
                 DB::RAW("2 AS condicion"),   
                 DB::RAW("CONCAT(brands.name,' ',lines.name) AS name")
             )
-            ->where(DB::RAW("TRIM(CONCAT(brands.name,lines.name))"), 'LIKE', "{$quitar_espacios}%")
+            ->where(DB::RAW("REPLACE(CONCAT(brands.name,lines.name), ' ', '')"), 'LIKE', "%{$quitar_espacios}%")
             ->whereExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('transports')
@@ -48,8 +47,7 @@ class AutocompleteController extends Controller
             })            
             ->whereNotNull('brands.name')
             ->whereNotNull('lines.name')
-            ->groupBy('name')
-            ->groupBy('condicion');
+            ->distinct('name');
 
             $marca_modelo = DB::connection('mysql')->table('brands')
             ->join('lines', 'brands.id', 'lines.brands_id')
@@ -59,7 +57,7 @@ class AutocompleteController extends Controller
                 DB::RAW("3 AS condicion"),
                 DB::RAW("CONCAT(brands.name,' ',models.anio) AS name")
             )
-            ->where(DB::RAW("TRIM(CONCAT(brands.name,models.anio))"), 'LIKE', "{$quitar_espacios}%")
+            ->where(DB::RAW("REPLACE(CONCAT(brands.name,models.anio), ' ', '')"), 'LIKE', "{$quitar_espacios}%")
             ->whereExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('transports')
@@ -72,8 +70,7 @@ class AutocompleteController extends Controller
             ->whereNotNull('lines.name')
             ->whereNotNull('generations.name')
             ->whereNotNull('models.anio')
-            ->groupBy('name')
-            ->groupBy('condicion');
+            ->distinct('name');
 
             $marca_linea_version = DB::connection('mysql')->table('brands')
             ->join('lines', 'brands.id', 'lines.brands_id')
@@ -84,7 +81,7 @@ class AutocompleteController extends Controller
                 DB::RAW("4 AS condicion"),
                 DB::RAW("CONCAT(brands.name,' ',lines.name,' ',versions.name) AS name")
             )
-            ->where(DB::RAW("TRIM(CONCAT(brands.name,lines.name,versions.name))"), 'LIKE', "{$quitar_espacios}%")
+            ->where(DB::RAW("REPLACE(CONCAT(brands.name,lines.name,versions.name), ' ', '')"), 'LIKE', "%{$quitar_espacios}%")
             ->whereExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('transports')
@@ -100,8 +97,7 @@ class AutocompleteController extends Controller
             ->unionAll($marca)
             ->unionAll($marca_linea)
             ->unionAll($marca_modelo)
-            ->groupBy('name')
-            ->groupBy('condicion')
+            ->distinct('name')
             ->get();
 
             $output = '<div class="dropdown-menu" style="display:block; position:absolute; width: 100%;">';

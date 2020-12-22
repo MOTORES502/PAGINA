@@ -28,7 +28,9 @@ class BlogController extends Controller
             DB::RAW('REPLACE(LOWER(blog.name)," ","_") AS slug'),
             DB::RAW('CONCAT(people.names," ",people.surnames) AS usuario')
         )
-        ->whereNull('blog.deleted_at')->paginate(8);
+        ->whereNull('blog.deleted_at')
+        ->orderByDesc('blog.updated_at')
+        ->paginate(8);
 
         if ($request->ajax()) {
             return response()->json(view('paginado.blog', compact('data'))->render());
@@ -76,7 +78,6 @@ class BlogController extends Controller
         ->whereNull('blog.deleted_at')
         ->limit(4)
         ->get();
-
 
         return view('blog_single', compact('blog', 'publicaciones'));
     }

@@ -31,6 +31,7 @@ Route::name('buscar.buscador_combo')->post('buscar/marca-linea-precio-min-precio
 Route::name('buscar.personalizada')->get('busqueda/personalizada', 'SearchController@personalizada');
 
 Route::name('cotizar.store')->post('cotizar', 'Empresa\QuoteController@store');
+Route::name('test.store')->post('test', 'Empresa\TestDriveController@store');
 
 Route::name('blog.index')->get('blog', 'BlogController@index');
 Route::name('blog.seleccionado')->get('blog/{slug}/{value}', 'BlogController@seleccionado');
@@ -40,6 +41,7 @@ Route::name('codigos')->get('codigos/{linea}', 'LineaController@codigos');
 Route::name('imagenes')->get('imagenes/{codigo}', 'LineaController@imagenes');
 
 Route::name('contacto.index')->get('contacto', 'ContactoController@index');
+Route::name('contacto.store')->post('contacto', 'ContactoController@store');
 
 Route::name('comparar.index')->get('comparar', 'CompararController@index');
 Route::name('comparar.store')->post('comparar', 'CompararController@store');
@@ -48,4 +50,5 @@ Route::name('comparar.compracion_historica')->get('comparacion/{slug_uno}/v/{com
 Route::name('quienes_somos.index')->get('quienes_somos', 'QuienesSomosController@index');
 
 Route::name('preguntas_frecuentes.index')->get('preguntas_frecuentes', 'PreguntasFrecuentesController@index');
+
 

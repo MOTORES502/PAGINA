@@ -12,27 +12,43 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <!-- Responsive -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <!-- Stylesheets -->
-    <link rel="stylesheet" href="{{ asset('template_new/css/bootstrap.css') }}">
-
-    <link href="{{ asset('template_new/plugins/revolution/css/settings.css') }}" rel="stylesheet" type="text/css"><!-- REVOLUTION SETTINGS STYLES -->
-    <link href="{{ asset('template_new/plugins/revolution/css/layers.css') }}" rel="stylesheet" type="text/css"><!-- REVOLUTION LAYERS STYLES -->
-    <link href="{{ asset('template_new/plugins/revolution/css/navigation.css') }}" rel="stylesheet" type="text/css"><!-- REVOLUTION NAVIGATION STYLES -->
-
-    <link rel="stylesheet" href="{{ asset('template_new/css/jquery.datetimepicker.css') }}">
-    <link rel="stylesheet" href="{{ asset('template_new/css/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('template_new/css/responsive.css') }}">
     
-    <!-- Extras -->
-    <link rel="stylesheet" href="{{ asset('whatsapp/floating-wpp.css') }}">
-    <link rel="stylesheet" href="{{ asset('select2/css/select2.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/intlTelInput.css') }}"> 
+    <!-- Stylesheets -->  
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/plugins/revolution/css/layers.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/plugins/revolution/css/navigation.min.css') }}">
+
+    <link rel="stylesheet" type="text/css" media="all" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/css/flaticon.css') }}">
+
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/css/animate.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/css/jquery-ui.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/css/jquery.fancybox.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/css/jquery.bootstrap-touchspin.css') }}">
+
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/css/style.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/css/responsive.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('whatsapp/floating-wpp.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('select2/css/select2.min.css') }}">
+
+    @yield('style')
+    <!-- Google Tag Manager 
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-NKP4G5Q');
+    </script>End Google Tag Manager -->
 </head>
 <body class="msb-x">
     <div class="page-wrapper">
-        <div class="preloader"></div>
+
+        <!-- Google Tag Manager (noscript) 
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKP4G5Q"
+        height="0" width="0"></iframe></noscript>
+        End Google Tag Manager (noscript) -->
 
         <!-- Main Header-->
         <header class="main-header">
@@ -64,24 +80,26 @@
                                         </a>
                                     </li>
 
-                                    @foreach ($menus as $item)
+                                    @foreach ($menus as $key => $item)
                                     <li class="panel panel-default">
-                                        <a data-toggle="collapse" href="{{ '#'.str_replace(" ","-",$item['nombre']) }}">
-                                            <!--<i class="fa fa-car"></i>-->{{ $item['nombre'] }} <i class="fa fa-chevron-down"></i>
+                                        <a data-toggle="collapse" href="{{ '#'.str_replace(" ","-",$item->name) }}">
+                                            <!--<i class="fa fa-car"></i>-->{{ $item->name }} <i class="fa fa-chevron-down"></i>
                                         </a>
-                                        <div id="{{ str_replace(" ","-",$item['nombre']) }}" class="panel-collapse collapse">
+                                        <div id="{{ str_replace(" ","-",$item->name) }}" class="panel-collapse collapse">
                                             <div class="panel-body">
                                                 <ul class="nav navbar-nav">
                                                     <!-- Dropdown level 2 -->
                                                     <li class="panel panel-default">
-                                                        <a data-toggle="collapse" href="#sub">
+                                                        <a data-toggle="collapse" href="{{ "#sub$key" }}">
                                                             <!--<i class="glyphicon glyphicon-off"></i>--> Categorías <i class="fa fa-chevron-down"></i>
                                                         </a>
-                                                        <div id="sub" class="panel-collapse collapse">
+                                                        <div id="{{ "sub$key" }}" class="panel-collapse collapse">
                                                             <div class="panel-body">
                                                                 <ul class="nav navbar-nav">
-                                                                    @foreach ($item['subs'] as $sub)
-                                                                        <li><a href="{{ route('categoria', ['slug' => str_replace(' ', '_', mb_strtolower($sub->name)), 'value' => base64_encode($sub->id)]) }}">{{ $sub->name }}</a></li>             
+                                                                    @foreach ($item->sub_categorias as $sub)
+                                                                        <li>
+                                                                            <a href="javascript:link_categoria('{{ str_replace(' ', '_', mb_strtolower($sub->name)) }}', '{{ base64_encode($sub->id) }}')">{{ $sub->name }}</a>
+                                                                        </li>             
                                                                     @endforeach
                                                                 </ul>
                                                             </div>
@@ -89,14 +107,16 @@
                                                     </li>
                                                     <!-- Dropdown level 2 -->
                                                     <li class="panel panel-default">
-                                                        <a data-toggle="collapse" href="#marca">
+                                                        <a data-toggle="collapse" href="{{ "#marca$key" }}">
                                                             <!--<i class="glyphicon glyphicon-off"></i>--> Marcas <i class="fa fa-chevron-down"></i>
                                                         </a>
-                                                        <div id="marca" class="panel-collapse collapse">
+                                                        <div id="{{ "marca$key" }}" class="panel-collapse collapse">
                                                             <div class="panel-body">
                                                                 <ul class="nav navbar-nav">
-                                                                    @foreach ($item['brands'] as $sub)
-                                                                        <li><a href="{{ route('marca', ['slug' => str_replace(' ', '_', mb_strtolower($sub->name)), 'value' => base64_encode($sub->name)]) }}">{{ $sub->name }}</a></li>             
+                                                                    @foreach ($item->brands as $sub)
+                                                                        <li>
+                                                                            <a href="javascript:link_marca('{{ str_replace(' ', '_', mb_strtolower($sub->name)) }}', '{{ base64_encode($sub->id) }}')">{{ $sub->name }}</a>
+                                                                        </li>             
                                                                     @endforeach
                                                                 </ul>
                                                             </div>
@@ -116,13 +136,13 @@
 
                         <div class="contact-on-call">
                             <ul>
-                                <li><a href="tel:50255792225"><i class="fa fa-phone"></i>+502 5579-2225</a></li>
-                                <li><a href="https://api.whatsapp.com/send?phone=50255792225" target="_blank"><i class="fa fa-whatsapp"></i>+502 5579-2225</a></li>
+                                <li><a href="tel:50256914466"><i class="fa fa-phone"></i>+502 5691-4466</a></li>
+                                <li><a href="https://api.whatsapp.com/send?phone=50256914466" target="_blank"><i class="fa fa-whatsapp"></i>+502 5691-4466</a></li>
                             </ul>
                         </div>
 
                         <div class="search-box">
-                            <form action="{{ route('buscar.personalizada') }}" method="get">
+                            <form action="" method="get">
                                 <form class="form-inline form-group flex-nowrap mx-0 mx-lg-auto rounded p-1" action="{{ route('buscar.personalizada') }}" method="get" role="search" autocomplete="off">
                                     <div class="form-group">
                                         <input type="search" id="search" name="search" value="{{ old('search') }}" placeholder="Buscar por marca, línea o palabra" required>
@@ -212,7 +232,7 @@
 
 
         <!--Main Footer-->
-        <footer class="main-footer" style="background-image:url({{ asset('template_new/images/background/1.jpg') }});">
+        <footer class="main-footer">
             <div class="auto-container">
                 <!--Widgets Section-->
                 <div class="widgets-section">
@@ -227,8 +247,8 @@
                                     <div class="footer-widget about-widget">
                                         <h2>Sobre nosotros</h2>
                                         <div class="text">
-                                            <p>Somos una empresa que está integrada por profesionales en mercadeo, compra y ventas, con más de 15 años de experiencia.</p>
-                                            <p>Buscaremos y encontraremos la mejor forma de comercializar tu motor, en base a una amplia cartera de clientes satisfechos y una gran experiencia de ventas y mercadeo en todas las plataformas aplicables. </p>
+                                            <p>Somos una empresa que está integrada por profesionales en mercadeo, compra y venta, con más de 15 años de experiencia.</p>
+                                            <p>Buscaremos y encontraremos la mejor forma de comercializar tu motor, en base a una amplia cartera de clientes satisfechos sumado a una gran experiencia de ventas y mercadeo en todas las plataformas aplicables. </p>
                                         </div>
                                         <a href="{{ route('quienes_somos.index') }}" class="theme-btn btn-style-three">Leer sobre nosotros</a>
                                     </div>
@@ -260,7 +280,7 @@
                                 <!--Footer Column-->
                                 <div class="footer-column col-md-6 col-sm-6 col-xs-12">
                                     <div class="footer-widget links-widget">
-                                        <h2>Contact Details</h2>
+                                        <h2>Detalle de Contácto</h2>
                                         <div class="widget-content">
                                             <ul class="list-style-one">
                                                 <li><span class="icon flaticon-maps-and-flags"></span>Km 13 Carretera a El Salvador Muxbal The Shops at Muxbal Guatemala, 01000</li>
@@ -315,109 +335,57 @@
         <!--End Main Footer-->
 
         <div id="whatsapp"></div>
+        <div id="fb-root"></div>
+        
+        <div 
+            class="fb-customerchat"
+            attribution=setup_tool
+            page_id="360279197871178"
+            theme_color="#0084ff"
+            logged_in_greeting="¡Bienvenido al mundo de Motores 502! ¡Estamos para servirle!"
+            logged_out_greeting="¡Bienvenido al mundo de Motores 502! ¡Estamos para servirle!">
+        </div> 
                
     </div>
     
     <!--Scroll to top-->
     <div class="scroll-to-top scroll-to-target" data-target="html"><span class="icon fa fa-angle-up"></span></div> 
    
-    <script src="{{ asset('template_new/js/jquery.js') }}"></script> 
-    <script src="{{ asset('template_new/js/bootstrap.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/jquery.js') }}"></script> 
+    <script type="text/javascript" src="{{ asset('template_new/js/bootstrap.min.js') }}"></script>
     
     <!--Revolution Slider-->
-    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.revolution.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.tools.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.actions.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.carousel.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.kenburn.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.migration.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.navigation.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
-    <script src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.video.min.js') }}"></script>
-    <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.revolution.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/plugins/revolution/js/jquery.themepunch.tools.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.actions.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.carousel.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.migration.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.navigation.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.parallax.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/plugins/revolution/js/extensions/revolution.extension.slideanims.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
     <!--End Revolution Slider-->
-    <script src="{{ asset('template_new/js/jquery.datetimepicker.js') }}"></script>
-    <script src="{{ asset('template_new/js/jquery-ui.js') }}"></script>
-    <script src="{{ asset('template_new/js/jquery.fancybox.pack.js') }}"></script>
-    <script src="{{ asset('template_new/js/jquery.fancybox-media.js') }}"></script>
-    <script src="{{ asset('template_new/js/owl.js') }}"></script>
-    <script src="{{ asset('template_new/js/appear.js') }}"></script>
-    <script src="{{ asset('template_new/js/wow.js') }}"></script>
-    <script src="{{ asset('template_new/js/main-slider-script.js') }}"></script>
-    <script src="{{ asset('template_new/js/validate.js') }}"></script>
-    <script src="{{ asset('template_new/js/script.js') }}"></script>  
+
+    @yield('script')
+    
+    <script type="text/javascript" src="{{ asset('template_new/js/jquery.fancybox.pack.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/jquery.fancybox-media.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/owl.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/appear.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/wow.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/script.js') }}"></script> 
+     
     <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/buscar_lineas.js') }}"></script>
-    <script src="{{ asset('select2/js/select2.full.min.js') }}"></script>
-</body>
-    @yield('script')    
-    <script type="text/javascript">
-        $(function () {		
-            $('.js-example-basic-single').select2({
-                theme: "classic",
-                width: 'resolve'
-            });
-            $('.js-example-basic-multiple').select2({
-                theme: "classic",
-                width: 'resolve'
-            });
-            $('#whatsapp').floatingWhatsApp({
-                phone: '50255792225',
-                popupMessage: '¿Hola, en que podemos ayudarle?',
-                showPopup: true,
-                showOnIE: true,
-                headerTitle: 'Whatsapp - Motores 502',
-                position: 'right',
-                headerColor: '#545454',
-                size: '50px',
-                backgroundColor: '#eaeded'
-            });
-        });
-    </script>   
-    <script>        
-        $(document).ready(function(){	
-            $('.js-example-basic-single').select2({
-                theme: "classic",
-                width: 'resolve'
-            });
-            $('.js-example-basic-multiple').select2({
-                theme: "classic",
-                width: 'resolve'
-            });
-            $('#icono_carro_one').show()
-            $('#imagen_carro_one').hide()
-            $('#icono_carro_two').show()
-            $('#imagen_carro_two').hide()
-            $('#search').keyup(function(){ 
-                var query = $(this).val();
-                $('#registros').fadeOut(); 
-                if(query != '')
-                {
-                    var _token = $('input[name="_token"]').val();
-                    $.ajax({
-                        url:"{{ route('autocomplete.ocurrencia') }}",
-                        method:"POST",
-                        data:{query:query, _token:_token},
-                        success:function(data){
-                            if(data.existe) {
-                                $('#registros').fadeIn();  
-                                $('#registros').html(data.data);
-                            } else {
-                                $('#registros').fadeOut(); 
-                            }
-                        }
-                    });
-                } else {  
-                    $('#registros').fadeOut(); 
-                }
-            });
-
-            $(document).on('click', '.dropdown-item', function(){  
-                $('#search').val($(this).text());  
-                $('#registros').fadeOut();  
-            });
-        });
-    </script>
+    <script type="text/javascript" src="{{ asset('select2/js/select2.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
+    <script type="text/javascript" src="{{ asset('js/utileria_principal.js') }}"></script>
+    <script>
+        lazyload();
+        window.oncontextmenu = function() {
+            return false;
+        } 
+    </script> }
+</body> 
 </html> 

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class CategoriaController extends Controller
 {
-    public function categoria($slug, $value)
+    public function categoria($slug, $value, Request $request)
     {
         $slug = str_replace('_', ' ', $slug);
         $title = "categoría de vehículos $slug";
@@ -18,68 +19,51 @@ class CategoriaController extends Controller
         $this->seo($title, $description, $keywords, $url, $image, 'website');
 
         $sub_categoria = DB::connection('mysql')->table('sub_categories')
-                        ->select('name', 'icon')
+                        ->select('name', 'icon', 'id')
                         ->where('id', base64_decode($value))
                         ->first();
 
-        $marcas = DB::connection('mysql')->table('sub_categories_transports')
+        $carros = DB::connection('mysql')->table('sub_categories_transports')
         ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
         ->join('brands', 'brands.id', 'transports.brands_id')
+        ->join('lines', 'lines.id', 'transports.lines_id')
+        ->join('generations', 'generations.id', 'transports.generations_id')
+        ->join('models', 'models.id', 'transports.models_id')
+        ->join('versions', 'versions.id', 'transports.versions_id')
+        ->join('coins', 'transports.coins_id', 'coins.id')
+        ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
+        ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
-            'brands.id AS id',
-            'brands.name AS nombre'
+            'transports.code AS codigo',
+            'transports.status AS estado',
+            'models.anio AS modelo',
+            'transports.mileage AS kilometro',
+            'fuels.name AS combustible',
+            'transmisions.name AS transmision',
+            DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
+            DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
+            DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt',
+            'brands.name AS brands_name',
+            'brands.image AS brands_image',
+            'brands.id AS brands_id'
         )
-        ->where('sub_categories_transports.sub_categories_id', base64_decode($value))
+        ->where('sub_categories_transports.sub_categories_id', $sub_categoria->id)
+        ->where('transports_images.order', 1)
         ->whereNull('transports.deleted_at')
-        ->whereNull('brands.deleted_at')
-        ->distinct('brands.id')
-        ->orderBy('brands.name')
-        ->get();
+        ->orderByDesc('transports.created_at')
+        ->paginate(10);
 
-        $array = array();
-
-        foreach ($marcas as $marca) {
-            $data['marca'] = DB::connection('mysql')->table('brands')
-                            ->select('id', 'name', 'image', 'code')
-                            ->where('id', $marca->id)
-                            ->first();
-
-            $data['carros'] = DB::connection('mysql')->table('transports')
-            ->join('brands', 'brands.id', 'transports.brands_id')
-            ->join('lines', 'lines.id', 'transports.lines_id')
-            ->join('generations', 'generations.id', 'transports.generations_id')
-            ->join('models', 'models.id', 'transports.models_id')
-            ->join('versions', 'versions.id', 'transports.versions_id')
-            ->join('coins', 'transports.coins_id', 'coins.id')
-            ->join('fuels', 'fuels.id', 'transports.fuels_id')
-            ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
-            ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
-            ->select(
-                'transports.code AS codigo',
-                'transports.status AS estado',
-                'models.anio AS modelo',
-                'transports.mileage AS kilometro',
-                'fuels.name AS combustible',
-                'transmisions.name AS transmision',
-                DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-                DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
-                DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
-                DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-                DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-                DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
-            )
-            ->where('brands.id', $marca->id)
-            ->whereNull('transports.deleted_at')
-            ->where('transports.status', 'DISPONIBLE')
-            ->whereNull('brands.deleted_at')
-            ->limit(5)
-            ->get();        
-            
-            array_push($array, $data);
+        if ($request->ajax()) {
+            return response()->json(view('paginado.categoria_carros', compact('carros'))->render());
         }
 
         $nuevo_ingreso = $this->nuevo_ingreso(base64_decode($value));
         
-        return view('categoria', compact('sub_categoria', 'array', 'nuevo_ingreso'));
+        return view('categoria', compact('sub_categoria', 'carros', 'nuevo_ingreso'));
     }
 }

@@ -55,6 +55,13 @@ return [
             'visibility' => 'public',
         ],
 
+        'images' => [
+            'driver' => 'local',
+            'root' => 'img/mrm_catalogo',
+            'url' => 'http://127.0.0.1:8001/SistemaMRM/public/img/mrm_catalogo',
+            'visibility' => 'public',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

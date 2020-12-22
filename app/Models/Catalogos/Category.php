@@ -25,4 +25,9 @@ class Category extends Model
     {
         return $this->hasMany(Brand::class, 'categories_id', 'id');
     }
+
+    public function sub_categorias()
+    {
+        return $this->hasMany(SubCategory::class, 'categories_id', 'id');
+    }
 }

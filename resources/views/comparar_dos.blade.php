@@ -28,7 +28,9 @@
                             <!--Car Column-->
                             <div class="car-column">
                                 <div class="inner">
-                                    <figure class="image"><img alt="{{ $image_one->concat }}" style="background-blend-mode: normal; background-image: url({{ $image_one->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" /></figure>
+                                    <figure class="image">
+                                        <img alt="{{ $image_one->concat }}" class="lazyload" data-src="{{ Storage::disk('images')->url($image_one->image) }}" />
+                                    </figure>
                                     <div class="title-box">
                                         <h4>{{ $vehiculo_one->nombre_completo }}</h4>
                                         <div class="price">{{ $vehiculo_one->oferta ? $vehiculo_one->oferta : $vehiculo_one->oferta }}</div>
@@ -38,7 +40,9 @@
                             <!--Car Column-->
                             <div class="car-column">
                                 <div class="inner">
-                                    <figure class="image"><img alt="{{ $image_two->concat }}" style="background-blend-mode: normal; background-image: url({{ $image_two->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" /></figure>
+                                    <figure class="image">
+                                        <img alt="{{ $image_two->concat }}" class="lazyload" data-src="{{ Storage::disk('images')->url($image_two->image) }}" />
+                                    </figure>
                                     <div class="title-box">
                                         <h4>{{ $vehiculo_two->nombre_completo }}</h4>
                                         <div class="price">{{ $vehiculo_two->oferta ? $vehiculo_two->oferta : $vehiculo_two->oferta }}</div>
@@ -176,13 +180,13 @@
                 <!--Comparison Block-->
                 <div class="comparison-block col-md-6 col-sm-12 col-xs-12">
                     <div class="inner-box">
-                        <a href="{{ route('comparar.compracion_historica', ['slug_uno' => $item->slug_one, 'slug_dos' => $item->slug_two, 'comparacion' => $item->id]) }}" class="overlay-link"></a>
+                        <a href="{{ route('comparar.compracion_historica', ['slug_uno' => $item->slug_one, 'slug_dos' => $item->slug_two, 'comparacion' => $item->id]) }}" class="overlay-link"  title="{{ 'comparar ' . $item->slug_one . ' vrs ' . $item->slug_two }}"></a>
                         <div class="vs">Vs</div>
                         <div class="clearfix">
                             <div class="inner-car-block col-md-6 col-sm-6 col-xs-12">
                                 <div class="inner">
                                     <div class="image">
-                                        <img alt="{{ $item->alt_one }}" style="background-blend-mode: normal; background-image: url({{ $item->image_one }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
+                                        <img alt="{{ $item->alt_one }}" class="lazyload" data-src="{{ Storage::disk('images')->url($item->image_one) }}" />
                                     </div>
                                     <div class="lower-box">
                                         <div class="car-name">{{ $item->completo_one }} <br> {{ $item->code_one }}</div>
@@ -194,7 +198,7 @@
                             <div class="inner-car-block col-md-6 col-sm-6 col-xs-12">
                                 <div class="inner">
                                     <div class="image">
-                                        <img alt="{{ $item->alt_two }}" style="background-blend-mode: normal; background-image: url({{ $item->image_two }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
+                                        <img alt="{{ $item->alt_two }}" class="lazyload" data-src="{{ Storage::disk('images')->url($item->image_two) }}" />
                                     </div>
                                     <div class="lower-box">
                                         <div class="car-name">{{ $item->completo_two }} <br> {{ $item->code_two }}</div>

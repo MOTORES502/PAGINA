@@ -21,14 +21,12 @@
                 <div class="offer-block">
                     <div class="inner-box">
                         <div class="image">
-                            <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
-                                <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
+                            <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}" title="{{ $item->alt }}">
+                                <img alt="{{ $item->alt }}" class="lazyload" data-src="{{ Storage::disk('images')->url($item->image) }}" />
                             </a>
                         </div>
                         <h3>
-                            <a href="{{ route('vehiculo', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
                             {{ $item->completo }} <br> {{ $item->codigo }}
-                            </a>
                         </h3>
                         <div class="lower-box">
                             <div class="plus-box">
@@ -58,14 +56,13 @@
 
     <!--End Page Title-->
     <section class="inventory-section invent-style-two">
-    	<div class="auto-container">
-        @foreach ($array as $item)
-          <div class="sec-title">
-              <h2>{{  $item['marca']->name }} / {{ $item['marca']->code }}</h2>
-          </div>
-          @foreach ($item['carros']->chunk(4) as $bloque)
+    	<div class="auto-container" id="categorias_carros">
+            <!--Styled Pagination-->
+            {{ $carros->links() }}
+            <!--End Styled Pagination-->
+            <hr>
             <div class="row clearfix">
-              @foreach ($bloque as $vehiculo)
+              @foreach ($carros as $vehiculo)
             	<!--Column-->
             	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 	<div class="layout-box clearfix">
@@ -74,13 +71,18 @@
                         	<div class="row clearfix">
                             	<div class="image-column col-md-4 col-sm-4 col-xs-12">
                                     <div class="image">
-                                        <a href="{{ route('vehiculo', ['slug' => $vehiculo->slug, 'value' => base64_encode($vehiculo->codigo)]) }}">
-                                          <img alt="{{ $vehiculo->alt }}" src="{{ asset('img/encima_motores502.png') }}" style="background-blend-mode: normal; background-image: url({{ $vehiculo->image }}); background-size: 100% 100%; background-repeat: no-repeat;" />
+                                        @if ($vehiculo->estado != 'DISPONIBLE')
+                                            <div class="ribbon ribbon-top-left"><span>{{ $vehiculo->estado }}</span></div>
+                                        @endif
+                                        <a href="{{ route('vehiculo', ['slug' => $vehiculo->slug, 'value' => base64_encode($vehiculo->codigo)]) }}" title="{{ $vehiculo->alt }}">
+                                          <img alt="{{ $vehiculo->alt }}" class="lazyload" data-src="{{ Storage::disk('images')->url($vehiculo->image) }}" />
                                         </a>
                                     </div>
                                 </div>
                                 <div class="content-column col-md-8 col-sm-8 col-xs-12">
-                                    <h3><a href="inventory-single.html">{{ $vehiculo->completo }}</a></h3>
+                                    <h3>
+                                        {{ $vehiculo->completo }}
+                                    </h3>
                                     <div class="price">{{ $vehiculo->oferta ? $vehiculo->oferta : $vehiculo->precio }}</div>
                                     <div class="info-box">
                                         <ul class="car-info">
@@ -94,13 +96,17 @@
                                     	<!--Btns-->
                                         <div class="btns-box">
                                         	<ul class="btns clearfix">
-                                        		<li><a href="javascript:" class="theme-btn btn-style-four">{{ $vehiculo->codigo }}</a></li>
+                                        		<li>{{ $vehiculo->codigo }}</li>
                                             </ul>
                                         </div>
                                         <!--Logos-->
                                         <div class="logos-box">
                                         	<ul class="logos clearfix">
-                                            <li class="logo"><a href="javascript:"><img width="25%" src="{{ $item['marca']->image }}" alt="{{  $item['marca']->name }}"></a></li>
+                                            <li class="logo">
+                                                <a href="{{ route('marca', ['slug' => str_replace(' ', '_', mb_strtolower($vehiculo->brands_name)), 'value' => base64_encode($vehiculo->brands_id)]) }}" title="{{ $vehiculo->brands_name }}">
+                                                    <img width="25%" class="lazyload" data-src="{{ Storage::disk('images')->url($vehiculo->brands_image) }}" alt="{{ $vehiculo->brands_name }}">
+                                                </a>
+                                            </li>
                                           </ul>
                                         </div>
                                     </div>
@@ -112,8 +118,13 @@
               </div>              
               @endforeach
             </div>
-          @endforeach
-        @endforeach
+            <!--Styled Pagination-->
+            {{ $carros->links() }}
+            <!--End Styled Pagination-->
       </div>
     </section>
 @stop
+
+@section('script')
+  <script type="text/javascript" src="{{ asset('js/buscar_categoria_carros.js') }}"></script>
+@endsection

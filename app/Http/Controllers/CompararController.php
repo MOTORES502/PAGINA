@@ -423,23 +423,29 @@ class CompararController extends Controller
         ->join('models AS models_two', 'models_two.id', 'two.models_id')
         ->join('versions AS versions_two', 'versions_two.id', 'two.versions_id')
         ->join('coins AS coins_two', 'two.coins_id', 'coins_two.id')
+        ->join('transports_images AS image_consulta_one', 'one.id', 'image_consulta_one.transports_id')
+        ->join('transports_images AS image_consulta_two', 'two.id', 'image_consulta_two.transports_id')
         ->select(
             'comparations.id AS id',
             'one.code AS code_one',
             'two.code AS code_two',
+            'one.status AS estado_one',
+            'two.status AS estado_two',
             DB::RAW('REPLACE(LOWER(CONCAT(brand_one.name,"-",lines_one.name,"-",versions_one.name,"-",models_one.anio))," ","") AS slug_one'),
             DB::RAW('REPLACE(LOWER(CONCAT(brand_two.name,"-",lines_two.name,"-",versions_two.name,"-",models_two.anio))," ","") AS slug_two'),
             DB::RAW('CONCAT(brand_one.name," ",lines_one.name," ",versions_one.name) AS completo_one'),
             DB::RAW('CONCAT(brand_two.name," ",lines_two.name," ",versions_two.name) AS completo_two'),
             DB::RAW('CONCAT(coins_one.symbol," ",FORMAT(one.price_publisher,2)) AS precio_one'),
             DB::RAW('CONCAT(coins_two.symbol," ",FORMAT(two.price_publisher,2)) AS precio_two'),
-            DB::RAW('(SELECT CONCAT(coins_one.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = one.id AND offe.people_id = one.people_id AND offe.active = true LIMIT 1) AS oferta_one'),
-            DB::RAW('(SELECT CONCAT(coins_two.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = two.id AND offe.people_id = two.people_id AND offe.active = true LIMIT 1) AS oferta_two'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = one.id AND i.order = 1 LIMIT 1) AS image_one'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = two.id AND i.order = 1 LIMIT 1) AS image_two'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = one.id AND i.order = 1 LIMIT 1) AS alt_one'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = two.id AND i.order = 1 LIMIT 1) AS alt_two')
+            DB::RAW('IF(one.offer IS NULL, one.offer, CONCAT(coins_one.symbol," ",FORMAT(one.offer,2))) AS oferta_one'),
+            DB::RAW('IF(two.offer IS NULL, two.offer, CONCAT(coins_two.symbol," ",FORMAT(two.offer,2))) AS oferta_two'),
+            'image_consulta_one.image AS image_one',
+            'image_consulta_one.concat AS alt_one',
+            'image_consulta_two.image AS image_two',
+            'image_consulta_two.concat AS alt_two'
         )
+        ->where('image_consulta_one.order', 1)
+        ->where('image_consulta_two.order', 1)
         ->orderByRaw('RAND()')
         ->limit(4)
         ->get();

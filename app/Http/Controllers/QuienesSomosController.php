@@ -26,6 +26,7 @@ class QuienesSomosController extends Controller
             'people_phones.number AS numero'
         )
         ->whereNull('users.deleted_at')
+        ->where('users.aparece', true)
         ->orderByRaw('RAND()')
         ->distinct('users.id')
         ->get();

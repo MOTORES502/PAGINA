@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SearchController extends Controller
 {
-    public function marca($slug, $value) //existe
+    public function marca($slug, $value, Request $request) //existe
     {
         $buscar = str_replace('_', ' ', $slug);
 
@@ -24,6 +23,10 @@ class SearchController extends Controller
         $titulo = "vehículos de la marca $buscar";
         $buscar = mb_strtoupper($buscar);
 
+        $sub_categoria = (isset($request->sub_categoria) && !is_null($request->sub_categoria) && !empty($request->sub_categoria)) ? $request->sub_categoria : null;
+        $ordenar_precio = (isset($request->ordenar_precio) && !is_null($request->ordenar_precio) && !empty($request->ordenar_precio)) ? $request->ordenar_precio : null;
+        $ordenar_modelo = (isset($request->ordenar_modelo) && !is_null($request->ordenar_modelo) && !empty($request->ordenar_modelo)) ? $request->ordenar_modelo : null;
+
         $data = DB::connection('mysql')->table('brands')
         ->join('transports', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
@@ -32,8 +35,10 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('sub_categories', 'sub_categories.id', 'transports.sub_categories_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
@@ -44,24 +49,72 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt',
+            'transports.created_at',
+            'transports.sub_categories_id AS sub_categories',
+            DB::raw('(CASE WHEN coins.id = 1
+            THEN 
+                (
+                    CASE WHEN (SELECT COUNT(offe.price_offer) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0
+                    THEN transports.price_publisher
+                    ELSE (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) END
+                )
+            ELSE 
+                (
+                    CASE WHEN (SELECT COUNT(offe.price_offer) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0
+                    THEN transports.price_publisher*8
+                    ELSE (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)*8 END
+                )            
+            END) AS order_by')
         )
         ->where('brands.name', $buscar)
-        ->where('transports.status', 'DISPONIBLE')
+        ->where('transports_images.order', 1)
         ->whereNull('transports.deleted_at')
-        ->whereNull('brands.deleted_at')
-        ->orderByRaw('RAND()')
+        ->when($sub_categoria, function ($query) use ($sub_categoria) {
+            return $query->where('sub_categories.name', $sub_categoria);
+        })
+        ->when($ordenar_precio, function ($query) use ($ordenar_precio) {
+            return $query->orderBy('order_by', $ordenar_precio);
+        })
+        ->when($ordenar_modelo, function ($query) use ($ordenar_modelo) {
+            return $query->orderBy('models.anio', $ordenar_modelo);
+        })
+        ->when(is_null($ordenar_modelo) && is_null($ordenar_precio), function ($query) {
+            return $query->orderByDesc('transports.created_at');
+        })  
         ->paginate(16);
 
+        if ($request->ajax()) {
+            return response()->json(['carro' => view('paginado.carros_buscados', compact('data'))->render()]);
+        }
+
         $existe = count($data) == 0 ? false : true;
+
+        $categorias = DB::connection('mysql')->table('transports')
+        ->join('brands', 'brands.id', 'transports.brands_id')
+        ->join('lines', 'lines.id', 'transports.lines_id')
+        ->join('generations', 'generations.id', 'transports.generations_id')
+        ->join('models', 'models.id', 'transports.models_id')
+        ->join('versions', 'versions.id', 'transports.versions_id')
+        ->join('sub_categories', 'transports.sub_categories_id', 'sub_categories.id')
+        ->select(
+            'sub_categories.name AS sub_categories',
+            'sub_categories.id AS id'
+        )
+            ->where('brands.name', $buscar)
+        ->whereNull('transports.deleted_at')
+        ->distinct('sub_categories.id')
+        ->orderBy('sub_categories.name')
+        ->get();
+
         $search = '';
 
-        return view('buscar', compact('data', 'existe', 'titulo', 'search'));        
+        return view('buscar', compact('data', 'existe', 'titulo', 'search', 'categorias'));        
     }
 
-    public function marca_linea($slug, $value) //existe
+    public function marca_linea($slug, $value, Request $request) //existe
     {
         $buscar = str_replace('_', ' ', $slug);
 
@@ -77,6 +130,10 @@ class SearchController extends Controller
         $titulo = "vehículos de la marca y línea $buscar";
         $quitar_espacios = mb_strtoupper(str_replace(' ', '', $buscar));
 
+        $sub_categoria = (isset($request->sub_categoria) && !is_null($request->sub_categoria) && !empty($request->sub_categoria)) ? $request->sub_categoria : null;
+        $ordenar_precio = (isset($request->ordenar_precio) && !is_null($request->ordenar_precio) && !empty($request->ordenar_precio)) ? $request->ordenar_precio : null;
+        $ordenar_modelo = (isset($request->ordenar_modelo) && !is_null($request->ordenar_modelo) && !empty($request->ordenar_modelo)) ? $request->ordenar_modelo : null;
+
         $data = DB::connection('mysql')->table('brands')
         ->join('transports', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
@@ -85,8 +142,10 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('sub_categories', 'sub_categories.id', 'transports.sub_categories_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
@@ -97,23 +156,72 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt',
+            'transports.created_at',
+            'transports.sub_categories_id AS sub_categories',
+            DB::raw('(CASE WHEN coins.id = 1
+            THEN 
+                (
+                    CASE WHEN (SELECT COUNT(offe.price_offer) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0
+                    THEN transports.price_publisher
+                    ELSE (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) END
+                )
+            ELSE 
+                (
+                    CASE WHEN (SELECT COUNT(offe.price_offer) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0
+                    THEN transports.price_publisher*8
+                    ELSE (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)*8 END
+                )            
+            END) AS order_by')
         )
-        ->where(DB::RAW("TRIM(CONCAT(brands.name,lines.name))"), $quitar_espacios)
-        ->where('transports.status', 'DISPONIBLE')
+        ->where(DB::RAW("REPLACE(CONCAT(brands.name,lines.name),' ','')"), $quitar_espacios)
+        ->where('transports_images.order', 1)
         ->whereNull('transports.deleted_at')
-        ->orderByRaw('RAND()')
+        ->when($sub_categoria, function ($query) use ($sub_categoria) {
+            return $query->where('sub_categories.name', $sub_categoria);
+        })
+        ->when($ordenar_precio, function ($query) use ($ordenar_precio) {
+            return $query->orderBy('order_by', $ordenar_precio);
+        })
+        ->when($ordenar_modelo, function ($query) use ($ordenar_modelo) {
+            return $query->orderBy('models.anio', $ordenar_modelo);
+        })
+        ->when(is_null($ordenar_modelo) && is_null($ordenar_precio), function ($query) {
+            return $query->orderByDesc('transports.created_at');
+        })  
         ->paginate(16);
 
+        if ($request->ajax()) {
+            return response()->json(['carro' => view('paginado.carros_buscados', compact('data'))->render()]);
+        }
+
         $existe = count($data) == 0 ? false : true;
+
+        $categorias = DB::connection('mysql')->table('transports')
+        ->join('brands', 'brands.id', 'transports.brands_id')
+        ->join('lines', 'lines.id', 'transports.lines_id')
+        ->join('generations', 'generations.id', 'transports.generations_id')
+        ->join('models', 'models.id', 'transports.models_id')
+        ->join('versions', 'versions.id', 'transports.versions_id')
+        ->join('sub_categories', 'transports.sub_categories_id', 'sub_categories.id')
+        ->select(
+            'sub_categories.name AS sub_categories',
+            'sub_categories.id AS id'
+        )
+        ->where(DB::RAW("REPLACE(CONCAT(brands.name,lines.name),' ','')"), $quitar_espacios)
+        ->whereNull('transports.deleted_at')
+        ->distinct('sub_categories.id')
+        ->orderBy('sub_categories.name')
+        ->get();
+
         $search = '';
 
-        return view('buscar', compact('data', 'existe', 'titulo', 'search'));    
+        return view('buscar', compact('data', 'existe', 'titulo', 'search', 'categorias'));    
     }
 
-    public function marca_modelo($slug, $value) //existe
+    public function marca_modelo($slug, $value, Request $request) //existe
     {
         $buscar = str_replace('_', ' ', $slug);
 
@@ -129,6 +237,10 @@ class SearchController extends Controller
         $titulo = "vehículos de la marca y modelo $buscar";
         $quitar_espacios = mb_strtoupper(str_replace(' ', '', $buscar));
 
+        $sub_categoria = (isset($request->sub_categoria) && !is_null($request->sub_categoria) && !empty($request->sub_categoria)) ? $request->sub_categoria : null;
+        $ordenar_precio = (isset($request->ordenar_precio) && !is_null($request->ordenar_precio) && !empty($request->ordenar_precio)) ? $request->ordenar_precio : null;
+        $ordenar_modelo = (isset($request->ordenar_modelo) && !is_null($request->ordenar_modelo) && !empty($request->ordenar_modelo)) ? $request->ordenar_modelo : null;
+
         $data = DB::connection('mysql')->table('brands')
         ->join('transports', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
@@ -137,8 +249,10 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('sub_categories', 'sub_categories.id', 'transports.sub_categories_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
@@ -149,25 +263,72 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt',
+            'transports.created_at',
+            'transports.sub_categories_id AS sub_categories',
+            DB::raw('(CASE WHEN coins.id = 1
+            THEN 
+                (
+                    CASE WHEN (SELECT COUNT(offe.price_offer) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0
+                    THEN transports.price_publisher
+                    ELSE (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) END
+                )
+            ELSE 
+                (
+                    CASE WHEN (SELECT COUNT(offe.price_offer) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0
+                    THEN transports.price_publisher*8
+                    ELSE (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)*8 END
+                )            
+            END) AS order_by')
         )
-        ->where(DB::RAW("TRIM(CONCAT(brands.name,models.anio))"), $quitar_espacios)
-        ->where('transports.status', 'DISPONIBLE')
+        ->where(DB::RAW("REPLACE(CONCAT(brands.name,models.anio),' ','')"), $quitar_espacios)
+        ->where('transports_images.order', 1)
         ->whereNull('transports.deleted_at')
-        ->whereNull('brands.deleted_at')
-        ->whereNull('models.deleted_at')
-        ->orderByRaw('RAND()')
+        ->when($sub_categoria, function ($query) use ($sub_categoria) {
+            return $query->where('sub_categories.name', $sub_categoria);
+        })
+        ->when($ordenar_precio, function ($query) use ($ordenar_precio) {
+            return $query->orderBy('order_by', $ordenar_precio);
+        })
+        ->when($ordenar_modelo, function ($query) use ($ordenar_modelo) {
+            return $query->orderBy('models.anio', $ordenar_modelo);
+        })
+        ->when(is_null($ordenar_modelo) && is_null($ordenar_precio), function ($query) {
+            return $query->orderByDesc('transports.created_at');
+        })  
         ->paginate(16);
 
+        if ($request->ajax()) {
+            return response()->json(['carro' => view('paginado.carros_buscados', compact('data'))->render()]);
+        }
+
         $existe = count($data) == 0 ? false : true;
+
+        $categorias = DB::connection('mysql')->table('transports')
+        ->join('brands', 'brands.id', 'transports.brands_id')
+        ->join('lines', 'lines.id', 'transports.lines_id')
+        ->join('generations', 'generations.id', 'transports.generations_id')
+        ->join('models', 'models.id', 'transports.models_id')
+        ->join('versions', 'versions.id', 'transports.versions_id')
+        ->join('sub_categories', 'transports.sub_categories_id', 'sub_categories.id')
+        ->select(
+            'sub_categories.name AS sub_categories',
+            'sub_categories.id AS id'
+        )
+        ->where(DB::RAW("REPLACE(CONCAT(brands.name,models.anio),' ','')"), $quitar_espacios)
+        ->whereNull('transports.deleted_at')
+        ->distinct('sub_categories.id')
+        ->orderBy('sub_categories.name')
+        ->get();
+
         $search = '';
 
-        return view('buscar', compact('data', 'existe', 'titulo', 'search')); 
+        return view('buscar', compact('data', 'existe', 'titulo', 'search', 'categorias')); 
     }
 
-    public function marca_linea_version($slug, $value) //existe
+    public function marca_linea_version($slug, $value, Request $request) //existe
     {
         $buscar = str_replace('_', ' ', $slug);
 
@@ -181,7 +342,11 @@ class SearchController extends Controller
         $this->seo($title, $description, $keywords, $url, $image, 'versión y modelo');
 
         $titulo = "vehículos de la versión y modelo $buscar";
-        $quitar_espacios = mb_strtoupper(str_replace(' ', '', $buscar));
+        $quitar_espacios = mb_strtoupper(str_replace('_', ' ', $buscar));
+
+        $sub_categoria = (isset($request->sub_categoria) && !is_null($request->sub_categoria) && !empty($request->sub_categoria)) ? $request->sub_categoria : null;
+        $ordenar_precio = (isset($request->ordenar_precio) && !is_null($request->ordenar_precio) && !empty($request->ordenar_precio)) ? $request->ordenar_precio : null;
+        $ordenar_modelo = (isset($request->ordenar_modelo) && !is_null($request->ordenar_modelo) && !empty($request->ordenar_modelo)) ? $request->ordenar_modelo : null;
 
         $data = DB::connection('mysql')->table('brands')
         ->join('transports', 'brands.id', 'transports.brands_id')
@@ -191,8 +356,10 @@ class SearchController extends Controller
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
+        ->join('sub_categories', 'sub_categories.id', 'transports.sub_categories_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
@@ -203,25 +370,74 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt',
+            'transports.created_at',
+            'transports.sub_categories_id AS sub_categories',
+            DB::raw('(CASE WHEN coins.id = 1
+            THEN 
+                (
+                    CASE WHEN (SELECT COUNT(offe.price_offer) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0
+                    THEN transports.price_publisher
+                    ELSE (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) END
+                )
+            ELSE 
+                (
+                    CASE WHEN (SELECT COUNT(offe.price_offer) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0
+                    THEN transports.price_publisher*8
+                    ELSE (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)*8 END
+                )            
+            END) AS order_by')
         )
-        ->where(DB::RAW("TRIM(CONCAT(brands.name,lines.name,versions.name))"), $quitar_espacios)
-        ->where('transports.status', 'DISPONIBLE')
+        ->where(DB::RAW("CONCAT(brands.name,' ',lines.name,' ',versions.name)"), $quitar_espacios)
+        ->where('transports_images.order', 1)
         ->whereNull('transports.deleted_at')
-        ->orderByRaw('RAND()')
+        ->when($sub_categoria, function ($query) use ($sub_categoria) {
+            return $query->where('sub_categories.name', $sub_categoria);
+        })
+        ->when($ordenar_precio, function ($query) use ($ordenar_precio) {
+            return $query->orderBy('order_by', $ordenar_precio);
+        })
+        ->when($ordenar_modelo, function ($query) use ($ordenar_modelo) {
+            return $query->orderBy('models.anio', $ordenar_modelo);
+        })
+        ->when(is_null($ordenar_modelo) && is_null($ordenar_precio), function ($query) {
+            return $query->orderByDesc('transports.created_at');
+        })       
         ->paginate(16);
 
+        if ($request->ajax()) {
+            return response()->json(['carro' => view('paginado.carros_buscados', compact('data'))->render()]);
+        }
+
         $existe = count($data) == 0 ? false : true;
+
+        $categorias = DB::connection('mysql')->table('transports')
+        ->join('brands', 'brands.id', 'transports.brands_id')
+        ->join('lines', 'lines.id', 'transports.lines_id')
+        ->join('generations', 'generations.id', 'transports.generations_id')
+        ->join('models', 'models.id', 'transports.models_id')
+        ->join('versions', 'versions.id', 'transports.versions_id')
+        ->join('sub_categories', 'transports.sub_categories_id', 'sub_categories.id')
+        ->select(
+            'sub_categories.name AS sub_categories',
+            'sub_categories.id AS id'
+        )
+        ->where(DB::RAW("CONCAT(brands.name,' ',lines.name,' ',versions.name)"), $quitar_espacios)
+        ->whereNull('transports.deleted_at')
+        ->distinct('sub_categories.id')
+        ->orderBy('sub_categories.name')
+        ->get();
+
         $search = '';
 
-        return view('buscar', compact('data', 'existe', 'titulo', 'search'));
+        return view('buscar', compact('data', 'existe', 'titulo', 'search', 'categorias'));
     }
 
     public function personalizada(Request $request)
     {
-        $buscar = str_replace('_', ' ', $request->get('search'));
+        $buscar = str_replace(['_', '+'], ' ', $request->get('search'));
 
         //SEO
         $title = "busqueda personalizada $buscar";
@@ -236,18 +452,22 @@ class SearchController extends Controller
         $buscar = mb_strtoupper($buscar);
         $quitar_espacios = str_replace(' ', '', $buscar);
 
-        $data = DB::connection('mysql')->table('sub_categories_transports')
-        ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
+        $sub_categoria = (isset($request->sub_categoria) && !is_null($request->sub_categoria) && !empty($request->sub_categoria)) ? $request->sub_categoria : null;
+        $ordenar_precio = (isset($request->ordenar_precio) && !is_null($request->ordenar_precio) && !empty($request->ordenar_precio)) ? $request->ordenar_precio : null;
+        $ordenar_modelo = (isset($request->ordenar_modelo)&& !is_null($request->ordenar_modelo) && !empty($request->ordenar_modelo)) ? $request->ordenar_modelo : null;
+
+        $data = DB::connection('mysql')->table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
         ->join('generations', 'generations.id', 'transports.generations_id')
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
-        ->join('sub_categories', 'sub_categories_transports.sub_categories_id', 'sub_categories.id')
+        ->join('sub_categories', 'transports.sub_categories_id', 'sub_categories.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
@@ -258,41 +478,62 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt',
+            'transports.created_at',
+            'transports.sub_categories_id AS sub_categories',
+            DB::raw('(CASE WHEN coins.id = 1
+            THEN 
+                (
+                    CASE WHEN (SELECT COUNT(offe.price_offer) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0
+                    THEN transports.price_publisher
+                    ELSE (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) END
+                )
+            ELSE 
+                (
+                    CASE WHEN (SELECT COUNT(offe.price_offer) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0
+                    THEN transports.price_publisher*8
+                    ELSE (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)*8 END
+                )            
+            END) AS order_by')
         )
-        ->orWhere('transports.code', $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(sub_categories.name)'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(brands.name)'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(lines.name)'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(generations.name)'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(models.anio)'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(versions.name)'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(models.anio,brands.name))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(models.anio,brands.name,lines.name))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(brands.name,lines.name))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(brands.name,lines.name,generations.name,models.anio))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(brands.name,lines.name,generations.name,models.anio,versions.name))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(brands.name,lines.name,models.anio,versions.name))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(brands.name,lines.name,versions.name))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(brands.name,versions.name,models.anio))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(versions.name,models.anio))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(brands.name,versions.name))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(lines.name,versions.name))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(brands.name,models.anio))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(lines.name,models.anio))'), $quitar_espacios)
-        ->orWhere(DB::RAW('TRIM(CONCAT(brands.name,lines.name,models.anio))'), $quitar_espacios)
-        ->where('transports.status', 'DISPONIBLE')
+        ->orWhere(function ($query) use ($quitar_espacios) {
+            $query->orWhere('transports.code', $quitar_espacios)
+            ->orWhere('sub_categories.name', $quitar_espacios)
+            ->orWhere('brands.name', $quitar_espacios)
+            ->orWhere('lines.name', $quitar_espacios)
+            ->orWhere('models.anio', $quitar_espacios)
+            ->orWhere('versions.name', $quitar_espacios)
+            ->orWhere(DB::RAW('CONCAT(models.anio,brands.name)'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(models.anio,brands.name,lines.name)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name,generations.name,models.anio)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name,generations.name,models.anio,versions.name)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name,models.anio,versions.name)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name,versions.name)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,versions.name,models.anio)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(versions.name,models.anio)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,versions.name)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(lines.name,versions.name)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,models.anio)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(lines.name,models.anio)," ","")'), $quitar_espacios)
+            ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name,models.anio)," ","")'), $quitar_espacios);
+        })        
+        ->where('transports_images.order', 1)
         ->whereNull('transports.deleted_at')
-        ->whereNull('sub_categories.deleted_at')
-        ->whereNull('brands.deleted_at')
-        ->whereNull('lines.deleted_at')
-        ->whereNull('generations.deleted_at')
-        ->whereNull('models.deleted_at')
-        ->whereNull('versions.deleted_at')
-        ->distinct('transports.code')
-        ->orderByRaw('RAND()')
+        ->when($sub_categoria, function ($query) use ($sub_categoria) {
+            return $query->where('sub_categories.name', $sub_categoria);
+        })
+        ->when($ordenar_precio, function ($query) use ($ordenar_precio) {
+            return $query->orderBy('order_by', $ordenar_precio);
+        })  
+        ->when($ordenar_modelo, function ($query) use ($ordenar_modelo) {
+            return $query->orderBy('models.anio', $ordenar_modelo);
+        }) 
+        ->when(is_null($ordenar_modelo) && is_null($ordenar_precio), function ($query) {
+            return $query->orderByDesc('transports.created_at');
+        })       
         ->paginate(16);
 
         $existe = count($data) == 0 ? false : true;
@@ -301,9 +542,45 @@ class SearchController extends Controller
             return response()->json(['carro' => view('paginado.carros_buscados', compact('data'))->render()]);
         }
 
+        $categorias = DB::connection('mysql')->table('transports')
+        ->join('brands', 'brands.id', 'transports.brands_id')
+        ->join('lines', 'lines.id', 'transports.lines_id')
+        ->join('generations', 'generations.id', 'transports.generations_id')
+        ->join('models', 'models.id', 'transports.models_id')
+        ->join('versions', 'versions.id', 'transports.versions_id')
+        ->join('sub_categories', 'transports.sub_categories_id', 'sub_categories.id')
+        ->select(
+            'sub_categories.name AS sub_categories',
+            'sub_categories.id AS id'
+        )
+        ->orWhere('transports.code', $quitar_espacios)
+        ->orWhere('sub_categories.name', $quitar_espacios)
+        ->orWhere('brands.name', $quitar_espacios)
+        ->orWhere('lines.name', $quitar_espacios)
+        ->orWhere('models.anio', $quitar_espacios)
+        ->orWhere('versions.name', $quitar_espacios)
+        ->orWhere(DB::RAW('CONCAT(models.anio,brands.name)'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(models.anio,brands.name,lines.name)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name,generations.name,models.anio)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name,generations.name,models.anio,versions.name)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name,models.anio,versions.name)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name,versions.name)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,versions.name,models.anio)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(versions.name,models.anio)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,versions.name)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(lines.name,versions.name)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,models.anio)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(lines.name,models.anio)," ","")'), $quitar_espacios)
+        ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name,models.anio)," ","")'), $quitar_espacios)
+        ->whereNull('transports.deleted_at')
+        ->distinct('sub_categories.id')
+        ->orderBy('sub_categories.name')
+        ->get();
+
         $search = $request->get('search');
 
-        return view('buscar', compact('data', 'existe', 'titulo', 'search'));
+        return view('buscar', compact('data', 'existe', 'titulo', 'search', 'categorias'));
     }
 
     public function buscador_combo(Request $request)
@@ -398,6 +675,7 @@ class SearchController extends Controller
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
@@ -408,13 +686,13 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
         ->whereNull('transports.deleted_at')
-        ->where('transports.status', 'DISPONIBLE')
         ->where('lines.id', $linea)
+        ->where('transports_images.order', 1)
         ->paginate(12);
 
         return $todos;
@@ -432,6 +710,7 @@ class SearchController extends Controller
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
@@ -442,13 +721,13 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
         ->whereNull('transports.deleted_at')
-        ->where('transports.status', 'DISPONIBLE')
         ->where('brands.id', $marca)
+        ->where('transports_images.order', 1)
         ->paginate(12);
 
         return $todos;
@@ -456,7 +735,10 @@ class SearchController extends Controller
 
     public function buscar_c_marca_pm_pm($marca, $precio_minimo, $precio_maximo, $precio_minimo_s, $precio_maximo_s, $sort)
     {
-        $consulta = DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))');
+        $consulta = DB::RAW('IF((SELECT COUNT(offe.price_offer) 
+        FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0, 
+        transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id 
+        AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))');
         $dolares = DB::connection('mysql')->table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
@@ -467,8 +749,12 @@ class SearchController extends Controller
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
-            DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))*8 AS order_by'),
+            DB::RAW('IF((SELECT COUNT(offe.price_offer) 
+            FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0, 
+            transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id 
+            AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))*8 AS order_by'),
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
@@ -478,15 +764,15 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
         ->where('coins.id', 2)
         ->whereBetween($consulta, [$precio_minimo_s, $precio_maximo_s])
         ->whereNull('transports.deleted_at')
-        ->where('transports.status', 'DISPONIBLE')
-        ->where('brands.id', $marca);
+        ->where('brands.id', $marca)
+        ->where('transports_images.order', 1);
 
         $todos = DB::connection('mysql')->table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
@@ -498,8 +784,12 @@ class SearchController extends Controller
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
-            DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)) AS order_by'),
+            DB::RAW('IF((SELECT COUNT(offe.price_offer) 
+            FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0, 
+            transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id 
+            AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)) AS order_by'),
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
@@ -509,15 +799,15 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
         ->where('coins.id', 1)
         ->whereBetween($consulta, [$precio_minimo, $precio_maximo])
         ->whereNull('transports.deleted_at')
-        ->where('transports.status', 'DISPONIBLE')
         ->where('brands.id', $marca)
+        ->where('transports_images.order', 1)
         ->union($dolares, true)
         ->orderBy('order_by', $sort)
         ->paginate(12);
@@ -527,7 +817,10 @@ class SearchController extends Controller
 
     public function buscar_c_linea_pm_pm($linea, $precio_minimo, $precio_maximo, $precio_minimo_s, $precio_maximo_s, $sort)
     {
-        $consulta = DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))');
+        $consulta = DB::RAW('IF((SELECT COUNT(offe.price_offer) 
+        FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0, 
+        transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id 
+        AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))');
         $dolares = DB::connection('mysql')->table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
@@ -538,8 +831,12 @@ class SearchController extends Controller
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
-            DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))*8 AS order_by'),
+            DB::RAW('IF((SELECT COUNT(offe.price_offer) 
+            FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0, 
+            transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id 
+            AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))*8 AS order_by'),
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
@@ -549,15 +846,15 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
         ->where('coins.id', 2)
         ->whereBetween($consulta, [$precio_minimo_s, $precio_maximo_s])
         ->whereNull('transports.deleted_at')
-        ->where('transports.status', 'DISPONIBLE')
-        ->where('lines.id', $linea);
+        ->where('lines.id', $linea)
+        ->where('transports_images.order', 1);
 
         $todos = DB::connection('mysql')->table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
@@ -569,8 +866,12 @@ class SearchController extends Controller
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
-            DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)) AS order_by'),
+            DB::RAW('IF((SELECT COUNT(offe.price_offer) 
+        FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0, 
+        transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id 
+        AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)) AS order_by'),
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
@@ -580,15 +881,15 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
         ->where('coins.id', 1)
         ->whereBetween($consulta, [$precio_minimo, $precio_maximo])
         ->whereNull('transports.deleted_at')
-        ->where('transports.status', 'DISPONIBLE')
         ->where('lines.id', $linea)
+        ->where('transports_images.order', 1)
         ->union($dolares, true)
         ->orderBy('order_by', $sort)
         ->paginate(12);
@@ -598,7 +899,10 @@ class SearchController extends Controller
 
     public function buscar_c_pm_pm($precio_minimo, $precio_maximo, $precio_minimo_s, $precio_maximo_s, $sort)
     {
-        $consulta = DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))');
+        $consulta = DB::RAW('IF((SELECT COUNT(offe.price_offer) 
+        FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0, 
+        transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id 
+        AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))');
         $dolares = DB::connection('mysql')->table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
@@ -609,8 +913,12 @@ class SearchController extends Controller
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
-            DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))*8 AS order_by'),
+            DB::RAW('IF((SELECT COUNT(offe.price_offer) 
+        FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0, 
+        transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id 
+        AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1))*8 AS order_by'),
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
@@ -620,14 +928,14 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
         ->where('coins.id', 2)
         ->whereBetween($consulta, [$precio_minimo_s, $precio_maximo_s])
         ->whereNull('transports.deleted_at')
-        ->where('transports.status', 'DISPONIBLE');
+        ->where('transports_images.order', 1);
 
         $todos = DB::connection('mysql')->table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
@@ -639,8 +947,12 @@ class SearchController extends Controller
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
-            DB::RAW('IF((SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = null, transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)) AS order_by'),
+            DB::RAW('IF((SELECT COUNT(offe.price_offer) 
+        FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) = 0, 
+        transports.price_publisher, (SELECT offe.price_offer FROM transports_offers offe WHERE offe.transports_id = transports.id 
+        AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1)) AS order_by'),
             'transports.code AS codigo',
             'transports.status AS estado',
             'models.anio AS modelo',
@@ -650,14 +962,14 @@ class SearchController extends Controller
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
         ->where('coins.id', 1)
         ->whereBetween($consulta, [$precio_minimo, $precio_maximo])
         ->whereNull('transports.deleted_at')
-        ->where('transports.status', 'DISPONIBLE')
+        ->where('transports_images.order', 1)
         ->union($dolares, true)
         ->orderBy('order_by', $sort)
         ->paginate(12);

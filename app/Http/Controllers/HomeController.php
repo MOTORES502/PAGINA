@@ -20,25 +20,33 @@ class HomeController extends Controller
 
         $subs = DB::connection('mysql')->table('sub_categories')
         ->select(
-            'id', 
-            'name', 
+            'id',
+            'name',
             'icon',
             DB::RAW('(SELECT COUNT(*) 
                 FROM sub_categories_transports 
+                INNER JOIN transports ON transports.id = sub_categories_transports.transports_id
                 WHERE sub_categories_transports.sub_categories_id = sub_categories.id 
-                AND sub_categories_transports.deleted_at IS NULL) AS cantidad')
+                AND transports.deleted_at IS NULL) AS cantidad')
         )
         ->whereNull('deleted_at')->paginate(8, ['*'], 'categorias');
 
-        $marcas = $this->marcas();
-
         $carros = $this->categorias_carros();
+        
         if ($request->ajax()) {
-            return response()->json(['sub' => view('paginado.categoria', compact('subs', 'carros'))->render(), 'carro' => view('paginado.carro', compact('subs', 'carros'))->render()]);
+            $options = app('request')->header('accept-charset') == 'utf-8' ? JSON_UNESCAPED_UNICODE : null; 
+            return response()->json(
+                ['sub' => view('paginado.categoria', compact('subs', 'carros'))->render(), 
+                'carro' => view('paginado.carro', compact('subs', 'carros'))->render()
+                ],
+                200,
+                [],
+                $options);
         }
 
         $ofertas = $this->ofertas();
 
+        $marcas = $this->marcas();
         $total_carros = DB::connection('mysql')->table('transports')
         ->where('transports.status', 'DISPONIBLE')
         ->whereNull('transports.deleted_at')
@@ -47,7 +55,7 @@ class HomeController extends Controller
         $arra_precio_bajo = $this->precios_minimos();
         $arra_precio_alto = $this->precios_maximos();
 
-        $blogs = DB::connection('mysql')->table('blog')
+        $blogs = array(); /*DB::connection('mysql')->table('blog')
         ->join('users', 'blog.users_id', 'users.id')
         ->join('people', 'users.people_id', 'people.id')
         ->select(
@@ -59,7 +67,7 @@ class HomeController extends Controller
             DB::RAW('REPLACE(LOWER(blog.name)," ","_") AS slug'),
             DB::RAW('CONCAT(people.names," ",people.surnames) AS usuario')
         )
-        ->whereNull('blog.deleted_at')->orderByRaw('RAND()')->limit(3)->get();
+        ->whereNull('blog.deleted_at')->orderByRaw('RAND()')->limit(3)->get();*/
 
         ViewPage::create([
             'anio' => date('Y'),
@@ -71,8 +79,11 @@ class HomeController extends Controller
 
         $comparaciones = DB::connection('mysql')->table('comparations')
         ->count();
+
+        $baners = DB::connection('mysql')->table('banners')
+        ->whereNull('banners.deleted_at')->orderByDesc('banners.order')->get();
         
-        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs', 'comparaciones'));
+        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs', 'comparaciones', 'baners'));
     }
 
     public function index_page(Request $request)
@@ -91,19 +102,21 @@ class HomeController extends Controller
             'icon',
             DB::RAW('(SELECT COUNT(*) 
                 FROM sub_categories_transports 
+                INNER JOIN transports ON transports.id = sub_categories_transports.transports_id
                 WHERE sub_categories_transports.sub_categories_id = sub_categories.id 
-                AND sub_categories_transports.deleted_at IS NULL) AS cantidad')
+                AND transports.deleted_at IS NULL) AS cantidad')
         )
-            ->whereNull('deleted_at')->paginate(8, ['*'], 'categorias');
-
-        $marcas = $this->marcas();
+        ->whereNull('deleted_at')->paginate(8, ['*'], 'categorias');
 
         $carros = $this->categorias_carros();
+
         if ($request->ajax()) {
             return response()->json(['sub' => view('paginado.categoria', compact('subs', 'carros'))->render(), 'carro' => view('paginado.carro', compact('subs', 'carros'))->render()]);
         }
 
         $ofertas = $this->ofertas();
+
+        $marcas = $this->marcas();
 
         $total_carros = DB::connection('mysql')->table('transports')
         ->where('transports.status', 'DISPONIBLE')
@@ -119,7 +132,7 @@ class HomeController extends Controller
         $arra_precio_bajo = $this->precios_minimos();
         $arra_precio_alto = $this->precios_maximos();
 
-        $blogs = DB::connection('mysql')->table('blog')
+        $blogs = array(); /*DB::connection('mysql')->table('blog')
         ->join('users', 'blog.users_id', 'users.id')
         ->join('people', 'users.people_id', 'people.id')
         ->select(
@@ -131,8 +144,18 @@ class HomeController extends Controller
             DB::RAW('REPLACE(LOWER(blog.name)," ","_") AS slug'),
             DB::RAW('CONCAT(people.names," ",people.surnames) AS usuario')
         )
-            ->whereNull('blog.deleted_at')->orderByRaw('RAND()')->limit(3)->get();
+            ->whereNull('blog.deleted_at')->orderByRaw('RAND()')->limit(3)->get();*/
 
-        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs', 'comparaciones'));
+
+        $visitas = DB::connection('mysql')->table('views')
+        ->count();
+
+        $comparaciones = DB::connection('mysql')->table('comparations')
+        ->count();
+
+        $baners = DB::connection('mysql')->table('banners')
+        ->whereNull('banners.deleted_at')->orderByDesc('banners.order')->get();
+
+        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs', 'comparaciones', 'baners'));
     }
 }

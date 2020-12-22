@@ -22,7 +22,7 @@
                         <div class="news-block-two">
                             <div class="inner-box">
                                 <div class="image">
-                                    <img src="{{ $blog->image }}" alt="{{ $blog->name }}" />
+                                    <img class="lazyload" data-src="{{ $blog->image }}" alt="{{ $blog->name }}" />
                                 </div>
                                 <div class="lower-box">
                                     <div class="post-date">{{ date('d', strtotime($blog->created_at)) }} <br> {{ date('M', strtotime($blog->created_at)) }}</div>
@@ -32,7 +32,7 @@
                                         </ul>
                                         <h3>{{ $blog->name }}</h3>
                                         <div class="text">
-                                        	{{ $blog->description }}
+                                        	{!! $blog->description !!}
                                         </div>
                                     </div>
                                 </div>
@@ -46,7 +46,9 @@
                     	<h2>Autor de la Publicación</h2>
                         <div class="author-comment">
                             <div class="inner-box">
-                                <div class="image"><img src="{{ is_null($blog->usuario_foto) ? asset('template_new/images/resource/author-4.jpg') : $blog->usuario_foto }}" alt="{{ $blog->usuario }}" /></div>
+                                <div class="image">
+                                    <img class="lazyload" data-src="{{ is_null($blog->usuario_foto) ? asset('template_new/images/resource/author-4.jpg') : $blog->usuario_foto }}" alt="{{ $blog->usuario }}" />
+                                </div>
                                 <h3>{{ $blog->usuario }}</h3>
                             </div>
                         </div>
@@ -62,8 +64,17 @@
 
                             @foreach ($publicaciones as $item)
                                 <article class="post">
-                                    <figure class="post-thumb"><img src="{{ $item->image }}" alt="{{ $item->name }}"><a class="overlay" href="{{ route('blog.seleccionado', ['slug' => $item->slug, 'value' => base64_encode($item->id)]) }}"><span class="icon flaticon-unlink"></span></a></figure>
-                                    <div class="text"><a href="{{ route('blog.seleccionado', ['slug' => $item->slug, 'value' => base64_encode($item->id)]) }}">{{ $item->name }}</a></div>
+                                    <figure class="post-thumb">
+                                        <img class="lazyload" data-src="{{ $item->image }}" alt="{{ $item->name }}">
+                                        <a class="overlay" href="{{ route('blog.seleccionado', ['slug' => $item->slug, 'value' => base64_encode($item->id)]) }}" title="{{ $item->name }}">
+                                            <span class="icon flaticon-unlink"></span>
+                                        </a>
+                                    </figure>
+                                    <div class="text">
+                                        <a href="{{ route('blog.seleccionado', ['slug' => str_replace(['¿', '?'], '', $item->slug), 'value' => base64_encode($item->id)]) }}" title="{{ $item->name }}">
+                                            {{ $item->name }}
+                                        </a>
+                                    </div>
                                     <ul class="post-meta">
                                         <li><span class="icon fa fa-user"></span>{{ $item->usuario }}</li>
                                     </ul>

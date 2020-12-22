@@ -26,23 +26,6 @@ class Controller extends BaseController
             array_push($keywords, mb_strtolower($value));
         }
 
-        $categorias = DB::connection('mysql')->table('categories')
-        ->select('name');
-
-        $sub_categorias = DB::connection('mysql')->table('sub_categories')
-        ->select('name');
-
-        $marcas = DB::connection('mysql')->table('brands')
-        ->select('name')
-        ->union($categorias)
-        ->union($sub_categorias)
-        ->groupBy('name')
-        ->get();
-
-        foreach ($marcas as $key => $value) {
-            array_push($keywords, mb_strtolower($value->name));
-        }
-
         SEOMeta::setTitleDefault('Motores 502');
         SEOMeta::setTitle($title);
         SEOMeta::setDescription($description);
@@ -105,12 +88,12 @@ class Controller extends BaseController
             ->join('transports', 'transports_offers.transports_id', 'transports.id')
             ->join('brands', 'brands.id', 'transports.brands_id')
             ->join('lines', 'lines.id', 'transports.lines_id')
-            ->join('generations', 'generations.id', 'transports.generations_id')
             ->join('models', 'models.id', 'transports.models_id')
             ->join('versions', 'versions.id', 'transports.versions_id')
             ->join('fuels', 'fuels.id', 'transports.fuels_id')
             ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
             ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+            ->join('transports_images', 'transports.id', 'transports_images.transports_id')
             ->select(
                 'transports.code AS codigo',
                 'transports.status AS estado',
@@ -124,16 +107,17 @@ class Controller extends BaseController
                 'fuels.name AS combustible',
                 'transmisions.name AS transmision',
                 DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports_offers.price_offer,2)) AS precio'),
-                DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-                DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt'),
+                'transports_images.image AS image',
+                'transports_images.concat AS alt',
                 DB::RAW('FORMAT(100-((transports_offers.price_offer*100)/transports.price_publisher),2) AS porcentaje')
             )
             ->where('transports.status', 'DISPONIBLE')
             ->where('transports_offers.active', true)
             ->whereNull('transports_offers.deleted_at')
+            ->where('transports_images.order', 1)
             ->whereNull('transports.deleted_at')
             ->orderByDesc('transports_offers.updated_at')
-            ->limit(16)
+            ->limit(9)
             ->get();
     }
 
@@ -142,13 +126,13 @@ class Controller extends BaseController
         $carros = DB::connection('mysql')->table('transports')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
-        ->join('generations', 'generations.id', 'transports.generations_id')
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
@@ -159,14 +143,15 @@ class Controller extends BaseController
             DB::RAW('REPLACE(LOWER(CONCAT(brands.name,"-",lines.name,"-",versions.name,"-",models.anio))," ","") AS slug'),
             DB::RAW('CONCAT(brands.name," ",lines.name," ",versions.name) AS completo'),
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
         ->where('transports.status', 'DISPONIBLE')
+        ->where('transports_images.order', 1)
         ->whereNull('transports.deleted_at')
         ->orderByDesc('transports.updated_at')
-        ->paginate(8, ['*'], 'carros');
+        ->paginate(9, ['*'], 'carros');
 
         return $carros;
     }
@@ -177,13 +162,13 @@ class Controller extends BaseController
         ->join('transports', 'sub_categories_transports.transports_id', 'transports.id')
         ->join('brands', 'brands.id', 'transports.brands_id')
         ->join('lines', 'lines.id', 'transports.lines_id')
-        ->join('generations', 'generations.id', 'transports.generations_id')
         ->join('models', 'models.id', 'transports.models_id')
         ->join('versions', 'versions.id', 'transports.versions_id')
         ->join('coins', 'transports.coins_id', 'coins.id')
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
@@ -197,11 +182,12 @@ class Controller extends BaseController
             'fuels.name AS combustible',
             'transmisions.name AS transmision',
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
         ->where('sub_categories_transports.sub_categories_id', $sub_categoria_id)
+        ->where('transports_images.order', 1)
         ->whereNull('transports.deleted_at')
         ->orderByDesc('transports.created_at')
         ->limit(18)
@@ -222,6 +208,7 @@ class Controller extends BaseController
         ->join('fuels', 'fuels.id', 'transports.fuels_id')
         ->join('transports_engineers', 'transports.id', 'transports_engineers.transports_id')
         ->join('transmisions', 'transports_engineers.transmisions_id', 'transmisions.id')
+        ->join('transports_images', 'transports.id', 'transports_images.transports_id')
         ->select(
             'transports.code AS codigo',
             'transports.status AS estado',
@@ -235,15 +222,16 @@ class Controller extends BaseController
             'fuels.name AS combustible',
             'transmisions.name AS transmision',
             DB::RAW('CONCAT(coins.symbol," ",FORMAT(transports.price_publisher,2)) AS precio'),
-            DB::RAW('(SELECT CONCAT(coins.symbol," ",FORMAT(offe.price_offer,2)) FROM transports_offers offe WHERE offe.transports_id = transports.id AND offe.people_id = transports.people_id AND offe.active = true LIMIT 1) AS oferta'),
-            DB::RAW('(SELECT i.image FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS image'),
-            DB::RAW('(SELECT i.concat FROM transports_images i WHERE i.transports_id = transports.id AND i.order = 1 LIMIT 1) AS alt')
+            DB::RAW('IF(offer IS NULL, offer, CONCAT(coins.symbol," ",FORMAT(transports.offer,2))) AS oferta'),
+            'transports_images.image AS image',
+            'transports_images.concat AS alt'
         )
-            ->where('brands.name', $marca)
-            ->whereNull('transports.deleted_at')
-            ->orderByDesc('transports.created_at')
-            ->limit(18)
-            ->get();
+        ->where('brands.id', $marca)
+        ->where('transports_images.order', 1)
+        ->whereNull('transports.deleted_at')
+        ->orderByDesc('transports.created_at')
+        ->limit(18)
+        ->get();
 
         return $carros;
     }
@@ -302,16 +290,13 @@ class Controller extends BaseController
 
     public function marcas()
     {
-        /*return DB::connection('mysql')->table('transports')
-        ->join('brands', 'transports.brands_id', 'brands.id')
-        ->join('categories', 'brands.categories_id', 'categories.id')
-        ->select(DB::RAW('CONCAT(categories.name," MARCA ",brands.name) AS name'), 'brands.id')
-        ->distinct('brands.name')
-        ->where('transports.status', 'DISPONIBLE')
-        ->whereNull('transports.deleted_at')
-        ->orderBy('brands.name')
-        ->get();*/
+        return Category::select('id', 'name')->with('brands:id,name,categories_id')->get();
+    }
 
-        return Category::all();
+    public function generadorCodigo($id, $abreviatura)
+    {
+        $año = date('Y');
+        $codigo = str_pad(strval($id), 3, "0", STR_PAD_LEFT);
+        return "{$abreviatura}-{$codigo}-{$año}";
     }
 }

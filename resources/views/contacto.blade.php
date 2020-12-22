@@ -19,7 +19,8 @@
         	
             <!--Contact Form-->
             <div class="contact-form">
-                <form method="post" action="#" id="contact-form">
+                <form method="post" action="{{ route('contacto.store') }}" id="contact-form">
+                    @csrf
                     <div class="row clearfix">
                         <div class="column col-md-6 col-sm-6 col-xs-12">
                             <div class="form-group">
@@ -56,7 +57,7 @@
     	<div class="auto-container">
         	<!--Sec Title-->
             <div class="sec-title light centered">
-            	<h2>Detalle de contactos</h2>
+            	<h2>Detalle de Contácto</h2>
             </div>
             <div class="row clearfix">
             	<!--Headquater-->
@@ -71,7 +72,11 @@
                             </ul>
                             <ul class="social-icon-four">
                                 @foreach ($canales as $item)
-                            	    <li><a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer"><span class="{{ $item['icon'] }}"></span></a></li>
+                            	    <li>
+                                        <a href="{{ $item['url'] }}" target="_blank" rel="noopener noreferrer" title="{{ 'click para ir a la red social' }}">
+                                            <span class="{{ $item['icon'] }}"></span>
+                                        </a>
+                                    </li>
                                 @endforeach
                             </ul>
                         </div>
@@ -92,7 +97,7 @@
                                                 <div class="inner-box">
                                                     <div class="content">
                                                         <div class="image">
-                                                            <img src="{{ $item->foto ? $item->foto : asset('template_new/images/resource/author-11.jpg') }}" alt="{{ $item->asesor }}" />
+                                                            <img class="lazyload" data-src="{{ $item->foto ? $item->foto : asset('template_new/images/resource/author-11.jpg') }}" alt="{{ $item->asesor }}" />
                                                         </div>
                                                         <h3>{{ $item->asesor }}</h3>
                                                         <ul>
@@ -105,22 +110,6 @@
                                         @endforeach
                                     </div>
                                 @endforeach
-                            	<div class="slide">
-                                    <div class="department-author">
-                                        <div class="inner-box">
-                                            <div class="content">
-                                                <div class="image">
-                                                    <img src="{{ asset('template_new/images/resource/author-7.jpg') }}" alt="" />
-                                                </div>
-                                                <h3>Charles Mecky</h3>
-                                                <ul>
-                                                    <li><span class="icon fa fa-phone"></span>84578-25-658</li>
-                                                    <li><span class="icon fa fa-envelope"></span>Charlesmeck@gmail.com</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                                 
                             </div>
                         </div>
@@ -155,9 +144,13 @@
 @stop
 
 @section('script')
+    <script type="text/javascript" src="{{ asset('template_new/js/jquery-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/jquery.datetimepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/validate.js') }}"></script>
+
     <!--Google Map APi Key-->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHzPSV2jshbjI8fqnC_C4L08ffnj5EN3A"></script>
-    <script src="{{ asset('template_new/js/gmaps.js') }}"></script>
-    <script src="{{ asset('template_nnew/js/map-script.js') }}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHzPSV2jshbjI8fqnC_C4L08ffnj5EN3A" async></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/gmaps.js') }}" defer></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/map-script.js') }}" defer></script>
     <!--End Google Map APi-->
 @endsection

@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Catalogos\Brand;
 use App\Models\Catalogos\Line;
 use App\Models\Sistema\Transport;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class LineaController extends Controller
 {
@@ -30,7 +32,7 @@ class LineaController extends Controller
 
                 return response()->json($data);
             } catch (\Throwable $th) {
-                //throw $th;
+                return response()->json($th->getMessage());
             }
         } else {
             return redirect()->back()->with('warning', 'La consulta no es válida');
@@ -73,12 +75,14 @@ class LineaController extends Controller
     {
         if ($request->ajax()) {
             try {
+                $base = Config::get('filesystems.disks.images.url');
                 $marca = asset('img/encima_motores502.png');
                 $data = DB::connection('mysql')->table('transports_images')
                 ->select(
                     'transports_images.image AS image',
                     'transports_images.concat AS concat'
                 )
+                ->selectRaw("'$base' AS base")
                 ->selectRaw("'$marca' AS marca")
                 ->where('transports_id', $codigo->id)
                 ->where('order', 1)
@@ -86,7 +90,7 @@ class LineaController extends Controller
 
                 return response()->json($data);
             } catch (\Throwable $th) {
-                return response()->json($th->getMessage());
+                return response()->json('La consulta no es válida');
             }
         } else {
             return redirect()->back()->with('warning', 'La consulta no es válida');

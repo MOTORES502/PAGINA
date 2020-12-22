@@ -3,7 +3,7 @@ $(document).on('change', '#marca_id', function (e) {
     if (id) {
         $('.preloader').show()
         $.ajax({
-            url: 'lineas/' + id,
+            url: '/lineas/' + id,
             type: 'GET',
             dataType: 'json',
             success: function (r) {
@@ -30,7 +30,7 @@ $(document).on('change', '#marca_id_one', function (e) {
     if (id) {
         $('.preloader').show()
         $.ajax({
-            url: 'lineas/' + id,
+            url: '/lineas/' + id,
             type: 'GET',
             dataType: 'json',
             success: function (r) {
@@ -59,7 +59,7 @@ $(document).on('change', '#marca_id_two', function (e) {
     if (id) {
         $('.preloader').show()
         $.ajax({
-            url: 'lineas/' + id,
+            url: '/lineas/' + id,
             type: 'GET',
             dataType: 'json',
             success: function (r) {
@@ -88,7 +88,7 @@ $(document).on('change', '#linea_id_one', function (e) {
     if (id) {
         $('.preloader').show()
         $.ajax({
-            url: 'codigos/' + id,
+            url: '/codigos/' + id,
             type: 'GET',
             dataType: 'json',
             success: function (r) {
@@ -115,7 +115,7 @@ $(document).on('change', '#linea_id_two', function (e) {
     if (id) {
         $('.preloader').show()
         $.ajax({
-            url: 'codigos/' + id,
+            url: '/codigos/' + id,
             type: 'GET',
             dataType: 'json',
             success: function (r) {
@@ -147,7 +147,7 @@ $(document).on('change', '#codigo_id_one', function (e) {
             dataType: 'json',
             success: function (r) {
                 if (r.image !== 'undefined') {
-                    var imagen = '<img alt="' + r.concat + '" style="background-blend-mode: normal; background-image: url(' + r.image + '); background-size: 100% 100%; background-repeat: no-repeat;" src="' + r.marca + '" />'
+                    var imagen = '<img alt="' + r.concat + '" style="background-blend-mode: normal; background-image: url(' + r.base + r.image + '); background-size: 100% 100%; background-repeat: no-repeat;" src="' + r.marca + '" />'
                     $("#imagen_carro_one").html(imagen);
                     $('#icono_carro_one').hide()
                     $('#imagen_carro_one').show()
@@ -176,7 +176,7 @@ $(document).on('change', '#codigo_id_two', function (e) {
             dataType: 'json',
             success: function (r) {
                 if (r.image !== 'undefined') {
-                    var imagen = '<img alt="' + r.concat + '" style="background-blend-mode: normal; background-image: url(' + r.image + '); background-size: 100% 100%; background-repeat: no-repeat;" src="' + r.marca + '" />'
+                    var imagen = '<img alt="' + r.concat + '" style="background-blend-mode: normal; background-image: url(' + r.base + r.image + '); background-size: 100% 100%; background-repeat: no-repeat;" src="' + r.marca + '" />'
                     $("#imagen_carro_two").html(imagen);
                     $('#icono_carro_two').hide()
                     $('#imagen_carro_two').show()

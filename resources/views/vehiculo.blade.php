@@ -1,5 +1,10 @@
 @extends('layouts.master')
 
+@section('style')
+    <link rel="stylesheet" href="{{ asset('template_new/css/jquery.datetimepicker.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('assets/css/intlTelInput.min.css') }}" type="text/css">
+@endsection
+
 @section('content')
     <!--Page Title-->
     <section class="page-title" style="background-image:url({{ asset('template_new/images/background/1.jpg') }});">
@@ -17,34 +22,36 @@
             	<div class="column col-lg-8 col-md-8 col-sm-12 col-xs-12">
                 	<!--Inventory Details-->
                     <div class="inventory-details">
-                    
+                        <div class="vehicle-details">
+                            <div class="text-description">
+                                <h2>{{ $vehiculo->nombre_completo }} <span class="h3"><b>(id: {{ $vehiculo->codigo }})</b></span> </h2>
+                                <p class="h4">Ubicación:
+                                @if (count($ubicacion) > 0)
+                                    @foreach ($ubicacion as $item)
+                                        {{ $item->location }} <br>
+                                    @endforeach
+                                @else
+                                    Haga su cita
+                                @endif
+                                </p>
+                                <hr> 
+                            </div>  
+                        </div>
                         <!--Product Carousel-->
                         <div class="product-carousel-outer">
                             <div class="big-image-outer">
-
-                                <div class="vehicle-details">
-                                    <div class="text-description">
-                                        <h2>{{ $vehiculo->nombre_completo }} <span class="h3"><b>(id: {{ $vehiculo->codigo }})</b></span> </h2>
-                                        <p class="h4">Ubicación:
-                                        @if (count($ubicacion) > 0)
-                                            @foreach ($ubicacion as $item)
-                                                {{ $item->location }} <br>
-                                            @endforeach
-                                        @else
-                                            Haga su cita
-                                        @endif
-                                        </p>
-                                        <hr>  
-                                    </div>  
-                                </div>
 
                                 <!--Product image Carousel-->
                                 <ul class="prod-image-carousel owl-theme owl-carousel">
                                     @foreach ($images as $key => $item)
                                         <li>
                                             <figure class="image">
-                                                <img src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
-                                                <a class="lightbox-image fancy-btn" data-fancybox-group="example-gallery" href="{{ $item->image }}" title="{{ $item->concat }}">
+                                                <img class="lazyload" data-src="{{ Storage::disk('images')->url($item->image) }}" alt="{{ $item->concat }}" />
+                                                
+                                                @if ($vehiculo->estado != 'DISPONIBLE')
+                                                    <div class="ribbon ribbon-top-left"><span>{{ $vehiculo->estado }}</span></div>
+                                                @endif
+                                                <a class="lightbox-image fancy-btn" data-fancybox-group="example-gallery" href="{{ Storage::disk('images')->url($item->image) }}" title="{{ $item->concat }}">
                                                     <span class="fa fa-search-plus"></span>
                                                 </a>
                                             </figure>
@@ -54,7 +61,11 @@
                                         <li>
                                             <figure class="image">
                                                 @foreach ($images->take(1) as $item_dos)
-                                                    <img src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item_dos->concat }}" style="background-blend-mode: normal; background-image: url({{ $item_dos->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
+                                                    <img class="lazyload" data-src="{{ Storage::disk('images')->url($item_dos->image) }}" alt="{{ $item_dos->concat }}" />
+                                                    
+                                                    @if ($vehiculo->estado != 'DISPONIBLE')
+                                                        <div class="ribbon ribbon-top-left"><span>{{ $vehiculo->estado }}</span></div>
+                                                    @endif
                                                     <a class="lightbox-image fancy-btn" data-fancybox-group="example-gallery" href="{{ $item->link }}" title="Motores 502">
                                                         <span class="fa fa-play"></span>
                                                     </a>
@@ -69,8 +80,8 @@
                             <div class="prod-thumbs-carousel owl-theme owl-carousel">
                                 @foreach ($images as $key => $item)
                                     <div class="thumb-item">
-                                        <figure class="thumb-box">
-                                            <img src="{{ asset('img/encima_motores502.png') }}" alt="{{ $item->concat }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;">
+                                        <figure class="thumb-box image">
+                                            <img alt="{{ $item->concat }}" class="lazyload" data-src="{{ Storage::disk('images')->url($item->image) }}" />
                                         </figure>
                                     </div>
                                 @endforeach   
@@ -78,7 +89,7 @@
                                     <div class="thumb-item">
                                         <figure class="thumb-box">
                                             @foreach ($images->take(1) as $item_dos)
-                                            <img src="{{ $item_dos->image }}" alt="Motores 502">
+                                            <img class="lazyload" data-src="{{ Storage::disk('images')->url($item_dos->image) }}" alt="{{ $item_dos->concat }}" />
                                             <div class="video-icon">
                                                 <span class="fa fa-play"></span>
                                             </div>
@@ -89,7 +100,6 @@
                             </div>
                             
                         </div><!--End Product Carousel-->
-                        
 
                         <!--Details Panel Box-->
                         <div class="details-panel-box">
@@ -120,7 +130,14 @@
                         
                         <!--Details Panel Box-->
                         <div class="details-panel-box tech-details">
-                        	<div class="panel-header"><div class="panel-btn clearfix"><h4><strong>Detalles técnicos</strong> {{ $vehiculo->nombre_completo }} </h4><div class="arrow"><span class="fa fa-angle-down"></span></div></div></div>
+                        	<div class="panel-header">
+                                <div class="panel-btn clearfix">
+                                    <h4>
+                                        <strong>Detalles técnicos</strong> {{ $vehiculo->nombre_completo }} 
+                                    </h4>
+                                    <div class="arrow"><span class="fa fa-angle-down"></span></div>
+                                </div>
+                            </div>
                             <div class="panel-content">
                             	<div class="content-box tabs-box inventory-tabs clearfix">
                                 	<div class="tab-buttons-outer">
@@ -220,10 +237,10 @@
                                 <div class="offer-column col-md-7 col-sm-12 col-xs-12">
                                 	<div class="inner-box">
                                     	<h3>{{ $vehiculo->nombre_completo }} </h3>
-                                        <div class="subtitle">Ofertas Especiales</div>
+                                        <div class="subtitle">Descuentos aplicados</div>
                                         <ul class="offer-info">
                                             @foreach ($ofertas as $key => $item)
-                                                <li><h4>Oferta No. {{ $key+1 }}:</h4><div class="clearfix"><span class="pull-left">{{ $item->precio_formato }}</span><span class="pull-right"><div class="price">-{{ $item->porcentaje }} <span class="percent">%</span></div></span></div></li>
+                                                <li><h4>Descuento No. {{ $key+1 }}:</h4><div class="clearfix"><span class="pull-left">{{ $item->precio_formato }}</span><span class="pull-right"><div class="price">-{{ $item->porcentaje }} <span class="percent">%</span></div></span></div></li>
                                             @endforeach
                                         </ul>
                                     </div>
@@ -231,9 +248,13 @@
                                 <!--Offer Banner-->
                                 <div class="offer-banner col-md-5 col-sm-6 col-xs-12">
                                 	<div class="inner-box">
-                                    	<figure class="image"><img src="{{ asset('template_new/images/resource/inventory-image-10.jpg') }}" alt=""></figure>
+                                        @foreach ($images->take(1) as $item_dos)
+                                    	    <figure class="image">
+                                                <img class="lazyload" data-src="{{ Storage::disk('images')->url($item_dos->image) }}" alt="{{ $item_dos->concat }}">
+                                            </figure>
+                                        @endforeach
                                         <div class="upper-info">
-                                        	<h3>{{ $vehiculo->nombre_completo }}</h3>
+                                        	<h4>Km 13 Antigua Carretera a El Salvador Muxbal Plaza Muxbal Local M08</h4>
                                             <div class="link"><a data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#masInformacion" class="theme-btn btn-style-one">Más Información</a></div>
                                         </div>
                                     </div>
@@ -258,10 +279,26 @@
                             @endif
                                                                         
                             <span class="pull-right">
-                                <img width="50px" src="{{ $vehiculo->imagen_marca }}" alt="{{ $vehiculo->marca }}">
+                                <img width="50px" src="{{ Storage::disk('images')->url($vehiculo->imagen_marca) }}" alt="{{ $vehiculo->marca }}">
                             </span>
                         </h2>
+                    </div> 
+
+                    <div class="schedule-drive-outer">
+                        <div class="form-outer">
+                            <div class="form-header">
+                                <h2>Compartir Información</h2>
+                                <ul class="social-icon-four">
+                                    <li><a class="copia" href="javascript:getlink();"><span class="icon fa fa-copy"></span></a></li>
+                                    <li><a href="{{ "mailto:?$correo" }}" target="_blank" rel="noopener noreferrer"><span class="icon fa fa-envelope"></span></a></li>
+                                    <li><a href="{{ "https://www.facebook.com/sharer/sharer.php?u=$url" }}" target="_blank" rel="noopener noreferrer"><span class="fa fa-facebook"></span></a></li>
+                                    <li><a href="{{ "https://twitter.com/intent/tweet?original_referer=$url" }}" target="_blank" rel="noopener noreferrer"><span class="fa fa-twitter"></span></a></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
+
+                    <hr>
 
                     <!--Schedule Test Drive Form-->
                     <div class="schedule-drive-outer">
@@ -273,20 +310,37 @@
                             <div class="form-box">
                                 <!--Cars Form-->
                                 <div class="cars-form">
-                                    <form action="{{ route('cotizar.store') }}" role="form" method="post" autocomplete="off">
+                                    <form action="{{ route('test.store') }}" role="form" method="post" autocomplete="off">
                                         @csrf
                                         <input type="hidden" name="transports_id" value="{{ $id }}">
                                         <div class="row clearfix">
                                             <div class="form-group col-md-12 col-sm-12 col-xs-12">
-                                                <label for="name">Nombre Completo</label>
+                                                <label for="names">Nombre</label>
                                                 <div class="field-inner">
-                                                    <input type="text" name="name" placeholder="escribir el nombre completo" onkeyup="mayus(this);" value="{{ old('name') }}" class="form-control">
+                                                    <input type="text" name="names" placeholder="escribir los nombres" onkeyup="mayus(this);" value="{{ old('names') }}" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                <label for="surnames">Apellido</label>
+                                                <div class="field-inner">
+                                                    <input type="text" name="surnames" placeholder="escribir los apellidos" onkeyup="mayus(this);" value="{{ old('surnames') }}" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-12 col-sm-12 col-xs-12">
                                                 <label for="email">Correo electrónico</label>
                                                 <div class="field-inner">
                                                     <input type="email" name="email" placeholder="escribir un correo electrónico para comunicarnos" onkeyup="min(this);" value="{{ old('email') }}" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                <label for="type_phone_id">Tipo de teléfono</label>
+                                                <div class="field-inner">
+                                                    <select class="form-control js-example-basic-single" style="width: 100%" name="type_phone_id">
+                                                        <option value="">Seleccionar uno por favor</option>
+                                                        @foreach ($tipos_telefono as $item)
+                                                            <option value="{{ $item->id }}" {{ ($item->id == 1) ? 'selected' : '' }}>{{ $item->name}}</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                             <div class="form-group col-md-12 col-sm-12 col-xs-12">
@@ -363,22 +417,23 @@
                             <div class="car-block col-sm-12">
                                 <div class="inner-box">
                                     <div class="image">
-                                    <a href="{{ route('vehiculo_recomendacion', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
-                                        <img alt="{{ $item->alt }}" style="background-blend-mode: normal; background-image: url({{ $item->image }}); background-size: 100% 100%; background-repeat: no-repeat;" src="{{ asset('img/encima_motores502.png') }}" />
-                                    </a>
-                                    <div class="price">{{ $item->precio }}</div>
+                                        @if ($item->estado != 'DISPONIBLE')
+                                            <div class="ribbon ribbon-top-left"><span>{{ $item->estado }}</span></div>
+                                        @endif
+                                        <a href="{{ route('vehiculo_recomendacion', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}" title="{{ $item->alt }}">
+                                            <img class="lazyload" data-src="{{ Storage::disk('images')->url($item->image) }}" alt="{{ $item->alt }}" />
+                                        </a>
+                                        <div class="price">{{ $item->precio }}</div>
                                     </div>
                                     <h3>
-                                    <a  href="{{ route('vehiculo_recomendacion', ['slug' => $item->slug, 'value' => base64_encode($item->codigo)]) }}">
                                         {{ $item->completo }} <br> {{ $item->codigo }}
-                                    </a>
                                     </h3>
                                     <div class="lower-box">
-                                    <ul class="car-info">
-                                        <li><span class="icon fa fa-road"></span>{{ number_format($item->kilometro, 0, '.', ',') }}</li>
-                                        <li><span class="icon fa fa-car"></span>{{ $item->combustible }}</li>
-                                        <br>
-                                        <li><span class="icon fa fa-clock-o"></span>{{ $item->modelo }}</li>
+                                        <ul class="car-info">
+                                            <li><span class="icon fa fa-road"></span>{{ number_format($item->kilometro, 0, '.', ',') }}</li>
+                                            <li><span class="icon fa fa-car"></span>{{ $item->combustible }}</li>
+                                            <li><span class="icon fa fa-clock-o"></span>{{ $item->modelo }}</li>
+                                            <li><span class="icon fa fa-gears"></span>{{ $item->transmision }}</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -434,7 +489,7 @@
                                         <select class="form-control js-example-basic-single" style="width: 100%" name="type_phone_id">
                                             <option value="">Seleccionar uno por favor</option>
                                             @foreach ($tipos_telefono as $item)
-                                                <option value="{{ $item->id }}" {{ ($item->id == old('type_phone_id')) ? 'selected' : '' }}>{{ $item->name}}</option>
+                                                <option value="{{ $item->id }}" {{ ($item->id == 1) ? 'selected' : '' }}>{{ $item->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -469,96 +524,12 @@
     </div>
 @stop
 
-@section('script')
-    <script src="{{ asset('assets/js/intlTelInput.js') }}"></script>
-    <script src="{{ asset('js/quotes.js') }}"></script>
-    <script>
-        $(document).ready(function(){
-            $("#calcular").click();
-        });
+@section('script')    
+    <script type="text/javascript" src="{{ asset('template_new/js/jquery-ui.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/jquery.datetimepicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('template_new/js/validate.js') }}"></script>
 
-        function mayus(e) {
-            e.value = e.value.toUpperCase();
-        }
-
-        function min(e) {
-            e.value = e.value.toLowerCase();
-        }
-
-        var input = document.querySelector("#phone"),
-            errorMsg = document.querySelector("#error-msg"), 
-            number_test = document.querySelector("#number_test");
-
-        // here, the index maps to the error code returned from getValidationError - see readme
-        var errorMap = ["Número inválido", "Código de país no válido", "Cantidad de dígitos inválido", "Cantidad de dígitos inválido", "Número inválido", "Número inválido"];
-
-        // initialise plugin
-        var iti = window.intlTelInput(input, {
-            initialCountry: "auto",
-            geoIpLookup: function(callback) {
-                $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
-                var countryCode = (resp && resp.country) ? resp.country : "gt";
-                callback(countryCode);
-                });
-            },   
-            utilsScript: "{{ asset('assets/js/utils.js') }}"
-        });
-        var iit_number_test = window.intlTelInput(number_test, {
-            initialCountry: "auto",
-            geoIpLookup: function(callback) {
-                $.get('https://ipinfo.io', function() {}, "jsonp").always(function(resp) {
-                var countryCode = (resp && resp.country) ? resp.country : "gt";
-                callback(countryCode);
-                });
-            },   
-            utilsScript: "{{ asset('assets/js/utils.js') }}"
-        });
-
-        var reset = function() {
-            input.classList.remove("text-danger");
-            errorMsg.innerHTML = "";
-            errorMsg.classList.add("hide");
-        };
-
-        // on blur: validate
-        input.addEventListener('keyup', function() {
-        reset();
-            if (input.value.trim()) {
-                if (iti.isValidNumber()) {
-                input.classList.remove("text-danger");
-                input.classList.add("text-success");
-                $('#guardar').show();
-                } else {
-                input.classList.remove("text-success");
-                input.classList.add("text-danger");
-                var errorCode = iti.getValidationError();
-                errorMsg.innerHTML = errorMap[errorCode];
-                errorMsg.classList.remove("hide");
-                errorMsg.classList.add("text-danger");
-                $('#guardar').hide();
-                }
-            }
-        });
-
-        number_test.addEventListener('keyup', function() {
-            if (number_test.value.trim()) {
-                if (iit_number_test.isValidNumber()) {
-                    number_test.classList.remove("text-danger");
-                    number_test.classList.add("text-success");
-                    $('#guardar_test').show();
-                } else {
-                    number_test.classList.remove("text-success");
-                    number_test.classList.add("text-danger");
-                    $('#guardar_test').hide();
-                }
-            }
-        });
-
-        // on keyup / change flag: reset
-        input.addEventListener('keyup', reset);
-        input.addEventListener('change', reset);
-        number_test.addEventListener('keyup');
-        number_test.addEventListener('change');
-
-    </script>
+    <script type="text/javascript" src="{{ asset('assets/js/intlTelInput.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/quotes.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/vehiculo_utileria.js') }}"></script>
 @endsection

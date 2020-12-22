@@ -103,11 +103,16 @@ function calcularCuotas_d(moneda,precio){
 	}else{
 		enganche_q=enganche;
 	}
+	if(enganche_q<=40000){
+		interest=0.17;
+	}else{
+		interest=0.15;
+	}
+
 	
 	var monthly_payment=get_rate(precioMenos,interest/12,meses);
 	
 	var cuota=num_f(monthly_payment);
-	console.log(engancheInput)
 	var cuotaSeguro=num_f(((precio/100)*5)/12);
 	document.getElementById("cuotasDesdeResult_d").innerHTML=moneda+num_f(monthly_payment)+"<br /><span style=\"font-size:14px;\">*No incluye seguro</span>";
 
