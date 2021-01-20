@@ -120,6 +120,7 @@ class VehiculoController extends Controller
 
         $images = DB::connection('mysql')->table('transports_images')
         ->select('image', 'concat')
+        ->where('transports_images.active', 1)
         ->where('transports_images.transports_id', $vehiculo->id)
         ->orderBy('order')
         ->get();
@@ -184,9 +185,10 @@ class VehiculoController extends Controller
         ->select(
             DB::RAW('CONCAT(countries.name,", ",departaments.name,", ",municipalities.name,", ",bussines_locations.location) AS location')
         )
+        ->whereNull('transports_business.deleted_at')
         ->where('transports_business.transports_id', $vehiculo->id)
         ->get();
-
+        
         //SEO
         $nombre = mb_strtolower($vehiculo->nombre_completo);
         $title = $nombre;
@@ -276,6 +278,7 @@ class VehiculoController extends Controller
 
         $images = DB::connection('mysql')->table('transports_images')
         ->select('image', 'concat')
+        ->where('transports_images.active', 1)
         ->where('transports_images.transports_id', $vehiculo->id)
         ->orderBy('order')
         ->get();
@@ -340,6 +343,7 @@ class VehiculoController extends Controller
         ->select(
             DB::RAW('CONCAT(countries.name,", ",departaments.name,", ",municipalities.name,", ",bussines_locations.location) AS location')
         )
+        ->whereNull('transports_business.deleted_at')
         ->where('transports_business.transports_id', $vehiculo->id)
         ->get();
 
@@ -433,9 +437,10 @@ class VehiculoController extends Controller
 
         $images = DB::connection('mysql')->table('transports_images')
         ->select('image', 'concat')
+        ->where('transports_images.active', 1)
         ->where('transports_images.transports_id', $vehiculo->id)
-            ->orderBy('order')
-            ->get();
+        ->orderBy('order')
+        ->get();
 
         $sub_categoria = DB::connection('mysql')->table('sub_categories_transports')->where('transports_id', $vehiculo->id)->whereIn('option', [1, 2])->pluck('sub_categories_id');
 
@@ -590,9 +595,10 @@ class VehiculoController extends Controller
 
         $images = DB::connection('mysql')->table('transports_images')
         ->select('image', 'concat')
+        ->where('transports_images.active', 1)
         ->where('transports_images.transports_id', $vehiculo->id)
-            ->orderBy('order')
-            ->get();
+        ->orderBy('order')
+        ->get();
 
         $sub_categoria = DB::connection('mysql')->table('sub_categories_transports')->where('transports_id', $vehiculo->id)->whereIn('option', [1, 2])->pluck('sub_categories_id');
 
@@ -654,6 +660,7 @@ class VehiculoController extends Controller
         ->select(
             DB::RAW('CONCAT(countries.name,", ",departaments.name,", ",municipalities.name,", ",bussines_locations.location) AS location')
         )
+        ->whereNull('transports_business.deleted_at')
         ->where('transports_business.transports_id', $vehiculo->id)
         ->get();
 

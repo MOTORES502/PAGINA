@@ -6,7 +6,7 @@
     <div class="auto-container">
         <!--Sec Title-->
         <div class="sec-title">
-            <h2>Vehículos Públicados</h2>
+            <h2>Inventario Completo</h2>
         </div>
 
         <!--End Sec Title-->

@@ -16,7 +16,7 @@ class CompararController extends Controller
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
 
-        $this->seo($title, $description, $keywords, null, $image, 'website');
+        $this->seo($title, $description, $keywords, '/comparador', $image, 'website');
 
         $carros = $this->getComparaciones();
         $marcas = $this->marcas();

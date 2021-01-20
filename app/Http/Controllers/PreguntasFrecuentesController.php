@@ -14,7 +14,7 @@ class PreguntasFrecuentesController extends Controller
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
 
-        $this->seo($title, $description, $keywords, null, $image, 'website');
+        $this->seo($title, $description, $keywords, '/preguntas_frecuentes', $image, 'website');
 
         $marcas = $this->marcas();
         $arra_precio_bajo = $this->precios_minimos();

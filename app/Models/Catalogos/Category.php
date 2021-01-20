@@ -23,11 +23,11 @@ class Category extends Model
 
     public function brands()
     {
-        return $this->hasMany(Brand::class, 'categories_id', 'id');
+        return $this->hasMany(Brand::class, 'categories_id', 'id')->orderBy('name');
     }
 
     public function sub_categorias()
     {
-        return $this->hasMany(SubCategory::class, 'categories_id', 'id');
+        return $this->hasMany(SubCategory::class, 'categories_id', 'id')->orderBy('name');
     }
 }

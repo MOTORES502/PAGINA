@@ -66,8 +66,8 @@
                             </div>
                             <div class="info-row clearfix">
                                 <div class="info-col">Total Kilometros</div>
-                                <div class="info-col">{{ $vehiculo_one->mileage }}Kms</div>
-                                <div class="info-col">{{ $vehiculo_two->mileage }}Kms</div>
+                                <div class="info-col">{{ number_format($vehiculo_one->mileage, 0, '.', ',') }} Kms</div>
+                                <div class="info-col">{{ number_format($vehiculo_two->mileage, 0, '.', ',') }} Kms</div>
                             </div>
                             <div class="info-row clearfix">
                                 <div class="info-col">Tracción</div>

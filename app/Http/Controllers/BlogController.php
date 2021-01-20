@@ -14,7 +14,7 @@ class BlogController extends Controller
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
 
-        $this->seo($title, $description, $keywords, null, $image, 'website');
+        $this->seo($title, $description, $keywords, 'blog', $image, 'website');
 
         $data = DB::connection('mysql')->table('blog')
         ->join('users', 'blog.users_id', 'users.id')

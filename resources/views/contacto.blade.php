@@ -66,7 +66,7 @@
                     	<div class="inner-box">
                         	<h2>Motores 502</h2>
                             <ul class="list-style-six">
-                            	<li><span class="icon flaticon-maps-and-flags"></span><span class="bold">Dirección:</span>Km 13 Carretera a El Salvador Muxbal The Shops at Muxbal Guatemala, 01000 .</li>
+                            	<li><span class="icon flaticon-maps-and-flags"></span><span class="bold">Dirección:</span>Km 13 Antigua Carretera a El Salvador Muxbal Plaza Muxbal Local M08.</li>
                                 <li><span class="icon flaticon-telephone"></span><span class="bold">Teléfono:</span><br>+(502) 6646-7000</li>
                                 <li><span class="icon flaticon-e-mail-envelope"></span><span class="bold">Correo:</span><br>info@motores502.com</li>
                             </ul>

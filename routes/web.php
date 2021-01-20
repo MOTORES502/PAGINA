@@ -51,4 +51,7 @@ Route::name('quienes_somos.index')->get('quienes_somos', 'QuienesSomosController
 
 Route::name('preguntas_frecuentes.index')->get('preguntas_frecuentes', 'PreguntasFrecuentesController@index');
 
+Route::get('site_map', 'SiteMAPController@index');
+
+Route::name('multa.index')->get('multas', 'MultaController@index'); 
 

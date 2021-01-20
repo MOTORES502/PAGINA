@@ -30,25 +30,24 @@
 
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/css/style.min.css') }}">
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('template_new/css/responsive.min.css') }}">
-    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('whatsapp/floating-wpp.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('whatsapp/floating-wpp.css') }}">
     <link rel="stylesheet" type="text/css" media="all" href="{{ asset('select2/css/select2.min.css') }}">
 
     @yield('style')
-    <!-- Google Tag Manager 
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-NKP4G5Q');
-    </script>End Google Tag Manager -->
+
+    <script type="text/javascript">
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-NKP4G5Q');
+    </script>
 </head>
 <body class="msb-x">
     <div class="page-wrapper">
 
-        <!-- Google Tag Manager (noscript) 
         <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKP4G5Q"
-        height="0" width="0"></iframe></noscript>
-        End Google Tag Manager (noscript) -->
+        height="0" width="0" hidden></iframe></noscript>
 
         <!-- Main Header-->
         <header class="main-header">
@@ -128,7 +127,10 @@
                                     </li>
                                     @endforeach
                                     <li class="panel panel-default">
-                                        <a href="{{ route('contacto.index') }}">Contacto</a>
+                                        <a href="{{ route('multa.index') }}">MULTAS DE TRÁNSITO</a>
+                                    </li>
+                                    <li class="panel panel-default">
+                                        <a href="{{ route('contacto.index') }}">CONTACTO</a>
                                     </li>
                                 </ul>
                             </div>
@@ -136,13 +138,13 @@
 
                         <div class="contact-on-call">
                             <ul>
-                                <li><a href="tel:50256914466"><i class="fa fa-phone"></i>+502 5691-4466</a></li>
+                                <li><a href="tel:50266467000"><i class="fa fa-phone"></i>+502 6646-7000</a></li>
                                 <li><a href="https://api.whatsapp.com/send?phone=50256914466" target="_blank"><i class="fa fa-whatsapp"></i>+502 5691-4466</a></li>
                             </ul>
                         </div>
 
                         <div class="search-box">
-                            <form action="" method="get">
+                            <form action="{{ route('buscar.personalizada') }}" method="get">
                                 <form class="form-inline form-group flex-nowrap mx-0 mx-lg-auto rounded p-1" action="{{ route('buscar.personalizada') }}" method="get" role="search" autocomplete="off">
                                     <div class="form-group">
                                         <input type="search" id="search" name="search" value="{{ old('search') }}" placeholder="Buscar por marca, línea o palabra" required>
@@ -176,10 +178,11 @@
                                 <ul class="navigation clearfix">
                                     <li class="current"><a href="{{ route('home') }}">Inicio</a></li>
                                     <li><a href="{{ route('quienes_somos.index') }}">Quienes Somos</a></li>
-                                    <li><a href="{{ route('vehiculos') }}">Vehículos Publicados</a></li>
+                                    <li><a href="{{ route('vehiculos') }}">Inventario Completo</a></li>
                                     <li><a href="{{ route('comparar.index') }}">Comparar Vehículo</a></li>
                                     <li><a href="{{ route('blog.index') }}">Blog</a></li>
                                     <li><a href="{{ route('preguntas_frecuentes.index') }}">Preguntas Frecuentes</a></li>
+                                    <li><a href="{{ route('multa.index') }}">Multas de Tránsito</a></li>
                                     <li><a href="{{ route('contacto.index') }}">Contacto</a></li>
                                 </ul>
                             </div>
@@ -265,6 +268,7 @@
                                                 <li><a href="{{ route('comparar.index') }}">Comparar Vehículo</a></li>
                                                 <li><a href="{{ route('blog.index') }}">Blog</a></li>
                                                 <li><a href="{{ route('preguntas_frecuentes.index') }}">Preguntas Frecuentes</a></li>
+                                                <li><a href="{{ route('multa.index') }}">Multas de Tránsito</a></li>
                                                 <li><a href="{{ route('contacto.index') }}">Contacto</a></li>
                                             </ul>
                                         </div>
@@ -283,7 +287,7 @@
                                         <h2>Detalle de Contácto</h2>
                                         <div class="widget-content">
                                             <ul class="list-style-one">
-                                                <li><span class="icon flaticon-maps-and-flags"></span>Km 13 Carretera a El Salvador Muxbal The Shops at Muxbal Guatemala, 01000</li>
+                                                <li><span class="icon flaticon-maps-and-flags"></span>Km 13 Antigua Carretera a El Salvador Muxbal Plaza Muxbal Local M08</li>
                                                 <li><span class="icon flaticon-telephone"></span>Teléfono: +(502) 6646-7000</li>
                                                 <li><span class="icon flaticon-web"></span>info@motores502.com</li>
                                             </ul>
@@ -376,7 +380,7 @@
     <script type="text/javascript" src="{{ asset('template_new/js/wow.js') }}"></script>
     <script type="text/javascript" src="{{ asset('template_new/js/script.js') }}"></script> 
      
-    <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('whatsapp/floating-wpp.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/buscar_lineas.js') }}"></script>
     <script type="text/javascript" src="{{ asset('select2/js/select2.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>

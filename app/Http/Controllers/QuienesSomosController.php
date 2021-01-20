@@ -14,7 +14,7 @@ class QuienesSomosController extends Controller
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
 
-        $this->seo($title, $description, $keywords, null, $image, 'website');
+        $this->seo($title, $description, $keywords, '/quienes_somos', $image, 'website');
 
         $asesores = DB::connection()->table('users')
         ->join('people', 'users.people_id', 'people.id')

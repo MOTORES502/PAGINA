@@ -15,7 +15,7 @@ return [
             'separator'    => ', ',
             'keywords'     => ['venta de carros', 'carros usados en venta', 'olx venta de carros', 'venta de carros usados', 'olx vehiculos', 'autos usados', 'toyota usados', 'usados de agencia', 'venta de autos', 'autos en venta', 'autos olx', 'venta de autos usados', 'carros de lujo', 'carros lujosos', 'autos de lujo', 'carros nuevos', 'sedan', 'hatchback',  'carros europeos', 'carros americanos', 'carros japoneses', 'carros de lujo'],
             'canonical'    => true, // Set null for using Url::current(), set false to total remove
-            'robots'       => false, // Set to 'all', 'none' or any combination of index/noindex and follow/nofollow
+            'robots'       => 'all', // Set to 'all', 'none' or any combination of index/noindex and follow/nofollow
         ],
         /*
          * Webmaster tags are always added.

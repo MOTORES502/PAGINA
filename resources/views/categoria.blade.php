@@ -86,7 +86,7 @@
                                     <div class="price">{{ $vehiculo->oferta ? $vehiculo->oferta : $vehiculo->precio }}</div>
                                     <div class="info-box">
                                         <ul class="car-info">
-                                            <li><span class="fa fa-road icon"></span><span class="info-title">Kms</span>{{ $vehiculo->kilometro }}</li>
+                                            <li><span class="fa fa-road icon"></span><span class="info-title">Kms</span>{{ number_format($vehiculo->kilometro, 0, '.', ',') }}</li>
                                             <li><span class="icon fa fa-car"></span><span class="info-title">Combustible</span>{{ $vehiculo->combustible }}</li>
                                             <li><span class="icon fa fa-clock-o"></span><span class="info-title">Modelo</span>{{ $vehiculo->modelo }}</li>
                                             <li><span class="fa fa-gears icon"></span><span class="info-title">Transmisión</span>{{ $vehiculo->transmision }}</li>

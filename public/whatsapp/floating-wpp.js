@@ -57,7 +57,7 @@
         //#endregion
 
         //#region Fake Chat Pop-up
-        if (settings.showPopup) {
+        /*if (settings.showPopup) {
             var $textarea = $(document.createElement('textarea'));
             var $closeBtn = $(document.createElement('strong'));
             var $sendIcon = $('<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="isolation:isolate" viewBox="0 0 20 18" width="20" height="18"><defs><clipPath id="_clipPath_fgX00hLzP9PnAfCkGQoSPsYB7aEGkj1G"><rect width="20" height="18"/></clipPath></defs><g clip-path="url(#_clipPath_fgX00hLzP9PnAfCkGQoSPsYB7aEGkj1G)"><path d=" M 0 0 L 0 7.813 L 16 9 L 0 10.188 L 0 18 L 20 9 L 0 0 Z " fill="rgb(46,46,46)"/></g></svg>')
@@ -131,7 +131,7 @@
                     $textarea.focus();
                 }
             }
-        }
+        }*/
 
         if (settings.zIndex) {
             $(this).css('z-index', settings.zIndex);
@@ -140,7 +140,7 @@
         if (settings.position === 'right') {
             this.css({
                 left: 'auto',
-                right: '12px'
+                right: '24px'
             });
             $popup.css('right', '0');
         }

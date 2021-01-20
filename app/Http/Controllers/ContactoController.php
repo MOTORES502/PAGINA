@@ -19,7 +19,7 @@ class ContactoController extends Controller
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
 
-        $this->seo($title, $description, $keywords, null, $image, 'website');
+        $this->seo($title, $description, $keywords, '/contacto', $image, 'website');
 
         $horario = $this->horario_atencion();
         $ubicacion = $this->ubicacion();

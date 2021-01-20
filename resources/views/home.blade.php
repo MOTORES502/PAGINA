@@ -194,7 +194,7 @@
                                 <div class="ribbon ribbon-top-left"><span>{{ $item->estado }}</span></div>
                             @endif
                             <a href="javascript:link_vehiculo('{{ $item->slug }}', '{{ base64_encode($item->codigo) }}')" title="{{ $item->alt }}">
-                                <img alt="{{ $item->alt }}" class="lazyload" data-src="{{ Storage::disk('images')->url($item->image) }}" />
+                                <img alt="{{ $item->alt }}" width="150%" class="lazyload" data-src="{{ Storage::disk('images')->url($item->image) }}" />
                             </a>
                             <div class="price">{{ $item->oferta ? $item->oferta : $item->precio }}</div>
                         </div>
@@ -226,7 +226,6 @@
     <!--Counter Section-->
     <section class="counter-section">
         <div class="auto-container">
-
             <div class="fact-counter">
                 <div class="row clearfix">
 
@@ -262,7 +261,7 @@
                             <div class="content">
                                 <div class="count-outer count-box">
                                     <div class="icon-box"><span class="icon flaticon-black"></span></div>
-                                    <span class="count-text" data-speed="4000" data-stop="295">0</span>+
+                                    <span class="count-text" data-speed="4000" data-stop="{{ $total_v }}">0</span>
                                 </div>
                                 <h4 class="counter-title">Experts Reviews</h4>
                             </div>

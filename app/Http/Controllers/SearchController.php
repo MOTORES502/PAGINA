@@ -82,7 +82,7 @@ class SearchController extends Controller
             return $query->orderBy('models.anio', $ordenar_modelo);
         })
         ->when(is_null($ordenar_modelo) && is_null($ordenar_precio), function ($query) {
-            return $query->orderByDesc('transports.created_at');
+            return $query->orderByDesc('models.anio');
         })  
         ->paginate(16);
 
@@ -189,7 +189,7 @@ class SearchController extends Controller
             return $query->orderBy('models.anio', $ordenar_modelo);
         })
         ->when(is_null($ordenar_modelo) && is_null($ordenar_precio), function ($query) {
-            return $query->orderByDesc('transports.created_at');
+            return $query->orderByDesc('models.anio');
         })  
         ->paginate(16);
 
@@ -296,7 +296,7 @@ class SearchController extends Controller
             return $query->orderBy('models.anio', $ordenar_modelo);
         })
         ->when(is_null($ordenar_modelo) && is_null($ordenar_precio), function ($query) {
-            return $query->orderByDesc('transports.created_at');
+            return $query->orderByDesc('models.anio');
         })  
         ->paginate(16);
 
@@ -403,7 +403,7 @@ class SearchController extends Controller
             return $query->orderBy('models.anio', $ordenar_modelo);
         })
         ->when(is_null($ordenar_modelo) && is_null($ordenar_precio), function ($query) {
-            return $query->orderByDesc('transports.created_at');
+            return $query->orderByDesc('models.anio');
         })       
         ->paginate(16);
 
@@ -501,10 +501,10 @@ class SearchController extends Controller
         ->orWhere(function ($query) use ($quitar_espacios) {
             $query->orWhere('transports.code', $quitar_espacios)
             ->orWhere('sub_categories.name', $quitar_espacios)
-            ->orWhere('brands.name', $quitar_espacios)
-            ->orWhere('lines.name', $quitar_espacios)
-            ->orWhere('models.anio', $quitar_espacios)
-            ->orWhere('versions.name', $quitar_espacios)
+            ->orWhere('brands.name', 'LIKE', "%$quitar_espacios%")
+            ->orWhere('lines.name', 'LIKE', "%$quitar_espacios%")
+            ->orWhere('models.anio', 'LIKE', "%$quitar_espacios%")
+            ->orWhere('versions.name', 'LIKE', "%$quitar_espacios%")
             ->orWhere(DB::RAW('CONCAT(models.anio,brands.name)'), $quitar_espacios)
             ->orWhere(DB::RAW('REPLACE(CONCAT(models.anio,brands.name,lines.name)," ","")'), $quitar_espacios)
             ->orWhere(DB::RAW('REPLACE(CONCAT(brands.name,lines.name)," ","")'), $quitar_espacios)
@@ -532,7 +532,7 @@ class SearchController extends Controller
             return $query->orderBy('models.anio', $ordenar_modelo);
         }) 
         ->when(is_null($ordenar_modelo) && is_null($ordenar_precio), function ($query) {
-            return $query->orderByDesc('transports.created_at');
+            return $query->orderByDesc('models.anio');
         })       
         ->paginate(16);
 
@@ -555,7 +555,7 @@ class SearchController extends Controller
         )
         ->orWhere('transports.code', $quitar_espacios)
         ->orWhere('sub_categories.name', $quitar_espacios)
-        ->orWhere('brands.name', $quitar_espacios)
+        ->orWhere('brands.name', 'LIKE', "%$quitar_espacios%")
         ->orWhere('lines.name', $quitar_espacios)
         ->orWhere('models.anio', $quitar_espacios)
         ->orWhere('versions.name', $quitar_espacios)
@@ -619,19 +619,19 @@ class SearchController extends Controller
             } elseif (!is_null($marca) && $precio_minimo == 0 && $precio_maximo == 0) {
                 $data = $this->buscar_c_marca($marca);
                 $titulo = "marca";
-            } elseif (!is_null($marca) && $precio_minimo > 0 && $precio_maximo == 0) {
+            } elseif (!is_null($marca)&& $linea == 0 && $precio_minimo > 0 && $precio_maximo == 0) {
                 $data = $this->buscar_c_marca_pm_pm($marca, $precio_minimo, 400000, $precio_minimo_s, 400000/8, 'asc');
                 $titulo = "marca y precio mínimo";
             } elseif ($linea > 0 && $precio_minimo > 0 && $precio_maximo == 0) {
                 $data = $this->buscar_c_linea_pm_pm($linea, $precio_minimo, 400000, $precio_minimo_s, 400000/8, 'asc');
-                $titulo = "línea y precio mínimo";
-            } elseif (is_null($marca) && $linea == 0 && $precio_minimo > 0 && $precio_maximo > 0) {
+                $titulo = "marca, línea y precio mínimo";
+            } elseif (!is_null($marca) && $linea > 0 && $precio_minimo > 0 && $precio_maximo == 0) {
                 $data = $this->buscar_c_pm_pm($precio_minimo, $precio_maximo, $precio_minimo_s, $precio_maximo_s, 'asc');
                 $titulo = "precio mínimo y máximo";
-            } elseif (!is_null($marca) && $precio_minimo == 0 && $precio_maximo > 0) {
+            } elseif (!is_null($marca) && $linea == 0 && $precio_minimo == 0 && $precio_maximo > 0) {
                 $data = $this->buscar_c_marca_pm_pm($marca, $precio_minimo, $precio_maximo, $precio_minimo_s, $precio_maximo_s, 'desc');
                 $titulo = "marca y precio máximo";
-            } elseif ($linea > 0 && $precio_minimo == 0 && $precio_maximo > 0) {
+            } elseif (!is_null($marca) && $linea > 0 && $precio_minimo == 0 && $precio_maximo > 0) {
                 $data = $this->buscar_c_linea_pm_pm($linea, $precio_minimo, $precio_maximo, $precio_minimo_s, $precio_maximo_s, 'desc');
                 $titulo = "marca, línea y precio máximo";
             } elseif (is_null($marca) && $linea == 0 && $precio_minimo == 0 && $precio_maximo > 0) {
@@ -640,6 +640,9 @@ class SearchController extends Controller
             } elseif (is_null($marca) && $linea == 0 && $precio_minimo > 0 && $precio_maximo == 0) {
                 $data = $this->buscar_c_pm_pm($precio_minimo, 400000, $precio_minimo_s, 400000/8, 'asc');
                 $titulo = "precio mínimo";
+            } elseif (is_null($marca) && $linea == 0 && $precio_minimo > 0 && $precio_maximo > 0) {
+                $data = $this->buscar_c_pm_pm($precio_minimo, 400000, $precio_minimo_s, 400000 / 8, 'asc');
+                $titulo = "precio mínimo y precio máximo";
             }
             
             $existe = count($data) == 0 ? false : true;
@@ -693,6 +696,7 @@ class SearchController extends Controller
         ->whereNull('transports.deleted_at')
         ->where('lines.id', $linea)
         ->where('transports_images.order', 1)
+        ->orderByDesc('models.anio')
         ->paginate(12);
 
         return $todos;
@@ -728,6 +732,7 @@ class SearchController extends Controller
         ->whereNull('transports.deleted_at')
         ->where('brands.id', $marca)
         ->where('transports_images.order', 1)
+        ->orderByDesc('models.anio')
         ->paginate(12);
 
         return $todos;

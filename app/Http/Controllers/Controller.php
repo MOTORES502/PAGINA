@@ -290,7 +290,7 @@ class Controller extends BaseController
 
     public function marcas()
     {
-        return Category::select('id', 'name')->with('brands:id,name,categories_id')->get();
+        return Category::select('id', 'name')->with('brands:id,name,categories_id', 'sub_categorias:id,name,icon,categories_id')->get();
     }
 
     public function generadorCodigo($id, $abreviatura)

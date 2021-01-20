@@ -58,7 +58,7 @@ return [
         'images' => [
             'driver' => 'local',
             'root' => 'img/mrm_catalogo',
-            'url' => 'http://127.0.0.1:8001/SistemaMRM/public/img/mrm_catalogo',
+            'url' => 'https://control.motores502.com/public/img/mrm_catalogo',
             'visibility' => 'public',
         ],
 

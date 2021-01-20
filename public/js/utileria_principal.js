@@ -10,7 +10,7 @@ $(function () {
     $('#whatsapp').floatingWhatsApp({
         phone: '50256914466',
         popupMessage: '¿Hola, en que podemos ayudarle?',
-        showPopup: true,
+        showPopup: false,
         showOnIE: true,
         headerTitle: 'Whatsapp - Motores 502',
         position: 'right',

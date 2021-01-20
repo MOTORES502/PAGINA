@@ -52,6 +52,10 @@ class HomeController extends Controller
         ->whereNull('transports.deleted_at')
         ->count();
 
+        $total_v = DB::connection('mysql')->table('transports')
+        ->whereNull('transports.deleted_at')
+        ->count();
+
         $arra_precio_bajo = $this->precios_minimos();
         $arra_precio_alto = $this->precios_maximos();
 
@@ -83,7 +87,7 @@ class HomeController extends Controller
         $baners = DB::connection('mysql')->table('banners')
         ->whereNull('banners.deleted_at')->orderByDesc('banners.order')->get();
         
-        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs', 'comparaciones', 'baners'));
+        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs', 'comparaciones', 'baners', 'total_v'));
     }
 
     public function index_page(Request $request)
@@ -93,7 +97,7 @@ class HomeController extends Controller
         $keywords = array();
         $image = asset('img/logo_s_fondo_mrm.png');
 
-        $this->seo($title, $description, $keywords, null, $image, 'website');
+        $this->seo($title, $description, $keywords, '/home', $image, 'website');
 
         $subs = DB::connection('mysql')->table('sub_categories')
         ->select(
@@ -120,6 +124,10 @@ class HomeController extends Controller
 
         $total_carros = DB::connection('mysql')->table('transports')
         ->where('transports.status', 'DISPONIBLE')
+        ->whereNull('transports.deleted_at')
+        ->count();
+
+        $total_v = DB::connection('mysql')->table('transports')
         ->whereNull('transports.deleted_at')
         ->count();
 
@@ -156,6 +164,6 @@ class HomeController extends Controller
         $baners = DB::connection('mysql')->table('banners')
         ->whereNull('banners.deleted_at')->orderByDesc('banners.order')->get();
 
-        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs', 'comparaciones', 'baners'));
+        return view('home', compact('ofertas', 'carros', 'subs', 'marcas', 'total_carros', 'visitas', 'arra_precio_bajo', 'arra_precio_alto', 'blogs', 'comparaciones', 'baners', 'total_v'));
     }
 }
