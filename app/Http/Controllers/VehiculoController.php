@@ -183,10 +183,11 @@ class VehiculoController extends Controller
         ->join('departaments', 'municipalities.departaments_id', 'departaments.id')
         ->join('countries', 'departaments.countries_id', 'countries.id')
         ->select(
-            DB::RAW('CONCAT(countries.name,", ",departaments.name,", ",municipalities.name,", ",bussines_locations.location) AS location')
+            'bussines_locations.location AS location'
         )
         ->whereNull('transports_business.deleted_at')
         ->where('transports_business.transports_id', $vehiculo->id)
+        ->where('bussines.id', '!=', 2)
         ->get();
         
         //SEO
@@ -341,10 +342,11 @@ class VehiculoController extends Controller
         ->join('departaments', 'municipalities.departaments_id', 'departaments.id')
         ->join('countries', 'departaments.countries_id', 'countries.id')
         ->select(
-            DB::RAW('CONCAT(countries.name,", ",departaments.name,", ",municipalities.name,", ",bussines_locations.location) AS location')
+            'bussines_locations.location AS location'
         )
         ->whereNull('transports_business.deleted_at')
         ->where('transports_business.transports_id', $vehiculo->id)
+        ->where('bussines.id', '!=', 2)
         ->get();
 
         //SEO
@@ -500,7 +502,7 @@ class VehiculoController extends Controller
         ->join('departaments', 'municipalities.departaments_id', 'departaments.id')
         ->join('countries', 'departaments.countries_id', 'countries.id')
         ->select(
-            DB::RAW('CONCAT(countries.name,", ",departaments.name,", ",municipalities.name,", ",bussines_locations.location) AS location')
+            'bussines_locations.location AS location'
         )
             ->where('transports_business.transports_id', $vehiculo->id)
             ->get();
@@ -658,10 +660,11 @@ class VehiculoController extends Controller
         ->join('departaments', 'municipalities.departaments_id', 'departaments.id')
         ->join('countries', 'departaments.countries_id', 'countries.id')
         ->select(
-            DB::RAW('CONCAT(countries.name,", ",departaments.name,", ",municipalities.name,", ",bussines_locations.location) AS location')
+            'bussines_locations.location AS location'
         )
         ->whereNull('transports_business.deleted_at')
         ->where('transports_business.transports_id', $vehiculo->id)
+        ->where('bussines.id', '!=', 2)
         ->get();
 
         //SEO

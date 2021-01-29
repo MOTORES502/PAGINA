@@ -154,6 +154,8 @@
                                 </form>
                             </form>
                         </div>
+
+                        <div id="google_translate_element" class="google pull-right"></div>
                     </div>
                 </div>
             </div>
@@ -349,6 +351,7 @@
             logged_in_greeting="¡Bienvenido al mundo de Motores 502! ¡Estamos para servirle!"
             logged_out_greeting="¡Bienvenido al mundo de Motores 502! ¡Estamos para servirle!">
         </div> 
+
                
     </div>
     
@@ -385,11 +388,22 @@
     <script type="text/javascript" src="{{ asset('select2/js/select2.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-rc.2/lazyload.js"></script>
     <script type="text/javascript" src="{{ asset('js/utileria_principal.js') }}"></script>
-    <script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <script type="text/javascript">
         lazyload();
         window.oncontextmenu = function() {
             return false;
         } 
-    </script> }
+        function googleTranslateElementInit() {
+	        new google.translate.TranslateElement(
+                {
+                    pageLanguage: 'es', 
+                    includedLanguages: 'bg,bs,ca,co,zh-CN,cs,cy,da,de,el,en,es,et,fa,fi,fr,es,fy,ga,gd,gl,he,hu,iw,is,it,ka,la,lb,lt,lv,mk,nl,no,pl,pt,ro,ru,sk,sl,sq,sr,sv,tr,uk,zh', 
+                    layout: google.translate.TranslateElement.InlineLayout.SIMPLE, 
+                    gaTrack: true
+                }, 'google_translate_element');
+        }
+    </script> 
+    
 </body> 
 </html> 
